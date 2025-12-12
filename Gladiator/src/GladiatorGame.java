@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.*;
 
-//test
+//変更した
 
 // ゲームの状態を定義
 enum GameState {
