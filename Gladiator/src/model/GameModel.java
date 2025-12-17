@@ -24,7 +24,7 @@ public class GameModel {
     public void initGame() {
         objects.clear();
         newObjectsBuffer.clear();
-        player = new Player(280, 960);
+        player = new Player((GameConstants.SCREEN_WIDTH-GameConstants.PLAYER_WIDTH)/2, GameConstants.SCREEN_HEIGHT-GameConstants.PLAYER_HEIGHT);
         objects.add(player);
 
         isFiring = false;
@@ -80,16 +80,16 @@ public class GameModel {
     public void playerShoot() {
         if (!isGameOver) {
             // プレイヤーの中央上から発射
-            Bullet b = new Bullet(player.getX() + 15, player.getY() - 20);
-            newObjectsBuffer.add(b);
+            Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH-GameConstants.BULLET_WIDTH)/2, player.getY() - GameConstants.BULLET_HEIGHT);
+            newObjectsBuffer.add(a);
         }
     }
 
     // 敵を出現させる
     public void spawnEnemy() {
         if (rand.nextInt(100) < 3) { // 3%の確率で出現（適当な頻度）
-            int randomX = rand.nextInt(571);
-            Enemy e = new Enemy(randomX, -30);
+            int randomX = rand.nextInt(GameConstants.SCREEN_WIDTH-GameConstants.ENEMY_WIDTH+1);
+            Enemy e = new Enemy(randomX, -GameConstants.ENEMY_HEIGHT);
             newObjectsBuffer.add(e);
         }
     }
@@ -107,14 +107,13 @@ public class GameModel {
 
         // model.Bullet vs model.Enemy
         for (GameObject b : objects) {
-            if (b instanceof Bullet) {
+            if (b instanceof Arrow) {
                 for (GameObject e : objects) {
                     if (e instanceof Enemy) {
                         // 弾も敵も生きていて、かつ衝突したら
                         if (!b.isDead() && !e.isDead() && b.getBounds().intersects(e.getBounds())) {
                             b.setDead(true); // 弾消滅
                             e.setDead(true); // 敵消滅
-                            System.out.println("Hit!");
                             score += 10; // スコアを増加する
                         }
                     }

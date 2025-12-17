@@ -1,9 +1,6 @@
 package view;
 
-import model.GameModel;
-import model.GameObject;
-import model.GameState;
-import model.Player;
+import model.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -19,12 +16,12 @@ public class GamePanel extends JPanel implements KeyListener {
     public GamePanel() {
         model = new GameModel(); // 初期状態はTITLE
 
-        this.setPreferredSize(new Dimension(600, 600));
+        this.setPreferredSize(new Dimension(GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
         this.addKeyListener(this);
 
-        timer = new Timer(16, e -> {
+        timer = new Timer(1000/GameConstants.FPS, e -> {
             model.update();
             repaint();
         });
@@ -76,7 +73,7 @@ public class GamePanel extends JPanel implements KeyListener {
     // ゲームオーバー画面
     private void drawGameOverScreen(Graphics g) {
         g.setColor(new Color(0, 0, 0, 150));
-        g.fillRect(0, 0, 600, 1000);
+        g.fillRect(0, 0, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
 
         //Game OVER
         g.setColor(Color.RED);
