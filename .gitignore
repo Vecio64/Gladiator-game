@@ -1,0 +1,10 @@
+# Mac system files
+.DS_Store
+
+# Compiled classes (Output)
+out/
+build/
+
+# IntelliJ project settings
+.idea/
+*.iml
