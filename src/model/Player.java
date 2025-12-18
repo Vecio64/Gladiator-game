@@ -1,9 +1,7 @@
 package model;
 
+import view.ResourceManager; // Import the manager
 import java.awt.*;
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 import java.awt.image.BufferedImage;
 
 // --- Playerクラス (自分) ---
@@ -16,14 +14,7 @@ public class Player extends GameObject {
 
     public Player(int x, int y) {
         super(x, y, GameConstants.PLAYER_WIDTH, GameConstants.PLAYER_HEIGHT); // 40x40の四角
-
-        try{
-            image = ImageIO.read(new File("res/player.png"));
-        }
-        catch (IOException e) {
-            System.out.println("Player image not found!");
-            e.printStackTrace();;
-        }
+        this.image = ResourceManager.playerImg;
     }
 
     @Override
@@ -44,6 +35,7 @@ public class Player extends GameObject {
             g.drawImage(image, x, y, width, height, null);
         }
         else{
+            // Fallback if image failed to load
             g.setColor(Color.BLUE);
             g.fillRect(x, y, width, height);
         }

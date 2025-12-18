@@ -52,11 +52,25 @@ public class GameModel {
         if (isFiring) {
             if (shotTimer == 0) {
                 playerShoot();
-                shotTimer = 5;
+                shotTimer = GameConstants.FPS/GameConstants.ARROW_PER_SECOND;
             }
         }
         if (shotTimer > 0) {
             shotTimer--;
+        }
+
+        // 1. Logic for Enemy Shooting
+        // We iterate through all objects to find Enemies
+        for (GameObject obj : objects) {
+            if (obj instanceof Enemy) {
+                if (rand.nextInt(100) < GameConstants.FEATHER_SPAWNRATE) {
+                    // Calculate spawn position (center of the enemy)
+                    int featherX = obj.getX() + (GameConstants.ENEMY_WIDTH-GameConstants.FEATHER_WIDTH)/2;
+                    int featherY = obj.getY() + GameConstants.ENEMY_HEIGHT;
+
+                    newObjectsBuffer.add(new Feather(featherX, featherY));
+                }
+            }
         }
 
         // 1. オブジェクト追加
@@ -80,14 +94,14 @@ public class GameModel {
     public void playerShoot() {
         if (!isGameOver) {
             // プレイヤーの中央上から発射
-            Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH-GameConstants.BULLET_WIDTH)/2, player.getY() - GameConstants.BULLET_HEIGHT);
+            Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH-GameConstants.ARROW_WIDTH)/2, player.getY() - GameConstants.ARROW_HEIGHT);
             newObjectsBuffer.add(a);
         }
     }
 
     // 敵を出現させる
     public void spawnEnemy() {
-        if (rand.nextInt(100) < 3) { // 3%の確率で出現（適当な頻度）
+        if (rand.nextInt(100) < GameConstants.ENEMY_SPAWNRATE) { // 3%の確率で出現（適当な頻度）
             int randomX = rand.nextInt(GameConstants.SCREEN_WIDTH-GameConstants.ENEMY_WIDTH+1);
             Enemy e = new Enemy(randomX, -GameConstants.ENEMY_HEIGHT);
             newObjectsBuffer.add(e);
@@ -100,23 +114,33 @@ public class GameModel {
             if (obj instanceof Enemy) {
                 if (player.getBounds().intersects(obj.getBounds())) {
                     state = GameState.GAMEOVER;
-                    System.out.println("GAME OVER!!");
+                    System.out.println("Contact with Enemy!");
                 }
             }
         }
 
-        // model.Bullet vs model.Enemy
+        // model.Arrow vs model.Enemy
         for (GameObject b : objects) {
             if (b instanceof Arrow) {
                 for (GameObject e : objects) {
                     if (e instanceof Enemy) {
-                        // 弾も敵も生きていて、かつ衝突したら
+                        // 矢も敵も生きていて、かつ衝突したら
                         if (!b.isDead() && !e.isDead() && b.getBounds().intersects(e.getBounds())) {
                             b.setDead(true); // 弾消滅
                             e.setDead(true); // 敵消滅
                             score += 10; // スコアを増加する
                         }
                     }
+                }
+            }
+        }
+
+        // NEW: Feather vs Player
+        for (GameObject obj : objects) {
+            if (obj instanceof Feather) {
+                if (obj.getBounds().intersects(player.getBounds())) {
+                    state = GameState.GAMEOVER; // Die instantly (or reduce HP later)
+                    System.out.println("Hit by a feather!");
                 }
             }
         }
