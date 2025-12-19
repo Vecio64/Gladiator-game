@@ -13,7 +13,7 @@ public class GameModel {
     private GameState state; // 現在のゲーム状態
     private boolean isFiring; // スペースキーが押されているか
     private int shotTimer; // 連射間隔を制御するタイマー
-    private int score = 0; //スコアの導入
+    private static int score = 0; //スコアの導入
 
     public GameModel() {
         objects = new ArrayList<>();
@@ -31,6 +31,10 @@ public class GameModel {
         shotTimer = 0;
         state = GameState.PLAYING;
         score = 0; //スコアをリセット
+    }
+
+    public static void addScore(int points){
+        score += points;
     }
 
     public void setFiring(boolean firing) {
@@ -63,7 +67,7 @@ public class GameModel {
         // We iterate through all objects to find Enemies
         for (GameObject obj : objects) {
             if (obj instanceof Enemy) {
-                if (rand.nextInt(100) < GameConstants.FEATHER_SPAWNRATE) {
+                if (rand.nextFloat(100) < GameConstants.FEATHER_SPAWNRATE / GameConstants.FPS) {
                     // Calculate spawn position (center of the enemy)
                     int featherX = obj.getX() + (GameConstants.ENEMY_WIDTH-GameConstants.FEATHER_WIDTH)/2;
                     int featherY = obj.getY() + GameConstants.ENEMY_HEIGHT;
@@ -101,7 +105,7 @@ public class GameModel {
 
     // 敵を出現させる
     public void spawnEnemy() {
-        if (rand.nextInt(100) < GameConstants.ENEMY_SPAWNRATE) { // 3%の確率で出現（適当な頻度）
+        if (rand.nextFloat(100) < GameConstants.ENEMY_SPAWNRATE / GameConstants.FPS) { // 3%の確率で出現（適当な頻度）
             int randomX = rand.nextInt(GameConstants.SCREEN_WIDTH-GameConstants.ENEMY_WIDTH+1);
             Enemy e = new Enemy(randomX, -GameConstants.ENEMY_HEIGHT);
             newObjectsBuffer.add(e);
@@ -122,13 +126,14 @@ public class GameModel {
         // model.Arrow vs model.Enemy
         for (GameObject b : objects) {
             if (b instanceof Arrow) {
+                Arrow arrow = (Arrow) b; // Cast for using Arrow method
+
                 for (GameObject e : objects) {
                     if (e instanceof Enemy) {
-                        // 矢も敵も生きていて、かつ衝突したら
+                        Enemy enemy = (Enemy) e; // Cast for using Enemy method
                         if (!b.isDead() && !e.isDead() && b.getBounds().intersects(e.getBounds())) {
-                            b.setDead(true); // 弾消滅
-                            e.setDead(true); // 敵消滅
-                            score += 10; // スコアを増加する
+                            arrow.setDead(true); // 弾消滅
+                            enemy.takeDamage(arrow.getDamage()); // 敵が矢のダメージを受ける
                         }
                     }
                 }

@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 class Arrow extends GameObject {
 
     private BufferedImage image;
+    private int damage = GameConstants.ARROW_DAMAGE;
 
     public Arrow(int x, int y) {
         super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT);
@@ -36,4 +37,9 @@ class Arrow extends GameObject {
         }
 
     }
+
+    public int getDamage(){
+        return damage;
+    }
+
 }
