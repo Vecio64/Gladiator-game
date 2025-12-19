@@ -19,8 +19,6 @@ public class Main {
         frame.setLocationRelativeTo(null); // ウィンドウを画面中央に
         frame.setVisible(true);
 
-        System.out.println("hello");
-
     }
 
 }
