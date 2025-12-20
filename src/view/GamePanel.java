@@ -13,6 +13,11 @@ public class GamePanel extends JPanel implements KeyListener {
     private GameModel model;
     private Timer timer;
 
+    //ボタンが押されているかを判断する変数
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
+    private boolean upPressed = false;
+    private boolean downPressed = false;
     public GamePanel() {
         model = new GameModel(); // 初期状態はTITLE
 
@@ -94,6 +99,36 @@ public class GamePanel extends JPanel implements KeyListener {
     }
 
     // --- キー操作 (Controller) ---
+
+    //キー操作においてボタンの押下状態に合わせて動きを決める
+    private void updatePlayerVelocity() {
+        Player p = model.getPlayer();
+
+        int vx = 0;
+        int vy = 0;
+
+        if (leftPressed && !rightPressed) vx = -1;
+        if (rightPressed && !leftPressed) vx = 1;
+        if (upPressed && !downPressed) vy = -1;
+        if (downPressed && !upPressed) vy = 1;
+
+        p.setVelX(vx);
+        p.setVelY(vy);
+    }
+
+    //ゲームオーバーした時にリセットする
+    private void resetKeyState() {
+        leftPressed = false;
+        rightPressed = false;
+        upPressed = false;
+        downPressed = false;
+
+        Player p = model.getPlayer();
+        if (p != null) {
+            p.setVelX(0);
+            p.setVelY(0);
+        }
+    }
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -105,22 +140,25 @@ public class GamePanel extends JPanel implements KeyListener {
                 model.initGame(); // ゲーム開始！
             }
         }
+        
         // プレイ中の操作
         else if (state == GameState.PLAYING) {
-            Player p = model.getPlayer();
-            if (key == KeyEvent.VK_LEFT) p.setVelX(-1);
-            if (key == KeyEvent.VK_RIGHT) p.setVelX(1);
-            if (key == KeyEvent.VK_UP) p.setVelY(-1);
-            if (key == KeyEvent.VK_DOWN) p.setVelY(1);
+            if (key == KeyEvent.VK_LEFT) leftPressed = true;
+            if (key == KeyEvent.VK_RIGHT) rightPressed = true;
+            if (key == KeyEvent.VK_UP) upPressed = true;
+            if (key == KeyEvent.VK_DOWN) downPressed = true;
 
             if (key == KeyEvent.VK_SPACE) {
                 model.setFiring(true);
             }
+
+            updatePlayerVelocity();
         }
         // ゲームオーバー時の操作
         else if (state == GameState.GAMEOVER) {
             if (key == KeyEvent.VK_C) {
                 model.initGame(); // リトライ
+                resetKeyState();
             } else if (key == KeyEvent.VK_Q) {
                 System.exit(0);   // アプリ終了
             }
@@ -132,13 +170,16 @@ public class GamePanel extends JPanel implements KeyListener {
         int key = e.getKeyCode();
 
         if (model.getState() == GameState.PLAYING) {
-            Player p = model.getPlayer();
-            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) p.setVelX(0);
-            if (key == KeyEvent.VK_UP || key == KeyEvent.VK_DOWN) p.setVelY(0);
-
+            if (key == KeyEvent.VK_LEFT) leftPressed = false;
+            if (key == KeyEvent.VK_RIGHT) rightPressed = false;
+            if (key == KeyEvent.VK_UP) upPressed = false;
+            if (key == KeyEvent.VK_DOWN) downPressed = false;
+            
             if (key == KeyEvent.VK_SPACE) {
                 model.setFiring(false);
             }
+
+            updatePlayerVelocity();
         }
     }
 
