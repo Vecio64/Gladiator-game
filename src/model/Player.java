@@ -9,6 +9,7 @@ public class Player extends GameObject {
     private int velX = 0; // 横の移動速度
     private int velY = 0; // 縦の移動速度
     private int speed = GameConstants.PLAYER_SPEED;
+    private int level = 1;
 
     private BufferedImage image;
 
@@ -50,4 +51,9 @@ public class Player extends GameObject {
     public void setVelY(int vy) {
         this.velY = vy * speed;
     }
+
+    public int getLevel(){
+        return level;
+    }
+
 }

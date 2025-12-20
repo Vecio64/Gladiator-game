@@ -6,14 +6,14 @@ public final class GameConstants {
 
     // 画面のサイズ
     public static final int SCREEN_WIDTH = 600;
-    public static final int SCREEN_HEIGHT = 900;
+    public static final int SCREEN_HEIGHT = 800;
 
     // ゲームの設定
     public static final int FPS = 60;
 
     // PLAYERの設定
     public static final int PLAYER_WIDTH = 100;
-    public static final int PLAYER_HEIGHT = PLAYER_WIDTH*921/720; // set to the image height width ration
+    public static final int PLAYER_HEIGHT = PLAYER_WIDTH*923/721; // set to the image height width ration
     public static final int PLAYER_SPEED = 7;
 
     // ARROWの設定
@@ -21,7 +21,7 @@ public final class GameConstants {
     public static final int ARROW_HEIGHT = ARROW_WIDTH * 367/41; // set to the image height width ration
     public static final int ARROW_SPEED = 10;
     public static final int ARROW_PER_SECOND = 4;
-    public static final int ARROW_DAMAGE = 2;
+    public static final int ARROW_DAMAGE = 1;
 
 
     // ENEMYの設定
