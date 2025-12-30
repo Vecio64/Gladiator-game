@@ -15,6 +15,11 @@ public class GameModel {
     private int shotTimer; // 連射間隔を制御するタイマー
     private static int score = 0; //スコアの導入
 
+    // 追加:ライフ機能用変数
+    private int lives; 
+    private static final int MAX_LIVES = 3; // 初期ライフ
+    private int damageTimer; // ダメージを受けた後の無敵時間（フレーム数）
+
     public GameModel() {
         objects = new ArrayList<>();
         newObjectsBuffer = new ArrayList<>();
@@ -31,6 +36,10 @@ public class GameModel {
         shotTimer = 0;
         state = GameState.PLAYING;
         score = 0; //スコアをリセット
+
+        // 追加:ライフ初期化
+        lives = MAX_LIVES;
+        damageTimer = 0;
     }
 
     public static void addScore(int points){
@@ -51,6 +60,11 @@ public class GameModel {
 
     public void update() {
         if (state != GameState.PLAYING) return;
+
+        // 追加:無敵時間の更新
+        if (damageTimer > 0) {
+            damageTimer--;
+        }
 
         // --- 連射ロジック ---
         if (isFiring) {
@@ -112,13 +126,26 @@ public class GameModel {
         }
     }
 
+    // 追加:ダメージ処理メソッド
+    private void takeDamage() {
+        if (damageTimer == 0) { // 無敵時間中でなければダメージ
+            lives--;
+            damageTimer = 60; // 60フレーム（約1秒）無敵にする
+            System.out.println("Damage taken! Lives remaining: " + lives);
+
+            if (lives <= 0) {
+                state = GameState.GAMEOVER;
+                System.out.println("GAME OVER");
+            }
+        }
+    }
+
     // 当たり判定ロジック
     private void checkCollisions() {
         for (GameObject obj : objects) {
             if (obj instanceof Enemy) {
                 if (player.getBounds().intersects(obj.getBounds())) {
-                    state = GameState.GAMEOVER;
-                    System.out.println("Contact with Enemy!");
+                    takeDamage();
                 }
             }
         }
@@ -144,8 +171,8 @@ public class GameModel {
         for (GameObject obj : objects) {
             if (obj instanceof Feather) {
                 if (obj.getBounds().intersects(player.getBounds())) {
-                    state = GameState.GAMEOVER; // Die instantly (or reduce HP later)
-                    System.out.println("Hit by a feather!");
+                    takeDamage();
+                    obj.setDead(true);
                 }
             }
         }
@@ -166,5 +193,14 @@ public class GameModel {
 
     public int getScore() {
         return score;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+    
+    // 無敵時間中かどうか
+    public boolean isInvincible() {
+        return damageTimer > 0;
     }
 }
