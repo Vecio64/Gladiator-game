@@ -28,46 +28,25 @@ public class ResourceManager {
         try {
             System.out.println("Loading resources...");
 
-            // Load images from disk
-            playerImg = ImageIO.read(new File("res/player.png"));
-            enemyImg  = ImageIO.read(new File("res/enemy.png"));
-            enemyHitImg = createWhiteSilhouette(enemyImg);
-            arrowImg  = ImageIO.read(new File("res/arrow.png"));
-            featherImg  = ImageIO.read(new File("res/feather.png"));
-
+            playerImg = loadTexture("res/player.png");
+            enemyImg  = loadTexture("res/enemy.png");
+            // enemyHitImg = createWhiteSilhouette(enemyImg);
+            arrowImg  = loadTexture("res/arrow.png");
+            featherImg = loadTexture("res/feather.png");
 
             System.out.println("Resources loaded successfully!");
-
         } catch (IOException e) {
             System.err.println("Error: Could not load images.");
             e.printStackTrace();
         }
     }
-    // Method for creating the DMG version of the img
-    private static BufferedImage createWhiteSilhouette(BufferedImage original) {
-        // Make an empty copy with the same dimensions
-        BufferedImage whiteImg = new BufferedImage(
-                original.getWidth(),
-                original.getHeight(),
-                BufferedImage.TYPE_INT_ARGB
-        );
+    
+    private static BufferedImage loadTexture(String path) throws IOException {
+        java.net.URL url = ResourceManager.class.getClassLoader().getResource(path);
 
-        // scan each pixel
-        for (int x = 0; x < original.getWidth(); x++) {
-            for (int y = 0; y < original.getHeight(); y++) {
-                int p = original.getRGB(x, y);
-
-                // Alpha value (Transparency)
-                int a = (p >> 24) & 0xff;
-
-                // if the pixel is not transparent, make it pure white
-                if (a > 0) {
-                    int whiteColor = (a << 24) | (255 << 16) | (255 << 8) | 255;
-                    whiteImg.setRGB(x, y, whiteColor);
-                }
-            }
+        if (url == null) {
+            throw new IOException("Image not found: " + path);
         }
-        return whiteImg;
+        return ImageIO.read(url);
     }
-
 }
