@@ -65,11 +65,18 @@ public class GamePanel extends JPanel implements KeyListener {
     private void drawGameScreen(Graphics g) {
         // 1. まずゲームオブジェクトを描画
         for (GameObject obj : model.getObjects()) {
+            // 無敵時間中はプレイヤーを点滅させる
+            if (obj instanceof Player && model.isInvincible()) {
+                // 100ミリ秒ごとに描画と非表示を切り替える
+                if (System.currentTimeMillis() % 200 < 100) {
+                    continue;
+                }
+            }
             obj.draw(g);
         }
 
         // 2. 画面上部に背景色とは別の色のバーを描画 (HUD背景)
-        g.setColor(new Color(50, 50, 80)); // 紺色っぽいグレー
+        g.setColor(new Color(50, 50, 80));
         g.fillRect(0, 0, GameConstants.SCREEN_WIDTH, HUD_HEIGHT);
         
         // 境界線（オプション）
@@ -103,10 +110,9 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawString(timeStr, GameConstants.SCREEN_WIDTH / 2 - 40, textY);
 
         // [LIFE表示] (右側)
-        // 実装がない場合は仮置きで "LIFE: 3" と表示するか、下のコメントアウトを外して修正してください
-        // int lives = 3; // model.getLives(); ← Modelにメソッドを追加したらこう書く
-        // String lifeStr = "LIFE: " + lives;
-        // g.drawString(lifeStr, GameConstants.SCREEN_WIDTH - 120, textY);
+        g.setColor(Color.GREEN);
+        String lifeStr = "LIFE: " + model.getLives();
+        g.drawString(lifeStr, GameConstants.SCREEN_WIDTH - 120, textY);
     }
 
     // タイトル画面
