@@ -1,48 +1,44 @@
 package view;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.File; // Fileクラスのインポートが必要になる場合があります
 
 /**
  * ResourceManager
- * This class handles loading all game assets (images, sounds, etc.) at startup.
- * By loading images once and storing them in static variables, we improve performance
- * and avoid accessing the disk every time an object is spawned.
+ * ゲームのリソース（画像など）を管理するクラスです。
+ * 起動時に一度だけ画像を読み込み、メモリに保持することでパフォーマンスを向上させます。
+ * （ディスクへのアクセス回数を減らすため）
  */
 public class ResourceManager {
 
-    // Static variables to hold the loaded images.
+    // 読み込んだ画像を保持する静的変数 (Static variables)
+    // どこからでも ResourceManager.playerImg のようにアクセスできます
     public static BufferedImage playerImg;
     public static BufferedImage enemyImg;
     public static BufferedImage arrowImg;
     public static BufferedImage featherImg;
     public static BufferedImage enemyHitImg;
 
-    private static final int PLAYER_WIDTH = 20;
-    private static final int PLAYER_HEIGHT = 20;
-    private static final int ENEMY_WIDTH = 30;
-    private static final int ENEMY_HEIGHT = 30;
-
     /**
-     * Loads all resources from the "res" folder.
-     * This method must be called once before the game starts.
+     * "res"フォルダからすべてのリソースを読み込みます。
+     * このメソッドは、ゲーム開始前に「一度だけ」呼び出す必要があります。
      */
     public static void loadImages() {
         try {
             System.out.println("Loading resources...");
 
-            // 読み込み(loadTexture) → リサイズ(resize) の順で実行
-            BufferedImage rawPlayer = loadTexture("res/player.png");
-            playerImg = resize(rawPlayer, PLAYER_WIDTH, PLAYER_HEIGHT);
+            // 1. 画像を読み込む（画質を維持するため、リサイズは行いません）
+            // ドット絵がぼやけないように、元の解像度のまま読み込みます
+            playerImg = loadTexture("res/player.png");
+            enemyImg  = loadTexture("res/enemy.png");
 
-            BufferedImage rawEnemy = loadTexture("res/enemy.png");
-            enemyImg = resize(rawEnemy, ENEMY_WIDTH, ENEMY_HEIGHT);
-
+            // 2. 敵がダメージを受けた時の「白いシルエット画像」を自動生成する
             enemyHitImg = createWhiteSilhouette(enemyImg);
-            arrowImg  = loadTexture("res/arrow.png");
+
+            // 3. その他の画像を読み込む
+            arrowImg   = loadTexture("res/arrow.png");
             featherImg = loadTexture("res/feather.png");
 
             System.out.println("Resources loaded successfully!");
@@ -51,45 +47,44 @@ public class ResourceManager {
             e.printStackTrace();
         }
     }
-    
+
+    // 画像を安全に読み込むためのヘルパーメソッド
     private static BufferedImage loadTexture(String path) throws IOException {
+        // クラスパス（srcフォルダ内など）からリソースを探す
         java.net.URL url = ResourceManager.class.getClassLoader().getResource(path);
 
         if (url == null) {
-            throw new IOException("Image not found: " + path);
+            // もし getResource で見つからない場合（フォルダ構成の違いなど）、
+            // 通常のファイルパスとして読み込みを試みる（フォールバック処理）
+            try {
+                return ImageIO.read(new File(path));
+            } catch (IOException ex) {
+                throw new IOException("Image not found: " + path);
+            }
         }
         return ImageIO.read(url);
     }
 
-    // 画像をリサイズするメソッド
-    private static BufferedImage resize(BufferedImage original, int width, int height) {
-        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = resized.createGraphics();
-        
-        // 画質をきれいに保つ設定
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        
-        g2.drawImage(original, 0, 0, width, height, null);
-        g2.dispose();
-        return resized;
-    }
-
-    // シルエットを作成するメソッド
+    // ダメージ演出用に、透明度を維持したまま「真っ白なシルエット」を作成するメソッド
     private static BufferedImage createWhiteSilhouette(BufferedImage original) {
+        // 元の画像と同じサイズで、空の画像を作成
         BufferedImage whiteImg = new BufferedImage(
                 original.getWidth(),
                 original.getHeight(),
                 BufferedImage.TYPE_INT_ARGB
         );
 
+        // すべてのピクセルを走査する
         for (int x = 0; x < original.getWidth(); x++) {
             for (int y = 0; y < original.getHeight(); y++) {
                 int p = original.getRGB(x, y);
+
                 // アルファ値（透明度）を取得
                 int a = (p >> 24) & 0xff;
 
-                // 透明じゃない部分を真っ白にする
+                // 透明ではない部分（キャラクター部分）だけを「真っ白」に塗りつぶす
                 if (a > 0) {
+                    // ARGB: アルファ値 + R(255) + G(255) + B(255)
                     int whiteColor = (a << 24) | (255 << 16) | (255 << 8) | 255;
                     whiteImg.setRGB(x, y, whiteColor);
                 }
