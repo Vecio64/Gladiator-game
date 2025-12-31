@@ -14,6 +14,7 @@ public class GameModel {
     private boolean isFiring; // スペースキーが押されているか
     private int shotTimer; // 連射間隔を制御するタイマー
     private static int score = 0; //スコアの導入
+    private boolean isBossActive = false; //ボスのフェーズの確認
 
     // 追加:ライフ機能用変数
     private int lives; 
@@ -40,6 +41,9 @@ public class GameModel {
         // 追加:ライフ初期化
         lives = MAX_LIVES;
         damageTimer = 0;
+
+        //追加：ボスのフェーズの初期化
+        isBossActive = false;
     }
 
     public static void addScore(int points){
@@ -66,11 +70,13 @@ public class GameModel {
             damageTimer--;
         }
 
+        checkLevelProgression();
+
         // --- 連射ロジック ---
         if (isFiring) {
             if (shotTimer == 0) {
                 playerShoot();
-                shotTimer = GameConstants.FPS/GameConstants.ARROW_PER_SECOND;
+                shotTimer = GameConstants.FPS / GameConstants.ARROW_PER_SECOND;
             }
         }
         if (shotTimer > 0) {
@@ -108,6 +114,31 @@ public class GameModel {
         objects.removeIf(obj -> obj.isDead());
     }
 
+
+    private void checkLevelProgression() {
+        // ボスがいたら、何もしない
+        if (isBossActive) return;
+
+        // SCOREを達成すれば
+        if (score >= GameConstants.SCORE_FOR_BOSS_1) {
+            System.out.println("BOSS PHASE STARTED! Score: " + score);
+
+            // 1. ボスのフェーズになる
+            isBossActive = true;
+
+            // 2. 全ての敵を消す
+            clearEnemies();
+
+            // 3. 次はspawnBoss();
+        }
+    }
+
+    // 全ての敵を消すメソッド
+    private void clearEnemies() {
+        // "敵または羽の場合、消す"
+        objects.removeIf(obj -> obj instanceof Enemy || obj instanceof Feather);
+    }
+
     // プレイヤーが撃つ（Controllerから呼ばれる）
     public void playerShoot() {
         if (!isGameOver) {
@@ -119,6 +150,9 @@ public class GameModel {
 
     // 敵を出現させる
     public void spawnEnemy() {
+        //ボスのフェーズの時に、何もしない
+        if(isBossActive) return;
+
         if (rand.nextFloat(100) < GameConstants.ENEMY_SPAWNRATE / GameConstants.FPS) { // 3%の確率で出現（適当な頻度）
             int randomX = rand.nextInt(GameConstants.SCREEN_WIDTH-GameConstants.ENEMY_WIDTH+1);
             Enemy e = new Enemy(randomX, -GameConstants.ENEMY_HEIGHT);

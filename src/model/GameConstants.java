@@ -8,6 +8,11 @@ public final class GameConstants {
     public static final int SCREEN_WIDTH = 600;
     public static final int SCREEN_HEIGHT = 800;
 
+    //SCOREの設定
+    public static final int SCORE_FOR_BOSS_1 = 100;
+    public static final int SCORE_FOR_BOSS_2 = 3000;
+    public static final int SCORE_FOR_BOSS_3 = 6000;
+
     // ゲームの設定
     public static final int FPS = 60;
 

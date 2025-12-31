@@ -41,7 +41,7 @@ class Enemy extends GameObject {
 
         this.hp -=dmg;
 
-        this.flashTimer = 3; // 10フレームでFLASH
+        this.flashTimer = 3;
 
         if(this.hp <= 0){
             this.isDead = true;
