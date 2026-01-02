@@ -22,12 +22,10 @@ public class GamePanel extends JPanel implements KeyListener {
     private long startTime; // ゲーム開始時刻
     private long endTime; // ゲーム終了時刻
 
-    private final int HUD_HEIGHT = 50;
-
     public GamePanel() {
         model = new GameModel(); // 初期状態はTITLE
 
-        this.setPreferredSize(new Dimension(GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT));
+        this.setPreferredSize(new Dimension(GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT));
         this.setBackground(Color.BLACK);
         this.setFocusable(true);
         this.addKeyListener(this);
@@ -77,11 +75,11 @@ public class GamePanel extends JPanel implements KeyListener {
 
         // 2. 画面上部に背景色とは別の色のバーを描画 (HUD背景)
         g.setColor(new Color(50, 50, 80));
-        g.fillRect(0, 0, GameConstants.SCREEN_WIDTH, HUD_HEIGHT);
+        g.fillRect(0, 0, GameConstants.WINDOW_WIDTH, GameConstants.HUD_HEIGHT);
         
         // 境界線（オプション）
         g.setColor(Color.WHITE);
-        g.drawLine(0, HUD_HEIGHT, GameConstants.SCREEN_WIDTH, HUD_HEIGHT);
+        g.drawLine(0, GameConstants.HUD_HEIGHT, GameConstants.WINDOW_WIDTH, GameConstants.HUD_HEIGHT);
 
         // 3. 各種ステータスの表示設定
         g.setColor(Color.WHITE);
@@ -107,12 +105,12 @@ public class GamePanel extends JPanel implements KeyListener {
             }
         }
         String timeStr = "TIME: " + currentSeconds;
-        g.drawString(timeStr, GameConstants.SCREEN_WIDTH / 2 - 40, textY);
+        g.drawString(timeStr, GameConstants.WINDOW_WIDTH / 2 - 40, textY);
 
         // [LIFE表示] (右側)
         g.setColor(Color.GREEN);
         String lifeStr = "LIFE: " + model.getLives();
-        g.drawString(lifeStr, GameConstants.SCREEN_WIDTH - 120, textY);
+        g.drawString(lifeStr, GameConstants.WINDOW_WIDTH - 120, textY);
     }
 
     // タイトル画面
@@ -131,7 +129,7 @@ public class GamePanel extends JPanel implements KeyListener {
     // ゲームオーバー画面
     private void drawGameOverScreen(Graphics g) {
         g.setColor(new Color(0, 0, 0, 150));
-        g.fillRect(0, 0, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
+        g.fillRect(0, 0, GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
 
         //Game OVER
         g.setColor(Color.RED);

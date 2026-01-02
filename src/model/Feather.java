@@ -18,7 +18,7 @@ public class Feather extends GameObject {
     public void move() {
         y += GameConstants.FEATHER_SPEED;;
 
-        if(y > GameConstants.SCREEN_HEIGHT){
+        if(y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT){
             isDead = true;
         }
     }

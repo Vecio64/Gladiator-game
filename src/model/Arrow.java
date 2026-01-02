@@ -21,7 +21,7 @@ class Arrow extends GameObject {
         y -= GameConstants.ARROW_SPEED; // 上にスピード10で飛ぶ
 
         // 画面外（上）に出たら死亡扱い
-        if (y < -height) {
+        if (y < GameConstants.HUD_HEIGHT - height) {
             isDead = true;
         }
     }

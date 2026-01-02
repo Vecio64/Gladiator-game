@@ -3,6 +3,7 @@ package model;
 import view.ResourceManager; // Import the manager
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.geom.Ellipse2D;
 
 // --- Playerクラス (自分) ---
 public class Player extends GameObject {
@@ -25,9 +26,9 @@ public class Player extends GameObject {
 
         // 画面からはみ出さないように制限
         if (x < 0) x = 0;
-        if (x > GameConstants.SCREEN_WIDTH - width) x = GameConstants.SCREEN_WIDTH - width;
+        if (x > GameConstants.FIELD_WIDTH - width) x = GameConstants.FIELD_WIDTH - width;
         if (y < 0) y = 0;
-        if (y > GameConstants.SCREEN_HEIGHT - height) y = GameConstants.SCREEN_HEIGHT - height;
+        if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height) y = GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height;
     }
 
     @Override
@@ -41,6 +42,21 @@ public class Player extends GameObject {
             g.fillRect(x, y, width, height);
         }
 
+    }
+
+    @Override
+    public Shape getShape() {
+        // we define the margin
+        float paddingX = width * 0.3f;  // remove 20 % width
+        float paddingY = height * 0.2f; // remove 10 % height
+
+        // the smaller hitbox get centered compared to the original immage
+        return new Ellipse2D.Float(
+                x + paddingX / 2,     // move right
+                y + paddingY / 2,     // move down
+                width - paddingX,     // reduce width
+                height - paddingY     // reduce height
+        );
     }
 
     // Controllerから呼ばれるメソッド

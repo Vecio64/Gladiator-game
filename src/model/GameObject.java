@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 // --- 1. キャラクターの親クラス ---
 public abstract class GameObject {
@@ -21,6 +22,10 @@ public abstract class GameObject {
 
     public Rectangle getBounds() {
         return new Rectangle(x, y, width, height);
+    }
+
+    public Shape getShape() {
+        return new Rectangle2D.Float(x, y, width, height);
     }
 
     public boolean isDead() {

@@ -41,7 +41,7 @@ class Enemy extends GameObject {
 
         this.hp -=dmg;
 
-        this.flashTimer = 3;
+        this.flashTimer = GameConstants.FLASH_TIMER;
 
         if(this.hp <= 0){
             this.isDead = true;
@@ -64,20 +64,20 @@ class Enemy extends GameObject {
         }
 
         // Check Right Border
-        if (x > GameConstants.SCREEN_WIDTH - width) {
-            x = GameConstants.SCREEN_WIDTH - width; // Fix position
+        if (x > GameConstants.FIELD_WIDTH - width) {
+            x = GameConstants.FIELD_WIDTH - width; // Fix position
             velX = -velX;   // Reverse direction (become negative)
         }
 
         // Check Left Border
-        if (y < 0) {
-            y = 0;          // Fix position to avoid sticking
+        if (y < GameConstants.HUD_HEIGHT) {
+            y = GameConstants.HUD_HEIGHT;          // Fix position to avoid sticking
             velY = -velY;   // Reverse direction (become positive)
         }
 
         // Check Right Border
-        if (y > GameConstants.SCREEN_HEIGHT - height) {
-            y = GameConstants.SCREEN_HEIGHT - height; // Fix position
+        if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height) {
+            y = GameConstants.FIELD_HEIGHT - height; // Fix position
             velY = -velY;   // Reverse direction (become negative)
         }
 

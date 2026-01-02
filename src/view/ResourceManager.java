@@ -20,6 +20,11 @@ public class ResourceManager {
     public static BufferedImage arrowImg;
     public static BufferedImage featherImg;
     public static BufferedImage enemyHitImg;
+    public static BufferedImage apolloImg;
+    public static BufferedImage apolloImg2;
+    public static BufferedImage apolloHitImg;
+    public static BufferedImage sunImg;
+    public static BufferedImage sunImg2;
 
     /**
      * "res"フォルダからすべてのリソースを読み込みます。
@@ -33,13 +38,18 @@ public class ResourceManager {
             // ドット絵がぼやけないように、元の解像度のまま読み込みます
             playerImg = loadTexture("res/player.png");
             enemyImg  = loadTexture("res/enemy.png");
+            apolloImg = loadTexture("res/Apollo.png");
+            apolloImg2 = loadTexture("res/ApolloRed.png");
 
             // 2. 敵がダメージを受けた時の「白いシルエット画像」を自動生成する
             enemyHitImg = createWhiteSilhouette(enemyImg);
+            apolloHitImg = createWhiteSilhouette(apolloImg);
 
             // 3. その他の画像を読み込む
             arrowImg   = loadTexture("res/arrow.png");
             featherImg = loadTexture("res/feather.png");
+            sunImg = loadTexture("res/Sun.png");
+            sunImg2 = loadTexture("res/SunRed.png");
 
             System.out.println("Resources loaded successfully!");
         } catch (IOException e) {
