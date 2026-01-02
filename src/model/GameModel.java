@@ -32,7 +32,7 @@ public class GameModel {
     public void initGame() {
         objects.clear();
         newObjectsBuffer.clear();
-        player = new Player((GameConstants.FIELD_WIDTH -GameConstants.PLAYER_WIDTH)/2, GameConstants.FIELD_HEIGHT -GameConstants.PLAYER_HEIGHT);
+        player = new Player((GameConstants.FIELD_WIDTH -GameConstants.PLAYER_WIDTH)/2, GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - GameConstants.PLAYER_HEIGHT);
         objects.add(player);
 
         isFiring = false;
@@ -213,56 +213,42 @@ public class GameModel {
     // 当たり判定ロジック
     private void checkCollisions() {
 
-        // Player vs Enemy
+        // 1. Player vs ANYTHING HOSTILE (Enemy, Boss, Sun)
         for (GameObject obj : objects) {
-            if (obj instanceof Enemy || obj instanceof Boss || obj instanceof Sun) {
+            // Check if object is a living hostile entity
+            if (obj instanceof HostileEntity) {
                 if (checkIntersection(player, obj)) {
-                    takeDamage();
+                    takeDamage(); // Player loses 1 life (Fixed)
+                }
+            }
+            // 2. Player vs ENEMY PROJECTILES (Feather)
+            // Logic: Is it a Projectile? YES. Is it NOT my own Arrow? YES.
+            else if (obj instanceof Projectile && !(obj instanceof Arrow)) {
+                if (checkIntersection(player, obj)) {
+                    takeDamage();      // Player loses 1 life (Fixed)
+                    obj.setDead(true); // Destroy the feather
                 }
             }
         }
 
-        // Arrow vs Enemy OR Boss
-        for (GameObject b : objects) {
-            if (b instanceof Arrow) {
-                Arrow arrow = (Arrow) b; // Cast for using Arrow method
-                for (GameObject e : objects) {
+        // 3. Arrow vs HOSTILE ENTITIES (Enemy, Boss, Sun)
+        for (GameObject objA : objects) {
+            if (objA instanceof Arrow) {
+                Arrow arrow = (Arrow) objA;
 
-                    // CASE 1 VS Enemy
-                    if (e instanceof Enemy) {
-                        Enemy enemy = (Enemy) e; // Cast for using Enemy method
-                        if (!b.isDead() && !e.isDead() && checkIntersection(b, e)) {
-                            arrow.setDead(true); // 弾消滅
-                            enemy.takeDamage(arrow.getDamage()); // 敵が矢のダメージを受ける
+                for (GameObject objB : objects) {
+                    // Unified check for all enemies
+                    if (objB instanceof HostileEntity) {
+                        HostileEntity hostile = (HostileEntity) objB;
+
+                        if (!arrow.isDead() && !hostile.isDead() && checkIntersection(arrow, hostile)) {
+
+                            arrow.setDead(true); // Arrow breaks
+
+                            // HERE we use the variable damage!
+                            hostile.takeDamage(arrow.getDamage());
                         }
                     }
-
-                    // CASE 2 VS BOSS
-                    if (e instanceof Boss){
-                        Boss boss = (Boss) e;
-                        if (!b.isDead() && !e.isDead() && checkIntersection(b, e)){
-                            arrow.setDead(true);
-                            boss.takeDamage(arrow.getDamage());
-                        }
-                    }
-
-                    // CASE 3 VS SUN
-                    if(e instanceof Sun){
-                        if (!b.isDead() && !e.isDead() && checkIntersection(b, e)){
-                            arrow.setDead(true);
-                        }
-                    }
-
-                }
-            }
-        }
-
-        // Feather vs Player
-        for (GameObject obj : objects) {
-            if (obj instanceof Feather) {
-                if (checkIntersection(obj, player)) {
-                    takeDamage();
-                    obj.setDead(true);
                 }
             }
         }

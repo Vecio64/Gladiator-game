@@ -4,24 +4,26 @@ import view.ResourceManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-// --- Arrowクラス  ---
-class Arrow extends GameObject {
+/**
+ * Arrow Class
+ * Projectile fired by the player. Moves upwards.
+ */
+public class Arrow extends Projectile {
 
     private BufferedImage image;
-    private int damage = GameConstants.ARROW_DAMAGE;
 
     public Arrow(int x, int y) {
-        super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT);
+        // We pass the VARIABLE damage from GameConstants (or Player stats in the future)
+        super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT, GameConstants.ARROW_DAMAGE);
         this.image = ResourceManager.arrowImg;
-
     }
 
     @Override
     public void move() {
-        y -= GameConstants.ARROW_SPEED; // 上にスピード10で飛ぶ
+        y -= GameConstants.ARROW_SPEED; // Moves Up
 
-        // 画面外（上）に出たら死亡扱い
-        if (y < GameConstants.HUD_HEIGHT - height) {
+        // Use the common check from Projectile class
+        if (isOutOfBounds()) {
             isDead = true;
         }
     }
@@ -31,15 +33,8 @@ class Arrow extends GameObject {
         if (image != null) {
             g.drawImage(image, x, y, width, height, null);
         } else {
-            // Fallback if image failed to load
             g.setColor(Color.YELLOW);
             g.fillRect(x, y, width, height);
         }
-
     }
-
-    public int getDamage(){
-        return damage;
-    }
-
 }

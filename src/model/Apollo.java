@@ -1,28 +1,32 @@
 package model;
 
-import view.ResourceManager; // Import the manager
+import view.ResourceManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Apollo Class
+ * Represents the first Boss of the game.
+ * It moves horizontally, bounces off walls, and shoots "Sun" projectiles.
+ * It has two phases: Normal and Enraged (Red & Fast).
+ */
 public class Apollo extends Boss {
 
     private BufferedImage image;
-
     private int speedX = GameConstants.APOLLO_SPEED;
-
-    private GameModel model;
-
-    private boolean secondPhase = false;
-
+    private GameModel model; // Reference to GameModel to spawn projectiles
+    private boolean secondPhase = false; // Flag to track if the boss is in "Rage Mode"
 
     public Apollo(GameModel model) {
+        // Call the parent constructor (Boss -> HostileEntity)
+        // Parameters: x, y, width, height, HP, Score Points
         super(
-                (GameConstants.FIELD_WIDTH - GameConstants.APOLLO_WIDTH) / 2,
-                GameConstants.HUD_HEIGHT,
+                (GameConstants.FIELD_WIDTH - GameConstants.APOLLO_WIDTH) / 2, // Start in the middle
+                GameConstants.HUD_HEIGHT, // Start below HUD
                 GameConstants.APOLLO_WIDTH,
                 GameConstants.APOLLO_HEIGHT,
-                GameConstants.APOLLO_HP
-
+                GameConstants.APOLLO_HP,
+                1000 // Score awarded when defeated
         );
         this.image = ResourceManager.apolloImg;
         this.model = model;
@@ -30,52 +34,53 @@ public class Apollo extends Boss {
 
     @Override
     public void move() {
+        // Update horizontal position
         x += speedX;
 
+        // Bounce logic: If it hits the screen edges
         if (x <= 0 || x >= GameConstants.FIELD_WIDTH - width) {
-            speedX = -speedX;
+            speedX = -speedX; // Reverse direction
+
+            // Trigger shooting mechanism via GameModel
+            // We pass the current phase status to decide if the Sun should be Red/Fast
             model.shootSun(x, y, speedX, secondPhase);
         }
 
+        // Decrease the flash timer (inherited from HostileEntity) for the hit effect
         if (flashTimer > 0) flashTimer--;
     }
 
     @Override
     public void takeDamage(int dmg) {
+        // 1. Apply damage using the parent class logic (reduces HP, checks death, adds score)
         super.takeDamage(dmg);
-        if(hp <= maxHp / 2 && !secondPhase){
-            this.image = ResourceManager.apolloImg2;
-            this.speedX *= 2;
-            secondPhase = true;
+
+        // 2. Specific Logic for Apollo: Check for Second Phase (Rage Mode)
+        // If HP drops below 50% and we are not yet in the second phase...
+        if (hp <= maxHp / 2 && !secondPhase) {
+            this.image = ResourceManager.apolloImg2; // Change sprite to Red Apollo
+            this.speedX *= 2; // Double the movement speed
+            secondPhase = true; // Activate the flag
+            System.out.println("Apollo entering Phase 2!");
         }
     }
 
     @Override
     public void draw(Graphics g) {
-
-        BufferedImage imgToDraw;
-
-        if(flashTimer > 0) {
-            // ダメージを受けたばかりならばピカピカする(FLASH)
-            imgToDraw = ResourceManager.apolloHitImg;
-        }
-        else {
-            imgToDraw = image;
-        }
+        BufferedImage imgToDraw = (flashTimer > 0) ? ResourceManager.apolloHitImg : image;
 
         if (image != null) {
-            // Check direction to flip image
+            // Directional Flipping Logic
             if (speedX > 0) {
-                // Moving RIGHT: Draw normal
-                // (Assuming the original sprite faces Right)
+                // Moving RIGHT: Draw normally
                 g.drawImage(imgToDraw, x, y, width, height, null);
             } else {
-                // Moving LEFT: Draw flipped (Mirror effect)
-                // We start at (x + width) and draw with negative width
+                // Moving LEFT: Flip the image horizontally
+                // We draw starting at (x + width) and use a negative width to flip
                 g.drawImage(imgToDraw, x + width, y, -width, height, null);
             }
         } else {
-            // Fallback (Red square)
+            // Fallback: Draw an Orange rectangle if images fail to load
             g.setColor(Color.ORANGE);
             g.fillRect(x, y, width, height);
         }

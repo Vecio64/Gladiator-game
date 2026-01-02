@@ -5,12 +5,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 // --- Feather Class (Enemy Projectile) ---
-public class Feather extends GameObject {
+public class Feather extends Projectile {
 
     private BufferedImage image;
 
     public Feather(int x, int y) {
-        super(x, y, GameConstants.FEATHER_WIDTH, GameConstants.FEATHER_HEIGHT);
+        // We pass the FIXED damage (1)
+        super(x, y, GameConstants.FEATHER_WIDTH, GameConstants.FEATHER_HEIGHT, GameConstants.FEATHER_DAMAGE);
         this.image = ResourceManager.featherImg;
     }
 
@@ -18,20 +19,19 @@ public class Feather extends GameObject {
     public void move() {
         y += GameConstants.FEATHER_SPEED;;
 
-        if(y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT){
+        // Use the common check from Projectile class
+        if(isOutOfBounds()){
             isDead = true;
         }
     }
 
     @Override
     public void draw(Graphics g) {
-        if(image!= null){
+        if (image != null) {
             g.drawImage(image, x, y, width, height, null);
-        }
-        else {
-        // Fallback if image failed to load
-        g.setColor(Color.GRAY);
-        g.fillRect(x, y, width, height);
+        } else {
+            g.setColor(Color.GRAY);
+            g.fillRect(x, y, width, height);
         }
     }
 }

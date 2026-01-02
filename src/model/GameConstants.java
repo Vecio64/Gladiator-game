@@ -12,7 +12,7 @@ public final class GameConstants {
     public static final int FIELD_HEIGHT = WINDOW_HEIGHT - HUD_HEIGHT;
 
     //SCOREの設定
-    public static final int SCORE_FOR_BOSS_1 = 100;
+    public static final int SCORE_FOR_BOSS_1 = 10;
     public static final int SCORE_FOR_BOSS_2 = 3000;
     public static final int SCORE_FOR_BOSS_3 = 6000;
 
@@ -45,6 +45,7 @@ public final class GameConstants {
     public static final int FEATHER_HEIGHT = FEATHER_WIDTH*1698/378; // set to the image height width ration
     public static final int FEATHER_SPEED = 7;
     public static final float FEATHER_SPAWNRATE = 33; // spawnrate probability per second
+    public static final int FEATHER_DAMAGE = 1;
 
     // BOSSの設定
 
