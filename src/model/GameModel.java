@@ -15,12 +15,18 @@ public class GameModel {
     private GameState state; // 現在のゲーム状態
     private boolean isFiring; // スペースキーが押されているか
     private int shotTimer; // 連射間隔を制御するタイマー
+
+    // Score progression
     private static int score = 0; //スコアの導入
+    private int nextTargetScore;
+    private int currentLevelIndex = 0;
     private boolean isBossActive = false; //ボスのフェーズの確認
 
+    // Enemies Spawnrate
+    private float harpySpawnrate;
+
     // 追加:ライフ機能用変数
-    private int lives; 
-    private static final int MAX_LIVES = 3; // 初期ライフ
+    private int lives;// 初期ライフ
     private int damageTimer; // ダメージを受けた後の無敵時間（フレーム数）
 
     public GameModel() {
@@ -41,10 +47,12 @@ public class GameModel {
         score = 0; //スコアをリセット
 
         // 追加:ライフ初期化
-        lives = MAX_LIVES;
+        lives = GameConstants.PLAYER_MAX_LIVES;
         damageTimer = 0;
 
-        //追加：ボスのフェーズの初期化
+        //Score progression resets
+        this.currentLevelIndex = 0;
+        this.nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
         isBossActive = false;
     }
 
@@ -67,12 +75,12 @@ public class GameModel {
     public void update() {
         if (state != GameState.PLAYING) return;
 
+        checkLevelProgression();
+
         // 追加:無敵時間の更新
         if (damageTimer > 0) {
             damageTimer--;
         }
-
-        checkLevelProgression();
 
         // --- 連射ロジック ---
         if (isFiring) {
@@ -88,11 +96,11 @@ public class GameModel {
         //Logic for Enemy Shooting
         // We iterate through all objects to find Enemies
         for (GameObject obj : objects) {
-            if (obj instanceof Enemy) {
+            if (obj instanceof Harpy) {
                 if (rand.nextFloat(100) < GameConstants.FEATHER_SPAWNRATE / GameConstants.FPS) {
                     // Calculate spawn position (center of the enemy)
-                    int featherX = obj.getX() + (GameConstants.ENEMY_WIDTH-GameConstants.FEATHER_WIDTH)/2;
-                    int featherY = obj.getY() + GameConstants.ENEMY_HEIGHT;
+                    int featherX = obj.getX() + (GameConstants.HARPY_WIDTH -GameConstants.FEATHER_WIDTH)/2;
+                    int featherY = obj.getY() + GameConstants.HARPY_HEIGHT;
 
                     newObjectsBuffer.add(new Feather(featherX, featherY));
                 }
@@ -120,26 +128,57 @@ public class GameModel {
     private void checkLevelProgression() {
         // ボスがいたら、何もしない
         if (isBossActive) return;
+        //次のフェーズがなかったらreturn
+        if (currentLevelIndex >= GameConstants.LEVEL_MILESTONES.length) return;
 
-        // SCOREを達成すれば
-        if (score >= GameConstants.SCORE_FOR_BOSS_1) {
-            System.out.println("BOSS PHASE STARTED! Score: " + score);
-
-            // 1. ボスのフェーズになる
-            isBossActive = true;
-
-            // 2. 全ての敵を消す
-            clearEnemies();
-
-            // 3. BOSSの登場
-            spawnBoss();
+        if (score >= nextTargetScore){
+            //apply the effect we decided in the applyLevelEffects function
+            applyLevelEffects(currentLevelIndex);
+            currentLevelIndex++;
+            nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
         }
+    }
+
+    private void applyLevelEffects(int levelIndex) {
+        switch (levelIndex) {
+            case 0: //START OF THE GAME
+                System.out.println("Start of the Game");
+                this.harpySpawnrate = GameConstants.HARPY_SPAWNRATE;
+                break;
+
+            case 1: // Raggiunti 100 punti
+                System.out.println("Difficulty UP! INSANE enemies.");
+                // Aumentiamo ancora (doppio rispetto all'inizio)
+                this.harpySpawnrate = GameConstants.HARPY_SPAWNRATE * 2.0f;
+                break;
+
+            case 2: // Raggiunti 300 punti
+                System.out.println("Difficulty UP! INSANE enemies.");
+                // Aumentiamo ancora (doppio rispetto all'inizio)
+                this.harpySpawnrate = GameConstants.HARPY_SPAWNRATE * 3.0f;
+                break;
+
+            case 3: // Raggiunti 500 punti
+                System.out.println("WARNING: BOSS APPROACHING!");
+                isBossActive = true;
+                clearEnemies();
+                spawnBoss();
+                break;
+
+            // In futuro aggiungerai qui case 3 (1500 punti), case 4, ecc.
+        }
+    }
+
+    public void bossDefeated(){
+        System.out.println("BOSS DEFEATED! Stage clear.");
+        this.isBossActive = false;
+        healPlayer();
     }
 
     // 全ての敵を消すメソッド
     private void clearEnemies() {
         // "敵または羽の場合、消す"
-        objects.removeIf(obj -> obj instanceof Enemy || obj instanceof Feather);
+        objects.removeIf(obj -> obj instanceof Harpy || obj instanceof Feather);
     }
 
     // プレイヤーが撃つ（Controllerから呼ばれる）
@@ -156,9 +195,9 @@ public class GameModel {
         //ボスのフェーズの時に、何もしない
         if(isBossActive) return;
 
-        if (rand.nextFloat(100) < GameConstants.ENEMY_SPAWNRATE / GameConstants.FPS) { // 3%の確率で出現（適当な頻度）
-            int randomX = rand.nextInt(GameConstants.FIELD_WIDTH -GameConstants.ENEMY_WIDTH+1);
-            Enemy e = new Enemy(randomX, GameConstants.HUD_HEIGHT-GameConstants.ENEMY_HEIGHT);
+        if (rand.nextFloat(100) < harpySpawnrate / GameConstants.FPS) { // 3%の確率で出現（適当な頻度）
+            int randomX = rand.nextInt(GameConstants.FIELD_WIDTH - GameConstants.HARPY_WIDTH + 1);
+            Harpy e = new Harpy(randomX, GameConstants.HUD_HEIGHT - GameConstants.HARPY_HEIGHT);
             newObjectsBuffer.add(e);
         }
     }
@@ -176,11 +215,11 @@ public class GameModel {
         System.out.println("Sun shot");
     }
 
-    // 追加:ダメージ処理メソッド
-    private void takeDamage() {
+    // ダメージ処理メソッド
+    private void playerTakesDamage() {
         if (damageTimer == 0) { // 無敵時間中でなければダメージ
             lives--;
-            damageTimer = 60; // 60フレーム（約1秒）無敵にする
+            damageTimer = 180; // 180フレーム（約3秒）無敵にする
             System.out.println("Damage taken! Lives remaining: " + lives);
 
             if (lives <= 0) {
@@ -189,6 +228,11 @@ public class GameModel {
             }
         }
     }
+
+    private void healPlayer(){
+        lives = GameConstants.PLAYER_MAX_LIVES;
+    }
+
 
     private boolean checkIntersection(GameObject obj1, GameObject obj2) {
         // 1. take the precise shapes
@@ -218,14 +262,14 @@ public class GameModel {
             // Check if object is a living hostile entity
             if (obj instanceof HostileEntity) {
                 if (checkIntersection(player, obj)) {
-                    takeDamage(); // Player loses 1 life (Fixed)
+                    playerTakesDamage(); // Player loses 1 life (Fixed)
                 }
             }
             // 2. Player vs ENEMY PROJECTILES (Feather)
             // Logic: Is it a Projectile? YES. Is it NOT my own Arrow? YES.
             else if (obj instanceof Projectile && !(obj instanceof Arrow)) {
                 if (checkIntersection(player, obj)) {
-                    takeDamage();      // Player loses 1 life (Fixed)
+                    playerTakesDamage();      // Player loses 1 life (Fixed)
                     obj.setDead(true); // Destroy the feather
                 }
             }

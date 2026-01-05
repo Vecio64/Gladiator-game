@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.Graphics;
-
 /**
  * HostileEntity
  * Abstract class representing any entity that is hostile to the player.

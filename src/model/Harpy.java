@@ -4,25 +4,25 @@ import view.ResourceManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Enemy extends HostileEntity {
+public class Harpy extends HostileEntity {
 
     private BufferedImage image;
     private int velX;
     private int velY;
 
-    public Enemy(int x, int y) {
+    public Harpy(int x, int y) {
         // Pass params to parent: x, y, width, height, HP, Score Points
         super(x, y,
-                GameConstants.ENEMY_WIDTH,
-                GameConstants.ENEMY_HEIGHT,
-                GameConstants.ENEMY_HP,
-                GameConstants.ENEMY_SCORE_POINTS);
+                GameConstants.HARPY_WIDTH,
+                GameConstants.HARPY_HEIGHT,
+                GameConstants.HARPY_HP,
+                GameConstants.HARPY_SCORE_POINTS);
 
         this.image = ResourceManager.enemyImg;
 
         // --- MOVEMENT SETUP ---
-        this.velY = GameConstants.ENEMY_YSPEED;
-        this.velX = GameConstants.ENEMY_XSPEED;
+        this.velY = GameConstants.HARPY_YSPEED;
+        this.velX = GameConstants.HARPY_XSPEED;
 
         // Randomize direction
         if (Math.random() < 0.5) {

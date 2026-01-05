@@ -14,7 +14,6 @@ public class Apollo extends Boss {
 
     private BufferedImage image;
     private int speedX = GameConstants.APOLLO_SPEED;
-    private GameModel model; // Reference to GameModel to spawn projectiles
     private boolean secondPhase = false; // Flag to track if the boss is in "Rage Mode"
 
     public Apollo(GameModel model) {
@@ -26,10 +25,10 @@ public class Apollo extends Boss {
                 GameConstants.APOLLO_WIDTH,
                 GameConstants.APOLLO_HEIGHT,
                 GameConstants.APOLLO_HP,
-                1000 // Score awarded when defeated
+                GameConstants.APOLLO_SCORE_POINTS, // Score awarded when defeated
+                model
         );
         this.image = ResourceManager.apolloImg;
-        this.model = model;
     }
 
     @Override

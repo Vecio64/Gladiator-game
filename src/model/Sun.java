@@ -40,7 +40,7 @@ public class Sun extends HostileEntity {
 
         // --- Trajectory Calculation ---
         double minAngle = 20.0;
-        double maxAngle = 180 - minAngle;
+        double maxAngle = 70;
         double angleRadians = Math.toRadians(minAngle + Math.random() * (maxAngle - minAngle));
 
         this.velX = currentSpeed * Math.cos(angleRadians);
