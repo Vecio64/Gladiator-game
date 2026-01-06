@@ -1,5 +1,7 @@
 package model;
 
+import view.ResourceManager;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,12 +24,17 @@ public class GameModel {
     private int currentLevelIndex = 0;
     private boolean isBossActive = false; //ボスのフェーズの確認
 
-    // Enemies Spawnrate
-    private float harpySpawnrate;
+    // Enemies SpawnInterval
+    private int harpySpawnTimer = 0;
+    private int harpySpawnInterval;
+    private int harpySpawnVariance;
 
     // 追加:ライフ機能用変数
     private int lives;// 初期ライフ
     private int damageTimer; // ダメージを受けた後の無敵時間（フレーム数）
+
+    //background
+    private Background background;
 
     public GameModel() {
         objects = new ArrayList<>();
@@ -40,6 +47,9 @@ public class GameModel {
         newObjectsBuffer.clear();
         player = new Player((GameConstants.FIELD_WIDTH -GameConstants.PLAYER_WIDTH)/2, GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - GameConstants.PLAYER_HEIGHT);
         objects.add(player);
+
+        // Initialize Background
+        background = new Background();
 
         isFiring = false;
         shotTimer = 0;
@@ -54,6 +64,11 @@ public class GameModel {
         this.currentLevelIndex = 0;
         this.nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
         isBossActive = false;
+
+        //spawnInterval resets
+        this.harpySpawnInterval = GameConstants.HARPY_SPAWN_INTERVAL;
+        this.harpySpawnVariance = GameConstants.HARPY_SPAWN_VARIANCE;
+        this.harpySpawnTimer = 0;
     }
 
     public static void addScore(int points){
@@ -75,6 +90,11 @@ public class GameModel {
     public void update() {
         if (state != GameState.PLAYING) return;
 
+        // Update background scrolling
+        if(background!= null) {
+            background.update();
+        }
+
         checkLevelProgression();
 
         // 追加:無敵時間の更新
@@ -86,7 +106,7 @@ public class GameModel {
         if (isFiring) {
             if (shotTimer == 0) {
                 playerShoot();
-                shotTimer = GameConstants.FPS / GameConstants.ARROW_PER_SECOND;
+                shotTimer = GameConstants.ARROW_INTERVAL;
             }
         }
         if (shotTimer > 0) {
@@ -97,12 +117,16 @@ public class GameModel {
         // We iterate through all objects to find Enemies
         for (GameObject obj : objects) {
             if (obj instanceof Harpy) {
-                if (rand.nextFloat(100) < GameConstants.FEATHER_SPAWNRATE / GameConstants.FPS) {
+                Harpy h = (Harpy) obj;
+
+                if (h.isReadyToFire()) {
                     // Calculate spawn position (center of the enemy)
-                    int featherX = obj.getX() + (GameConstants.HARPY_WIDTH -GameConstants.FEATHER_WIDTH)/2;
+                    int featherX = obj.getX() + (GameConstants.HARPY_WIDTH - GameConstants.FEATHER_WIDTH) / 2;
                     int featherY = obj.getY() + GameConstants.HARPY_HEIGHT;
 
                     newObjectsBuffer.add(new Feather(featherX, featherY));
+
+                    h.resetFireTimer();
                 }
             }
         }
@@ -143,29 +167,35 @@ public class GameModel {
         switch (levelIndex) {
             case 0: //START OF THE GAME
                 System.out.println("Start of the Game");
-                this.harpySpawnrate = GameConstants.HARPY_SPAWNRATE;
+                this.harpySpawnInterval = GameConstants.HARPY_SPAWN_INTERVAL;
+                this.harpySpawnVariance = GameConstants.HARPY_SPAWN_VARIANCE;
                 break;
 
-            case 1: // Raggiunti 100 punti
-                System.out.println("Difficulty UP! INSANE enemies.");
-                // Aumentiamo ancora (doppio rispetto all'inizio)
-                this.harpySpawnrate = GameConstants.HARPY_SPAWNRATE * 2.0f;
+            case 1:
+                System.out.println("Difficulty UP!");
+                this.harpySpawnInterval = (int)(GameConstants.HARPY_SPAWN_INTERVAL * 0.8 );//increase Spawnrate by 25%
+                this.harpySpawnVariance = (int)(GameConstants.HARPY_SPAWN_VARIANCE * 0.8 );//increase Spawnrate by 25%
                 break;
 
-            case 2: // Raggiunti 300 punti
-                System.out.println("Difficulty UP! INSANE enemies.");
-                // Aumentiamo ancora (doppio rispetto all'inizio)
-                this.harpySpawnrate = GameConstants.HARPY_SPAWNRATE * 3.0f;
+            case 2:
+                System.out.println("Difficulty UP!");
+                this.harpySpawnInterval = (int)(GameConstants.HARPY_SPAWN_INTERVAL * 0.67 );//increase Spawnrate by 50%
+                this.harpySpawnVariance = (int)(GameConstants.HARPY_SPAWN_VARIANCE * 0.67 );//increase Spawnrate by 50%
                 break;
 
-            case 3: // Raggiunti 500 punti
+            case 3:
                 System.out.println("WARNING: BOSS APPROACHING!");
                 isBossActive = true;
-                clearEnemies();
+                clearEverything();
                 spawnBoss();
                 break;
-
-            // In futuro aggiungerai qui case 3 (1500 punti), case 4, ecc.
+            case 4:
+                System.out.println("STAGE 2 START!");
+                if (background != null) {
+                    clearEverything();
+                    background.setImage(ResourceManager.stage2Img);
+                    background.setSpeed(GameConstants.SCREEN_SPEED);
+                }
         }
     }
 
@@ -176,9 +206,9 @@ public class GameModel {
     }
 
     // 全ての敵を消すメソッド
-    private void clearEnemies() {
+    private void clearEverything() {
         // "敵または羽の場合、消す"
-        objects.removeIf(obj -> obj instanceof Harpy || obj instanceof Feather);
+        objects.removeIf(obj -> obj instanceof HostileEntity || obj instanceof Projectile);
     }
 
     // プレイヤーが撃つ（Controllerから呼ばれる）
@@ -195,17 +225,26 @@ public class GameModel {
         //ボスのフェーズの時に、何もしない
         if(isBossActive) return;
 
-        if (rand.nextFloat(100) < harpySpawnrate / GameConstants.FPS) { // 3%の確率で出現（適当な頻度）
+        if(harpySpawnTimer > 0){
+            harpySpawnTimer--;
+        } else {
             int randomX = rand.nextInt(GameConstants.FIELD_WIDTH - GameConstants.HARPY_WIDTH + 1);
             Harpy e = new Harpy(randomX, GameConstants.HUD_HEIGHT - GameConstants.HARPY_HEIGHT);
             newObjectsBuffer.add(e);
+
+            int variance = harpySpawnVariance;
+            int randomVar = rand.nextInt(variance * 2) - variance; // range: -15 a +15
+
+            this.harpySpawnTimer = harpySpawnInterval + randomVar;
+
+
         }
     }
 
 
     private void spawnBoss() {
-        Apollo boss = new Apollo(this);
-        objects.add(boss);
+        Apollo apollo = new Apollo(this);
+        objects.add(apollo);
         System.out.println("APOLLO HAS DESCENDED!");
     }
 
@@ -219,7 +258,7 @@ public class GameModel {
     private void playerTakesDamage() {
         if (damageTimer == 0) { // 無敵時間中でなければダメージ
             lives--;
-            damageTimer = 180; // 180フレーム（約3秒）無敵にする
+            damageTimer = 120; // 180フレーム（約3秒）無敵にする
             System.out.println("Damage taken! Lives remaining: " + lives);
 
             if (lives <= 0) {
@@ -298,7 +337,10 @@ public class GameModel {
         }
     }
 
-
+    // 無敵時間中かどうか
+    public boolean isInvincible() {
+        return damageTimer > 0;
+    }
 
     //SETTERS & GETTERS
     public ArrayList<GameObject> getObjects() {
@@ -320,9 +362,8 @@ public class GameModel {
     public int getLives() {
         return lives;
     }
-    
-    // 無敵時間中かどうか
-    public boolean isInvincible() {
-        return damageTimer > 0;
+
+    public Background getBackground() {
+        return background;
     }
 }

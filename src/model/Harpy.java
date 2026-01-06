@@ -9,6 +9,9 @@ public class Harpy extends HostileEntity {
     private BufferedImage image;
     private int velX;
     private int velY;
+    private int fireTimer;
+
+    private boolean isInScreen;
 
     public Harpy(int x, int y) {
         // Pass params to parent: x, y, width, height, HP, Score Points
@@ -23,11 +26,14 @@ public class Harpy extends HostileEntity {
         // --- MOVEMENT SETUP ---
         this.velY = GameConstants.HARPY_YSPEED;
         this.velX = GameConstants.HARPY_XSPEED;
+        this.isInScreen = false;
 
         // Randomize direction
         if (Math.random() < 0.5) {
             this.velX = -this.velX;
         }
+
+        resetFireTimer();
     }
 
     @Override
@@ -44,18 +50,43 @@ public class Harpy extends HostileEntity {
             x = GameConstants.FIELD_WIDTH - width;
             velX = -velX;
         }
-        if (y < GameConstants.HUD_HEIGHT) {
+        if (y < GameConstants.HUD_HEIGHT && isInScreen) {
             y = GameConstants.HUD_HEIGHT;
             velY = -velY;
         }
+        if (y > GameConstants.HUD_HEIGHT){
+            isInScreen = true;
+        }
         if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height) {
-            y = GameConstants.FIELD_HEIGHT - height;
+            y = GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height;
             velY = -velY;
         }
 
         // Decrease flash timer (handled in parent variable)
-        if (flashTimer > 0) flashTimer--;
+        if (flashTimer > 0) {
+            flashTimer--;
+        }
+
+        if(fireTimer > 0) {
+            fireTimer--;
+        }
     }
+
+    public boolean isReadyToFire() {
+        return fireTimer <= 0;
+    }
+
+    public void resetFireTimer() {
+        int base = GameConstants.FEATHER_FIRE_INTERVAL;
+        int variance = GameConstants.FEATHER_FIRE_VARIANCE;
+
+        int randomVariation = (int)(Math.random() * (variance * 2)) - variance;
+
+        this.fireTimer = base + randomVariation;
+    }
+
+
+
 
     @Override
     public void draw(Graphics g) {

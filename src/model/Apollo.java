@@ -62,6 +62,10 @@ public class Apollo extends Boss {
             secondPhase = true; // Activate the flag
             System.out.println("Apollo entering Phase 2!");
         }
+
+        if(isDead){
+
+        }
     }
 
     @Override

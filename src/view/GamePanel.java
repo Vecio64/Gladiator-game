@@ -61,7 +61,15 @@ public class GamePanel extends JPanel implements KeyListener {
 
     // ゲーム本編の描画
     private void drawGameScreen(Graphics g) {
-        // 1. まずゲームオブジェクトを描画
+
+        if (model.getBackground() != null) {
+            model.getBackground().draw(g);
+        } else {
+            // Fallback: Black background if image is missing
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
+        }
+
         for (GameObject obj : model.getObjects()) {
             // 無敵時間中はプレイヤーを点滅させる
             if (obj instanceof Player && model.isInvincible()) {
@@ -73,7 +81,7 @@ public class GamePanel extends JPanel implements KeyListener {
             obj.draw(g);
         }
 
-        // 2. 画面上部に背景色とは別の色のバーを描画 (HUD背景)
+        // 画面上部に背景色とは別の色のバーを描画 (HUD背景)
         g.setColor(new Color(50, 50, 80));
         g.fillRect(0, 0, GameConstants.WINDOW_WIDTH, GameConstants.HUD_HEIGHT);
         
