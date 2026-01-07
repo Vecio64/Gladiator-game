@@ -16,7 +16,7 @@ public class Background {
     private BufferedImage image;
 
     // Screen dimensions
-    private final int WIDTH = GameConstants.FIELD_WIDTH;
+    private final int WIDTH = GameConstants.WINDOW_WIDTH;
     private final int HEIGHT = GameConstants.FIELD_HEIGHT / 2;
 
     public Background() {

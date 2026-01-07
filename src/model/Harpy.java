@@ -21,7 +21,7 @@ public class Harpy extends HostileEntity {
                 GameConstants.HARPY_HP,
                 GameConstants.HARPY_SCORE_POINTS);
 
-        this.image = ResourceManager.enemyImg;
+        this.image = ResourceManager.harpyImg;
 
         // --- MOVEMENT SETUP ---
         this.velY = GameConstants.HARPY_YSPEED;
@@ -46,8 +46,8 @@ public class Harpy extends HostileEntity {
             x = 0;
             velX = -velX;
         }
-        if (x > GameConstants.FIELD_WIDTH - width) {
-            x = GameConstants.FIELD_WIDTH - width;
+        if (x > GameConstants.WINDOW_WIDTH - width) {
+            x = GameConstants.WINDOW_WIDTH - width;
             velX = -velX;
         }
         if (y < GameConstants.HUD_HEIGHT && isInScreen) {

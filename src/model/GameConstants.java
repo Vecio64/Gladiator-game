@@ -6,10 +6,13 @@ public final class GameConstants {
 
     // 画面のサイズ
     public static final int WINDOW_WIDTH = 600;
-    public static final int WINDOW_HEIGHT = 850;
+
+    //HEIGTHS
+
     public static final int HUD_HEIGHT = 50;
-    public static final int FIELD_WIDTH = 600;
-    public static final int FIELD_HEIGHT = WINDOW_HEIGHT - HUD_HEIGHT;
+    public static final int FIELD_HEIGHT = 800;
+    public static final int BOTTOM_HUD_HEIGHT = 100;
+    public static final int WINDOW_HEIGHT = HUD_HEIGHT + FIELD_HEIGHT + BOTTOM_HUD_HEIGHT;
 
     // ゲームの設定
     public static final int FPS = 60;
@@ -22,6 +25,11 @@ public final class GameConstants {
     public static final int PLAYER_HEIGHT = PLAYER_WIDTH*923/721; // set to the image height width ration
     public static final int PLAYER_SPEED = 8;
     public static final int PLAYER_MAX_LIVES = 3;
+
+    //ABILITY TIMERS
+    public static final int ABILITY1TIMER = FPS * 10; // 10 seconds
+    public static final int ABILITY2TIMER = FPS * 10; // 10 seconds
+    public static final int ABILITY3TIMER = FPS * 10; // 10 seconds
 
     // ARROWの設定
     public static final int ARROW_WIDTH = 6;
@@ -54,14 +62,17 @@ public final class GameConstants {
     // APOLLOの設定
     public static final int APOLLO_WIDTH = 200;
     public static final int APOLLO_HEIGHT = APOLLO_WIDTH * 1556 / 2463;
-    public static final int APOLLO_SPEED = 3;
+    public static final int APOLLO_SPEED1 = 4;
+    public static final int APOLLO_SPEED2 = APOLLO_SPEED1 * 3 / 2;
     public static final int APOLLO_HP = 1;
     public static final int APOLLO_SCORE_POINTS = 1000;
 
     // SUNの設定
     public static final int SUN_WIDTH = 150;
     public static final int SUN_HEIGHT = SUN_WIDTH;
-    public static final double SUN_SPEED = 4;
+    public static final double SUN_SPEED1 = 6;
+    public static final double SUN_SPEED2 = SUN_SPEED1 * 3 / 2;
+    public static final int SUN_DAMAGE = 3;
 
 
     //SCOREの設定
@@ -83,18 +94,9 @@ public final class GameConstants {
 
     // We put them all in an Array
     public static final int[] LEVEL_MILESTONES = {
-            SCORE_STAGE1_PHASE1,
-            SCORE_STAGE1_PHASE2,
-            SCORE_STAGE1_PHASE3,
-            SCORE_FOR_BOSS_1,
-            SCORE_STAGE2_PHASE1,
-            SCORE_STAGE2_PHASE2,
-            SCORE_STAGE2_PHASE3,
-            SCORE_FOR_BOSS_2,
-            SCORE_STAGE3_PHASE1,
-            SCORE_STAGE3_PHASE2,
-            SCORE_STAGE3_PHASE3,
-            SCORE_FOR_BOSS_3
+            SCORE_STAGE1_PHASE1, SCORE_STAGE1_PHASE2, SCORE_STAGE1_PHASE3, SCORE_FOR_BOSS_1,
+            SCORE_STAGE2_PHASE1, SCORE_STAGE2_PHASE2, SCORE_STAGE2_PHASE3, SCORE_FOR_BOSS_2,
+            SCORE_STAGE3_PHASE1, SCORE_STAGE3_PHASE2, SCORE_STAGE3_PHASE3, SCORE_FOR_BOSS_3
     };
 
     //他の設定

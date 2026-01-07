@@ -26,7 +26,7 @@ public class Player extends GameObject {
 
         // 画面からはみ出さないように制限
         if (x < 0) x = 0;
-        if (x > GameConstants.FIELD_WIDTH - width) x = GameConstants.FIELD_WIDTH - width;
+        if (x > GameConstants.WINDOW_WIDTH - width) x = GameConstants.WINDOW_WIDTH - width;
         if (y < GameConstants.HUD_HEIGHT) y = GameConstants.HUD_HEIGHT;
         if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height) y = GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height;
     }

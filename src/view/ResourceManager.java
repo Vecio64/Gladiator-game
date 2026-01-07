@@ -1,9 +1,11 @@
 package view;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File; // Fileクラスのインポートが必要になる場合があります
+import java.io.InputStream;
 
 /**
  * ResourceManager
@@ -16,7 +18,7 @@ public class ResourceManager {
     // 読み込んだ画像を保持する静的変数 (Static variables)
     // どこからでも ResourceManager.playerImg のようにアクセスできます
     public static BufferedImage playerImg;
-    public static BufferedImage enemyImg;
+    public static BufferedImage harpyImg;
     public static BufferedImage arrowImg;
     public static BufferedImage featherImg;
     public static BufferedImage enemyHitImg;
@@ -27,6 +29,11 @@ public class ResourceManager {
     public static BufferedImage sunImg2;
     public static BufferedImage stage1Img;
     public static BufferedImage stage2Img;
+    public static BufferedImage heartFullImg;
+    public static BufferedImage heartEmptyImg;
+
+    // PIXEL FONT
+    public static Font pixelFont;
 
     /**
      * "res"フォルダからすべてのリソースを読み込みます。
@@ -39,12 +46,12 @@ public class ResourceManager {
             // 1. 画像を読み込む（画質を維持するため、リサイズは行いません）
             // ドット絵がぼやけないように、元の解像度のまま読み込みます
             playerImg = loadTexture("res/player.png");
-            enemyImg  = loadTexture("res/enemy.png");
+            harpyImg = loadTexture("res/enemy.png");
             apolloImg = loadTexture("res/Apollo.png");
             apolloImg2 = loadTexture("res/ApolloRed.png");
 
             // 敵がダメージを受けた時の「白いシルエット画像」を自動生成する
-            enemyHitImg = createWhiteSilhouette(enemyImg);
+            enemyHitImg = createWhiteSilhouette(harpyImg);
             apolloHitImg = createWhiteSilhouette(apolloImg);
 
             // その他の画像を読み込む
@@ -57,11 +64,34 @@ public class ResourceManager {
             stage1Img = loadTexture("res/stage1.png");
             stage2Img = loadTexture("res/stage2.png");
 
-            System.out.println("Resources loaded successfully!");
+            //その他
+            heartFullImg = loadTexture("res/heart.png");
+            heartEmptyImg = createBlackSilhouette(heartFullImg);
+
+            // --- LOAD CUSTOM FONT ---
+            try {
+                // Load the font file from the res folder
+                InputStream is = ResourceManager.class.getClassLoader().getResourceAsStream("res/PixelFont.ttf");
+
+                if (is != null) {
+                    // Create the font object (default size is 1pt)
+                    pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
+                    System.out.println("Pixel Font loaded successfully!");
+                } else {
+                    System.err.println("Error: PixelFont.ttf not found. Using default font.");
+                    pixelFont = new Font("Arial", Font.BOLD, 20); // Fallback
+                }
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+                pixelFont = new Font("Arial", Font.BOLD, 20); // Fallback
+            }
+
+            System.out.println("All Resources loaded successfully!");
         } catch (IOException e) {
             System.err.println("Error: Could not load images.");
             e.printStackTrace();
         }
+
     }
 
     // 画像を安全に読み込むためのヘルパーメソッド
@@ -107,5 +137,23 @@ public class ResourceManager {
             }
         }
         return whiteImg;
+    }
+
+    private static BufferedImage createBlackSilhouette(BufferedImage original) {
+        BufferedImage blackImg = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        for (int x = 0; x < original.getWidth(); x++) {
+            for (int y = 0; y < original.getHeight(); y++) {
+                int p = original.getRGB(x, y);
+                int a = (p >> 24) & 0xff; // Get Alpha
+
+                // If the pixel is not transparent, make it BLACK
+                if (a > 0) {
+                    // ARGB: Alpha + R(0) + G(0) + B(0)
+                    int blackColor = (a << 24) | (0 << 16) | (0 << 8) | 0;
+                    blackImg.setRGB(x, y, blackColor);
+                }
+            }
+        }
+        return blackImg;
     }
 }

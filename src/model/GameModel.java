@@ -33,8 +33,14 @@ public class GameModel {
     private int lives;// 初期ライフ
     private int damageTimer; // ダメージを受けた後の無敵時間（フレーム数）
 
+    private int ability1Timer;
+    private int ability2Timer;
+    private int ability3Timer;
+
     //background
     private Background background;
+
+    private int currentStage;
 
     public GameModel() {
         objects = new ArrayList<>();
@@ -45,7 +51,7 @@ public class GameModel {
     public void initGame() {
         objects.clear();
         newObjectsBuffer.clear();
-        player = new Player((GameConstants.FIELD_WIDTH -GameConstants.PLAYER_WIDTH)/2, GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - GameConstants.PLAYER_HEIGHT);
+        player = new Player((GameConstants.WINDOW_WIDTH -GameConstants.PLAYER_WIDTH)/2, GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - GameConstants.PLAYER_HEIGHT);
         objects.add(player);
 
         // Initialize Background
@@ -69,6 +75,8 @@ public class GameModel {
         this.harpySpawnInterval = GameConstants.HARPY_SPAWN_INTERVAL;
         this.harpySpawnVariance = GameConstants.HARPY_SPAWN_VARIANCE;
         this.harpySpawnTimer = 0;
+
+        this.currentStage = 1;
     }
 
     public static void addScore(int points){
@@ -97,10 +105,7 @@ public class GameModel {
 
         checkLevelProgression();
 
-        // 追加:無敵時間の更新
-        if (damageTimer > 0) {
-            damageTimer--;
-        }
+
 
         // --- 連射ロジック ---
         if (isFiring) {
@@ -111,6 +116,23 @@ public class GameModel {
         }
         if (shotTimer > 0) {
             shotTimer--;
+        }
+
+        // 無敵時間の更新
+        if (damageTimer > 0) {
+            damageTimer--;
+        }
+
+        if (ability1Timer > 0) {
+            ability1Timer--;
+        }
+
+        if (ability2Timer > 0) {
+            ability2Timer--;
+        }
+
+        if (ability3Timer > 0) {
+            ability3Timer--;
         }
 
         //Logic for Enemy Shooting
@@ -159,6 +181,7 @@ public class GameModel {
             //apply the effect we decided in the applyLevelEffects function
             applyLevelEffects(currentLevelIndex);
             currentLevelIndex++;
+            System.out.println("The current leve index is: " + currentLevelIndex);
             nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
         }
     }
@@ -188,6 +211,7 @@ public class GameModel {
                 isBossActive = true;
                 clearEverything();
                 spawnBoss();
+                healPlayer();
                 break;
             case 4:
                 System.out.println("STAGE 2 START!");
@@ -195,6 +219,8 @@ public class GameModel {
                     clearEverything();
                     background.setImage(ResourceManager.stage2Img);
                     background.setSpeed(GameConstants.SCREEN_SPEED);
+                    ability1Timer = 0;
+                    this.currentStage = 2;
                 }
         }
     }
@@ -220,6 +246,14 @@ public class GameModel {
         }
     }
 
+    public void ability1(){
+        if (ability1Timer > 0) return;
+        ability1Timer = GameConstants.ABILITY1TIMER;
+        Sun sun = new Sun(player.getX(), player.getY(), 0, false, true);
+        newObjectsBuffer.add(sun);
+        System.out.println("Player shoots sun");
+    }
+
     // 敵を出現させる
     public void spawnEnemy() {
         //ボスのフェーズの時に、何もしない
@@ -228,7 +262,7 @@ public class GameModel {
         if(harpySpawnTimer > 0){
             harpySpawnTimer--;
         } else {
-            int randomX = rand.nextInt(GameConstants.FIELD_WIDTH - GameConstants.HARPY_WIDTH + 1);
+            int randomX = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.HARPY_WIDTH + 1);
             Harpy e = new Harpy(randomX, GameConstants.HUD_HEIGHT - GameConstants.HARPY_HEIGHT);
             newObjectsBuffer.add(e);
 
@@ -249,7 +283,7 @@ public class GameModel {
     }
 
     public void shootSun(int ApolloX, int ApolloY, int ApolloSpeedX, boolean isSecondPhase){
-        Sun sun = new Sun(ApolloX, ApolloY, ApolloSpeedX, isSecondPhase);
+        Sun sun = new Sun(ApolloX, ApolloY, ApolloSpeedX, isSecondPhase, false);
         newObjectsBuffer.add(sun);
         System.out.println("Sun shot");
     }
@@ -300,6 +334,12 @@ public class GameModel {
         for (GameObject obj : objects) {
             // Check if object is a living hostile entity
             if (obj instanceof HostileEntity) {
+                if (obj instanceof Sun){
+                    Sun sun = (Sun) obj;
+                    if (sun.getIsFriendly()){
+                        continue;
+                    }
+                }
                 if (checkIntersection(player, obj)) {
                     playerTakesDamage(); // Player loses 1 life (Fixed)
                 }
@@ -323,18 +363,41 @@ public class GameModel {
                     // Unified check for all enemies
                     if (objB instanceof HostileEntity) {
                         HostileEntity hostile = (HostileEntity) objB;
-
+                        if (objB instanceof Sun) {
+                            Sun sun = (Sun) objB;
+                            if (sun.getIsFriendly()) {
+                                continue;
+                            }
+                        }
                         if (!arrow.isDead() && !hostile.isDead() && checkIntersection(arrow, hostile)) {
-
                             arrow.setDead(true); // Arrow breaks
-
-                            // HERE we use the variable damage!
                             hostile.takeDamage(arrow.getDamage());
                         }
                     }
                 }
             }
+            // 4. Friendly Sun vs HOSTILE ENTITIES and PROJECTILES
+            if (objA instanceof Sun) {
+                Sun sun = (Sun) objA;
+                if (sun.getIsFriendly()) {
+                    for (GameObject objB : objects) {
+                        // Unified check for all enemies
+                        if (objB instanceof HostileEntity) {
+                            HostileEntity hostile = (HostileEntity) objB;
+                            if (!sun.isDead() && !hostile.isDead() && checkIntersection(sun, hostile)) {
+                                hostile.takeDamage(sun.getDamage());
+                            }
+                        }
+                        if (objB instanceof Projectile && !(objB instanceof Arrow)){
+                            if (checkIntersection(sun, objB)) {
+                                objB.setDead(true); // Destroy the feather
+                            }
+                        }
+                    }
+                }
+            }
         }
+
     }
 
     // 無敵時間中かどうか
@@ -365,5 +428,31 @@ public class GameModel {
 
     public Background getBackground() {
         return background;
+    }
+
+    public String getStageText(){
+        if (currentStage > 3) {
+            return "EXTRA STAGE";
+        }
+        return "STAGE " + currentStage;
+    }
+
+    public int getCurrentLevelIndex(){
+        return this.currentLevelIndex;
+    }
+
+    public int getAbility1Timer() {
+        return ability1Timer;
+    }
+
+    public boolean isAbilityUnclocked(int abilityIndex) {
+        // Logic for Ability 1 (Sun)
+        if (abilityIndex == 1) {
+            // Unlocks after defeating the first boss (Apollo)
+            // Apollo is Level Index 3. So > 3 means Stage 2 started.
+            return this.currentLevelIndex > 4;
+        }
+        // Future logic for Ability 2 and 3
+        return false;
     }
 }
