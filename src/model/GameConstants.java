@@ -64,7 +64,7 @@ public final class GameConstants {
     public static final int APOLLO_HEIGHT = APOLLO_WIDTH * 1556 / 2463;
     public static final int APOLLO_SPEED1 = 4;
     public static final int APOLLO_SPEED2 = APOLLO_SPEED1 * 3 / 2;
-    public static final int APOLLO_HP = 1;
+    public static final int APOLLO_HP = 50;
     public static final int APOLLO_SCORE_POINTS = 1000;
 
     // SUNの設定
@@ -78,9 +78,9 @@ public final class GameConstants {
     //SCOREの設定
     // STAGE 1
     public static final int SCORE_STAGE1_PHASE1 = 0;
-    public static final int SCORE_STAGE1_PHASE2 = HARPY_SCORE_POINTS * 1;
-    public static final int SCORE_STAGE1_PHASE3 = HARPY_SCORE_POINTS * 3;
-    public static final int SCORE_FOR_BOSS_1 = HARPY_SCORE_POINTS * 5;
+    public static final int SCORE_STAGE1_PHASE2 = HARPY_SCORE_POINTS * 10;
+    public static final int SCORE_STAGE1_PHASE3 = HARPY_SCORE_POINTS * 30;
+    public static final int SCORE_FOR_BOSS_1 = HARPY_SCORE_POINTS * 50;
     // STAGE 2
     public static final int SCORE_STAGE2_PHASE1 = SCORE_FOR_BOSS_1 + APOLLO_SCORE_POINTS;
     public static final int SCORE_STAGE2_PHASE2 = 2000;
