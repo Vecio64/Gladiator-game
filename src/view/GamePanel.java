@@ -47,8 +47,11 @@ public class GamePanel extends JPanel implements KeyListener {
 
         if (state == GameState.TITLE) {
             drawTitleScreen(g);
-        } else if (state == GameState.PLAYING) {
+        } else if (state == GameState.PLAYING || state == GameState.PAUSED) {
             drawGameScreen(g);
+            if (state == GameState.PAUSED){
+                drawPauseScreen(g);
+            }
         } else if (state == GameState.GAMEOVER) {
             drawGameScreen(g); // Draw game screen in background
             drawGameOverScreen(g);
@@ -239,6 +242,26 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawString(msg, (GameConstants.WINDOW_WIDTH - msgWidth)/2, 350);
     }
 
+    private void drawPauseScreen(Graphics g) {
+        // 1. Semi-transparent black overlay
+        g.setColor(new Color(0, 0, 0, 150)); // 150 = Alpha (Transparency)
+        g.fillRect(0, 0, GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
+
+        // 2. "PAUSE" Text
+        g.setColor(Color.WHITE);
+        setPixelFont(g, 40f); // Large font
+        String pauseText = "PAUSE";
+        int pauseWidth = g.getFontMetrics().stringWidth(pauseText);
+        // Center text
+        g.drawString(pauseText, (GameConstants.WINDOW_WIDTH - pauseWidth) / 2, GameConstants.WINDOW_HEIGHT / 2 - 100);
+
+        // 3. Instruction Text
+        setPixelFont(g, 20f); // Smaller font
+        String resumeText = "Press [P] to Resume";
+        int resumeWidth = g.getFontMetrics().stringWidth(resumeText);
+        g.drawString(resumeText, (GameConstants.WINDOW_WIDTH - resumeWidth) / 2, GameConstants.WINDOW_HEIGHT / 2 - 50);
+    }
+
     // Draw Game Over Screen
     private void drawGameOverScreen(Graphics g) {
         // Semi-transparent overlay
@@ -322,6 +345,11 @@ public class GamePanel extends JPanel implements KeyListener {
                 model.setFiring(true);
             }
 
+            if (key == KeyEvent.VK_P) {
+                model.setState(GameState.PAUSED);
+                System.out.println("Game Paused");
+            }
+
             updatePlayerVelocity();
 
             // Placeholder for Abilities
@@ -336,6 +364,14 @@ public class GamePanel extends JPanel implements KeyListener {
             // ABILITY 3
             if (key == KeyEvent.VK_3) System.out.println("Ability 3 pressed");
         }
+
+        else if (state == GameState.PAUSED){
+            if (key == KeyEvent.VK_P){
+                model.setState(GameState.PLAYING);
+                System.out.println("Game Resumed");
+            }
+        }
+
         // Game Over State Input
         else if (state == GameState.GAMEOVER) {
             if (key == KeyEvent.VK_C) {
