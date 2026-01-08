@@ -47,11 +47,15 @@ public class GamePanel extends JPanel implements KeyListener {
 
         if (state == GameState.TITLE) {
             drawTitleScreen(g);
-        } else if (state == GameState.PLAYING || state == GameState.PAUSED) {
+        } else if (state == GameState.PLAYING || state == GameState.PAUSED || state == GameState.MESSAGE) {
             drawGameScreen(g);
             if (state == GameState.PAUSED){
                 drawPauseScreen(g);
             }
+            else if (state == GameState.MESSAGE) {
+                drawMessageScreen(g);
+            }
+
         } else if (state == GameState.GAMEOVER) {
             drawGameScreen(g); // Draw game screen in background
             drawGameOverScreen(g);
@@ -262,6 +266,56 @@ public class GamePanel extends JPanel implements KeyListener {
         g.drawString(resumeText, (GameConstants.WINDOW_WIDTH - resumeWidth) / 2, GameConstants.WINDOW_HEIGHT / 2 - 50);
     }
 
+    private void drawMessageScreen(Graphics g) {
+        // 1. Semi-transparent black background for the whole screen (dimming)
+        g.setColor(new Color(0, 0, 0, 100));
+        g.fillRect(0, 0, GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
+
+        // 2. The Message Box Dimensions
+        int boxWidth = 500;
+        int boxHeight = 400;
+        int boxX = (GameConstants.WINDOW_WIDTH - boxWidth) / 2;
+        int boxY = (GameConstants.WINDOW_HEIGHT - boxHeight) / 2;
+
+        // 3. Draw the Box Background (Dark Blue)
+        g.setColor(new Color(20, 20, 80));
+        g.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+        // 4. Draw the Box Border (White)
+        g.setColor(Color.WHITE);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(4)); // Thicker border
+        g2.drawRect(boxX, boxY, boxWidth, boxHeight);
+
+        // 5. Draw the Text
+        String[] lines = model.getCurrentMessageLines();
+        if (lines != null) {
+            setPixelFont(g, 20f); // Size for text
+            g.setColor(Color.WHITE);
+
+            int lineHeight = 30;
+            // Calculate starting Y to center the block of text vertically
+            int totalTextHeight = lines.length * lineHeight;
+            int startTextY = boxY + (boxHeight - totalTextHeight) / 2 + 10; // +10 adjustment
+
+            for (int i = 0; i < lines.length; i++) {
+                String line = lines[i];
+                // Center align each line horizontally
+                int lineWidth = g.getFontMetrics().stringWidth(line);
+                int lineX = (GameConstants.WINDOW_WIDTH - lineWidth) / 2;
+
+                g.drawString(line, lineX, startTextY + (i * lineHeight));
+            }
+        }
+
+        // 6. Draw "Press Space" prompt at the bottom of the box
+        setPixelFont(g, 14f);
+        g.setColor(Color.YELLOW);
+        String prompt = "PRESS [SPACE] TO CONTINUE";
+        int promptWidth = g.getFontMetrics().stringWidth(prompt);
+        g.drawString(prompt, (GameConstants.WINDOW_WIDTH - promptWidth) / 2, boxY + boxHeight - 20);
+    }
+
     // Draw Game Over Screen
     private void drawGameOverScreen(Graphics g) {
         // Semi-transparent overlay
@@ -347,6 +401,7 @@ public class GamePanel extends JPanel implements KeyListener {
 
             if (key == KeyEvent.VK_P) {
                 model.setState(GameState.PAUSED);
+                resetKeyState();
                 System.out.println("Game Paused");
             }
 
@@ -368,7 +423,15 @@ public class GamePanel extends JPanel implements KeyListener {
         else if (state == GameState.PAUSED){
             if (key == KeyEvent.VK_P){
                 model.setState(GameState.PLAYING);
+                resetKeyState();
                 System.out.println("Game Resumed");
+            }
+        }
+
+        else if (state == GameState.MESSAGE) {
+            if (key == KeyEvent.VK_SPACE) {
+                model.resumeGame(); // Go back to Playing
+                resetKeyState();
             }
         }
 
@@ -388,19 +451,18 @@ public class GamePanel extends JPanel implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
+        if (key == KeyEvent.VK_LEFT) leftPressed = false;
+        if (key == KeyEvent.VK_RIGHT) rightPressed = false;
+        if (key == KeyEvent.VK_UP) upPressed = false;
+        if (key == KeyEvent.VK_DOWN) downPressed = false;
 
-        if (model.getState() == GameState.PLAYING) {
-            if (key == KeyEvent.VK_LEFT) leftPressed = false;
-            if (key == KeyEvent.VK_RIGHT) rightPressed = false;
-            if (key == KeyEvent.VK_UP) upPressed = false;
-            if (key == KeyEvent.VK_DOWN) downPressed = false;
-
-            if (key == KeyEvent.VK_SPACE) {
-                model.setFiring(false);
-            }
-
+        if (key == KeyEvent.VK_SPACE) {
+            model.setFiring(false);
+        }
+        if (model.getState() == GameState.PLAYING){
             updatePlayerVelocity();
         }
+
     }
 
     @Override

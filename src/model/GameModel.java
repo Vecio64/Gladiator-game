@@ -42,6 +42,8 @@ public class GameModel {
 
     private int currentStage;
 
+    private String[] currentMessageLines;
+
     public GameModel() {
         objects = new ArrayList<>();
         newObjectsBuffer = new ArrayList<>();
@@ -75,8 +77,20 @@ public class GameModel {
         this.harpySpawnInterval = GameConstants.HARPY_SPAWN_INTERVAL;
         this.harpySpawnVariance = GameConstants.HARPY_SPAWN_VARIANCE;
         this.harpySpawnTimer = 0;
-
         this.currentStage = 1;
+
+
+        String tutorial = "WELCOME GLADIATOR!\n\n" +
+                "Controls:\n" +
+                "[KEY-ARROWS] Move\n" +
+                "[SPACE] Shoot\n" +
+                "[P] Pause\n\n" +
+                "Defeat enemies\n" +
+                "and survive.\n" +
+                "Good Luck!";
+        showMessage(tutorial);
+
+
     }
 
     public static void addScore(int points){
@@ -207,14 +221,14 @@ public class GameModel {
                 break;
 
             case 3:
-                System.out.println("WARNING: BOSS APPROACHING!");
+                showMessage("WARNING!\n\nBOSS DETECTED:\nAPOLLO\n\nPrepare for battle!");
                 isBossActive = true;
                 clearEverything();
                 spawnBoss();
                 healPlayer();
                 break;
             case 4:
-                System.out.println("STAGE 2 START!");
+                showMessage("STAGE 1 CLEARED!\n\nEntering the Heavens.\n\nPress [1] to use\nABILITY 1:\nAPOLLO'S SUN");
                 if (background != null) {
                     clearEverything();
                     background.setImage(ResourceManager.stage2Img);
@@ -222,7 +236,14 @@ public class GameModel {
                     ability1Timer = 0;
                     this.currentStage = 2;
                 }
+                break;
         }
+    }
+
+    public void showMessage(String text) {
+        // Split the text by newline character to handle multiple lines
+        this.currentMessageLines = text.split("\n");
+        this.state = GameState.MESSAGE;
     }
 
     public void bossDefeated(){
@@ -405,6 +426,25 @@ public class GameModel {
         return damageTimer > 0;
     }
 
+    public int getAbility1Timer() {
+        return ability1Timer;
+    }
+
+    public boolean isAbilityUnclocked(int abilityIndex) {
+        // Logic for Ability 1 (Sun)
+        if (abilityIndex == 1) {
+            // Unlocks after defeating the first boss (Apollo)
+            // Apollo is Level Index 3. So > 3 means Stage 2 started.
+            return this.currentLevelIndex > 4;
+        }
+        // Future logic for Ability 2 and 3
+        return false;
+    }
+
+    public void resumeGame() {
+        this.state = GameState.PLAYING;
+    }
+
     //SETTERS & GETTERS
     public ArrayList<GameObject> getObjects() {
         return objects;
@@ -441,18 +481,8 @@ public class GameModel {
         return this.currentLevelIndex;
     }
 
-    public int getAbility1Timer() {
-        return ability1Timer;
+    public String[] getCurrentMessageLines() {
+        return currentMessageLines;
     }
 
-    public boolean isAbilityUnclocked(int abilityIndex) {
-        // Logic for Ability 1 (Sun)
-        if (abilityIndex == 1) {
-            // Unlocks after defeating the first boss (Apollo)
-            // Apollo is Level Index 3. So > 3 means Stage 2 started.
-            return this.currentLevelIndex > 4;
-        }
-        // Future logic for Ability 2 and 3
-        return false;
-    }
 }
