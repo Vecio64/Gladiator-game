@@ -306,7 +306,6 @@ public class GameModel {
     public void shootSun(int ApolloX, int ApolloY, int ApolloSpeedX, boolean isSecondPhase){
         Sun sun = new Sun(ApolloX, ApolloY, ApolloSpeedX, isSecondPhase, false);
         newObjectsBuffer.add(sun);
-        System.out.println("Sun shot");
     }
 
     // ダメージ処理メソッド

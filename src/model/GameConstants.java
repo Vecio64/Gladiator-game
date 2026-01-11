@@ -8,7 +8,6 @@ public final class GameConstants {
     public static final int WINDOW_WIDTH = 600;
 
     //HEIGTHS
-
     public static final int HUD_HEIGHT = 50;
     public static final int FIELD_HEIGHT = 800;
     public static final int BOTTOM_HUD_HEIGHT = 100;
