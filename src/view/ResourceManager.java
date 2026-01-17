@@ -31,6 +31,9 @@ public class ResourceManager {
     public static BufferedImage stage2Img;
     public static BufferedImage heartFullImg;
     public static BufferedImage heartEmptyImg;
+    public static BufferedImage zeusImg;
+    public static BufferedImage zeusHitImg;
+    public static BufferedImage lightingImg;
 
     // PIXEL FONT
     public static Font pixelFont;
@@ -49,16 +52,19 @@ public class ResourceManager {
             harpyImg = loadTexture("res/enemy.png");
             apolloImg = loadTexture("res/Apollo.png");
             apolloImg2 = loadTexture("res/ApolloRed.png");
+            zeusImg = loadTexture("res/Zeus.png");
 
             // 敵がダメージを受けた時の「白いシルエット画像」を自動生成する
             enemyHitImg = createWhiteSilhouette(harpyImg);
             apolloHitImg = createWhiteSilhouette(apolloImg);
+            zeusHitImg = createWhiteSilhouette(zeusImg);
 
             // その他の画像を読み込む
             arrowImg   = loadTexture("res/arrow.png");
             featherImg = loadTexture("res/feather.png");
             sunImg = loadTexture("res/Sun.png");
             sunImg2 = loadTexture("res/SunRed.png");
+            lightingImg = loadTexture("res/lighting.png");
 
             //背景を読み込む
             stage1Img = loadTexture("res/stage1.png");
