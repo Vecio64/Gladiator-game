@@ -20,7 +20,7 @@ public class Lighting extends HostileEntity{
         this.isfriendly = friendly;
 
         this.velX = 0;
-        this.velY = 5;
+        this.velY = 20;
 
         this.image = ResourceManager.lightingImg;
 

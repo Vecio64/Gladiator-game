@@ -237,6 +237,28 @@ public class GameModel {
                     this.currentStage = 2;
                 }
                 break;
+            case 5:
+                System.out.println("Difficulty UP!");
+                this.harpySpawnInterval = (int)(GameConstants.HARPY_SPAWN_INTERVAL * 0.67 );//increase Spawnrate by 50%
+                this.harpySpawnVariance = (int)(GameConstants.HARPY_SPAWN_VARIANCE * 0.67 );//increase Spawnrate by 50%
+                break;
+            case 6:
+                showMessage("WARNING!\n\nBOSS DETECTED:\nZEUS\n\nPrepare for battle!");
+                isBossActive = true;
+                clearEverything();
+                spawnZeus();
+                healPlayer();
+                break;
+            case 7:
+                showMessage("STAGE 2 CLEARED!\n\nEntering the next stage.\n\nPress [2] to use\nABILITY 2:\nZEUS'S LIGHTING");
+                if (background != null) {
+                    clearEverything();
+                    background.setImage(ResourceManager.stage2Img);
+                    background.setSpeed(GameConstants.SCREEN_SPEED);
+                    ability1Timer = 0;
+                    this.currentStage = 2;
+                }
+                break;
         }
     }
 
@@ -306,6 +328,17 @@ public class GameModel {
     public void shootSun(int ApolloX, int ApolloY, int ApolloSpeedX, boolean isSecondPhase){
         Sun sun = new Sun(ApolloX, ApolloY, ApolloSpeedX, isSecondPhase, false);
         newObjectsBuffer.add(sun);
+    }
+
+    public void spawnZeus() {
+        Zeus zeus = new Zeus(this);
+        objects.add(zeus);
+        System.out.println("ZEUS HAS DESCENDED!");
+    }
+
+    public void shootLighting(int ZuesX, int ZeusY, int ZeusSpeedX) {
+        Lighting lighting = new Lighting(ZuesX, ZeusY, ZeusSpeedX, false);
+        newObjectsBuffer.add(lighting);
     }
 
     // ダメージ処理メソッド

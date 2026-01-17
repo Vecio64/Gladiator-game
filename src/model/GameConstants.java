@@ -73,6 +73,18 @@ public final class GameConstants {
     public static final double SUN_SPEED2 = SUN_SPEED1 * 3 / 2;
     public static final int SUN_DAMAGE = 3;
 
+    // ZEUSの設定
+    public static final int ZEUS_SPEED = 4;
+    public static final int ZEUS_WIDTH = 150;
+    public static final int ZUES_HEIGHT = 150;
+    public static final int ZEUS_HP = 50;
+    public static final int ZEUS_SCORE_POINTS = 1500;
+
+    //LIGHTINGの設定
+    public static final int LIGHTING_WIDTH = 25;
+    public static final int LIGHTING_HEIGHT = 150;
+    public static final int LIGHTING_DAMAGE = 3;
+
 
     //SCOREの設定
     // STAGE 1
