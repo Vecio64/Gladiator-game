@@ -4,33 +4,27 @@ import view.ResourceManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-/**
- * Arrow Class
- * Projectile fired by the player. Moves upwards.
- */
 public class Arrow extends Projectile {
 
-    private BufferedImage image;
-
-    public Arrow(int x, int y) {
-        // We pass the VARIABLE damage from GameConstants (or Player stats in the future)
-        super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT, GameConstants.ARROW_DAMAGE);
-        this.image = ResourceManager.arrowImg;
+    public Arrow(int x, int y, int arrowDamage) {
+        // Alignment: PLAYER
+        // Power Level: 1 (Light) -> Can be destroyed by Boulders (Lvl 2) or Sun (Lvl 3)
+        // Damage: Standard Arrow Damage
+        super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT, ResourceManager.arrowImg,
+                Alignment.PLAYER, 1, arrowDamage);
     }
 
     @Override
     public void move() {
-        y -= GameConstants.ARROW_SPEED; // Moves Up
-
-        // Use the common check from Projectile class
-        if (isOutOfBounds()) {
+        y -= GameConstants.ARROW_SPEED;
+        if (y < -height) {
             isDead = true;
         }
     }
 
     @Override
     public void draw(Graphics g) {
-        if (image != null) {
+        if (ResourceManager.arrowImg != null) {
             g.drawImage(image, x, y, width, height, null);
         } else {
             g.setColor(Color.YELLOW);

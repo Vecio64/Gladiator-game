@@ -4,24 +4,22 @@ import view.ResourceManager;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Harpy extends HostileEntity {
+public class Harpy extends Minion {
 
-    private BufferedImage image;
     private int velX;
     private int velY;
     private int fireTimer;
-
     private boolean isInScreen;
 
-    public Harpy(int x, int y) {
+    public Harpy(int x, int y, GameModel model) {
         // Pass params to parent: x, y, width, height, HP, Score Points
         super(x, y,
                 GameConstants.HARPY_WIDTH,
                 GameConstants.HARPY_HEIGHT,
+                ResourceManager.harpyImg,
                 GameConstants.HARPY_HP,
-                GameConstants.HARPY_SCORE_POINTS);
-
-        this.image = ResourceManager.harpyImg;
+                GameConstants.HARPY_SCORE_POINTS,
+                model);
 
         // --- MOVEMENT SETUP ---
         this.velY = GameConstants.HARPY_YSPEED;
@@ -38,6 +36,7 @@ public class Harpy extends HostileEntity {
 
     @Override
     public void move() {
+        super.move();
         x += velX;
         y += velY;
 
@@ -62,18 +61,18 @@ public class Harpy extends HostileEntity {
             velY = -velY;
         }
 
-        // Decrease flash timer (handled in parent variable)
-        if (flashTimer > 0) {
-            flashTimer--;
-        }
-
         if(fireTimer > 0) {
             fireTimer--;
         }
+        if (fireTimer <= 0){
+            throwFeather();
+            resetFireTimer();
+        }
     }
 
-    public boolean isReadyToFire() {
-        return fireTimer <= 0;
+    private void throwFeather(){
+        Feather f = new Feather (x + (width - GameConstants.FEATHER_WIDTH)/2, y + height);
+        model.spawnEnemyProjectile(f);
     }
 
     public void resetFireTimer() {
@@ -90,7 +89,7 @@ public class Harpy extends HostileEntity {
 
     @Override
     public void draw(Graphics g) {
-        BufferedImage imgToDraw = (flashTimer > 0) ? ResourceManager.enemyHitImg : image;
+        BufferedImage imgToDraw = (flashTimer > 0) ? ResourceManager.harpyHitImg : image;
 
         if (image != null) {
             if (velX < 0) {

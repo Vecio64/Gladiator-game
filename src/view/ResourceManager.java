@@ -15,25 +15,57 @@ import java.io.InputStream;
  */
 public class ResourceManager {
 
-    // 読み込んだ画像を保持する静的変数 (Static variables)
-    // どこからでも ResourceManager.playerImg のようにアクセスできます
+
+    // PLAYER
     public static BufferedImage playerImg;
-    public static BufferedImage harpyImg;
     public static BufferedImage arrowImg;
+
+    //******************
+    // MINIONS
+    //******************
+    // HARPY
+    public static BufferedImage harpyImg;
+    public static BufferedImage harpyHitImg;
+    // HARPY's FEATHER
     public static BufferedImage featherImg;
-    public static BufferedImage enemyHitImg;
+    // CYCLOPS
+    public static BufferedImage cyclopsImg;
+    public static BufferedImage cyclopsImg2;
+    public static BufferedImage cyclopsHitImg;
+    public static BufferedImage cyclopsHitImg2;
+    // CYCLOPS's BOULCER
+    public static BufferedImage boulderImg;
+
+    //******************
+    // BOSSES
+    //******************
+
+    // APOLLO
     public static BufferedImage apolloImg;
     public static BufferedImage apolloImg2;
     public static BufferedImage apolloHitImg;
+    // APOLLO's SUN
     public static BufferedImage sunImg;
     public static BufferedImage sunImg2;
+    // ZEUS
+    public static BufferedImage zeusImg;
+    public static BufferedImage zeusImg2;
+    public static BufferedImage zeusHitImg;
+    public static BufferedImage zeusHitImg2;
+    // ZEUS's LIGHTNING
+    public static BufferedImage lightingImg;
+    public static BufferedImage lightingImg2;
+
+    //******************
+    // HUD
+    //******************
+
+    // STAGES
     public static BufferedImage stage1Img;
     public static BufferedImage stage2Img;
+    // HEART
     public static BufferedImage heartFullImg;
     public static BufferedImage heartEmptyImg;
-    public static BufferedImage zeusImg;
-    public static BufferedImage zeusHitImg;
-    public static BufferedImage lightingImg;
 
     // PIXEL FONT
     public static Font pixelFont;
@@ -46,31 +78,54 @@ public class ResourceManager {
         try {
             System.out.println("Loading resources...");
 
-            // 1. 画像を読み込む（画質を維持するため、リサイズは行いません）
-            // ドット絵がぼやけないように、元の解像度のまま読み込みます
+            // PLAYER
             playerImg = loadTexture("res/player.png");
+            arrowImg   = loadTexture("res/arrow.png");
+
+            //******************
+            // MINIONS
+            //******************
+            // HARPY
             harpyImg = loadTexture("res/enemy.png");
+            harpyHitImg = createWhiteSilhouette(harpyImg);
+            // HARPY's FEATHER
+            featherImg = loadTexture("res/feather.png");
+            // CYCLOPS
+            cyclopsImg = loadTexture("res/cyclops_openedwings.png");
+            cyclopsImg2 = loadTexture("res/cyclops_closedwings.png");
+            cyclopsHitImg = createWhiteSilhouette(cyclopsImg);
+            cyclopsHitImg2 = createWhiteSilhouette(cyclopsImg2);
+            // CYCLOPS's BOULDER
+            boulderImg = loadTexture("res/boulder.png");
+
+            //******************
+            // BOSSES
+            //******************
+
+            // APOLLO
             apolloImg = loadTexture("res/Apollo.png");
             apolloImg2 = loadTexture("res/ApolloRed.png");
-            zeusImg = loadTexture("res/Zeus.png");
-
-            // 敵がダメージを受けた時の「白いシルエット画像」を自動生成する
-            enemyHitImg = createWhiteSilhouette(harpyImg);
             apolloHitImg = createWhiteSilhouette(apolloImg);
+            // APOLLO's SUN
+            sunImg = loadTexture("res/sun.png");
+            sunImg2 = loadTexture("res/sunRed.png");
+            // ZEUS
+            zeusImg = loadTexture("res/Zeus.png");
+            zeusImg2 = loadTexture("res/ZeusAngry.png");
             zeusHitImg = createWhiteSilhouette(zeusImg);
-
-            // その他の画像を読み込む
-            arrowImg   = loadTexture("res/arrow.png");
-            featherImg = loadTexture("res/feather.png");
-            sunImg = loadTexture("res/Sun.png");
-            sunImg2 = loadTexture("res/SunRed.png");
+            zeusHitImg2 = createWhiteSilhouette(zeusImg2);
+            // ZEUS's LIGHTNING
             lightingImg = loadTexture("res/lighting.png");
+            lightingImg2 = loadTexture("res/lightingAngry.png");
 
-            //背景を読み込む
+            //******************
+            // HUD
+            //******************
+
+            // STAGES
             stage1Img = loadTexture("res/stage1.png");
             stage2Img = loadTexture("res/stage2.png");
-
-            //その他
+            // HEART
             heartFullImg = loadTexture("res/heart.png");
             heartEmptyImg = createBlackSilhouette(heartFullImg);
 

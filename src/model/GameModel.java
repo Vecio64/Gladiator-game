@@ -4,6 +4,7 @@ import view.ResourceManager;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.awt.geom.Area;
 
@@ -17,17 +18,14 @@ public class GameModel {
     private GameState state; // 現在のゲーム状態
     private boolean isFiring; // スペースキーが押されているか
     private int shotTimer; // 連射間隔を制御するタイマー
+    private int arrowDamage;
+    private int arrowInterval;
 
     // Score progression
     private static int score = 0; //スコアの導入
     private int nextTargetScore;
     private int currentLevelIndex = 0;
     private boolean isBossActive = false; //ボスのフェーズの確認
-
-    // Enemies SpawnInterval
-    private int harpySpawnTimer = 0;
-    private int harpySpawnInterval;
-    private int harpySpawnVariance;
 
     // 追加:ライフ機能用変数
     private int lives;// 初期ライフ
@@ -40,19 +38,24 @@ public class GameModel {
     //background
     private Background background;
 
+    // for writing the stage number in GamePanel
     private int currentStage;
 
     private String[] currentMessageLines;
 
+    private List<EnemySpawner> activeSpawners;
+
     public GameModel() {
         objects = new ArrayList<>();
         newObjectsBuffer = new ArrayList<>();
+        activeSpawners = new ArrayList<>();
         state = GameState.TITLE; // 最初はタイトル画面から
     }
 
     public void initGame() {
         objects.clear();
         newObjectsBuffer.clear();
+        activeSpawners.clear();
         player = new Player((GameConstants.WINDOW_WIDTH -GameConstants.PLAYER_WIDTH)/2, GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - GameConstants.PLAYER_HEIGHT);
         objects.add(player);
 
@@ -61,6 +64,8 @@ public class GameModel {
 
         isFiring = false;
         shotTimer = 0;
+        arrowDamage = GameConstants.ARROW_DAMAGE;
+        arrowInterval = GameConstants.ARROW_INTERVAL;
         state = GameState.PLAYING;
         score = 0; //スコアをリセット
 
@@ -73,10 +78,8 @@ public class GameModel {
         this.nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
         isBossActive = false;
 
-        //spawnInterval resets
-        this.harpySpawnInterval = GameConstants.HARPY_SPAWN_INTERVAL;
-        this.harpySpawnVariance = GameConstants.HARPY_SPAWN_VARIANCE;
-        this.harpySpawnTimer = 0;
+        // STAGE 1 SETUP: Add Harpy Spawner
+        activeSpawners.add(new EnemySpawner(Harpy.class, GameConstants.HARPY_SPAWN_INTERVAL, GameConstants.HARPY_SPAWN_VARIANCE));
         this.currentStage = 1;
 
 
@@ -149,20 +152,13 @@ public class GameModel {
             ability3Timer--;
         }
 
-        //Logic for Enemy Shooting
-        // We iterate through all objects to find Enemies
-        for (GameObject obj : objects) {
-            if (obj instanceof Harpy) {
-                Harpy h = (Harpy) obj;
-
-                if (h.isReadyToFire()) {
-                    // Calculate spawn position (center of the enemy)
-                    int featherX = obj.getX() + (GameConstants.HARPY_WIDTH - GameConstants.FEATHER_WIDTH) / 2;
-                    int featherY = obj.getY() + GameConstants.HARPY_HEIGHT;
-
-                    newObjectsBuffer.add(new Feather(featherX, featherY));
-
-                    h.resetFireTimer();
+        // --- NEW SPAWN LOGIC ---
+        // Iterate through all active spawners
+        if (!isBossActive) {
+            for (EnemySpawner spawner : activeSpawners) {
+                // If spawner says "True", create that enemy
+                if (spawner.update()) {
+                    spawnMinion(spawner.getEnemyType());
                 }
             }
         }
@@ -170,7 +166,6 @@ public class GameModel {
         // オブジェクト追加
         objects.addAll(newObjectsBuffer);
         newObjectsBuffer.clear();
-        spawnEnemy();
 
         // 移動
         for (GameObject obj : objects) {
@@ -184,6 +179,35 @@ public class GameModel {
         objects.removeIf(obj -> obj.isDead());
     }
 
+    /**
+     * Helper method to instantiate the correct enemy based on Class type.
+     */
+    private void spawnMinion(Class<? extends Minion> type) {
+        int x,y;
+        if (type == Harpy.class) {
+            x = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.HARPY_WIDTH); // Simple random X
+            y = GameConstants.HUD_HEIGHT - GameConstants.HARPY_HEIGHT; // Start at top
+            Harpy h = new Harpy(x, y, this);
+            newObjectsBuffer.add(h);
+        }
+        else if (type == Cyclops.class) {
+            x = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.CYCLOPS_WIDTH); // Simple random X
+            y = GameConstants.HUD_HEIGHT - GameConstants.CYCLOPS_HEIGHT;
+            Cyclops g = new Cyclops(x, y, this); // Pass 'this' (GameModel)
+            newObjectsBuffer.add(g);
+        }
+    }
+
+    /**
+     * Allows enemies (Minions/Bosses) to add projectiles to the game.
+     * Using a specific method is safer than exposing the whole list.
+     */
+    public void spawnEnemyProjectile(Projectile p) {
+        if (p != null) {
+            newObjectsBuffer.add(p);
+        }
+    }
+
 
     private void checkLevelProgression() {
         // ボスがいたら、何もしない
@@ -195,7 +219,7 @@ public class GameModel {
             //apply the effect we decided in the applyLevelEffects function
             applyLevelEffects(currentLevelIndex);
             currentLevelIndex++;
-            System.out.println("The current leve index is: " + currentLevelIndex);
+            System.out.println("The current level index is: " + currentLevelIndex);
             nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
         }
     }
@@ -204,61 +228,83 @@ public class GameModel {
         switch (levelIndex) {
             case 0: //START OF THE GAME
                 System.out.println("Start of the Game");
-                this.harpySpawnInterval = GameConstants.HARPY_SPAWN_INTERVAL;
-                this.harpySpawnVariance = GameConstants.HARPY_SPAWN_VARIANCE;
                 break;
 
             case 1:
                 System.out.println("Difficulty UP!");
-                this.harpySpawnInterval = (int)(GameConstants.HARPY_SPAWN_INTERVAL * 0.8 );//increase Spawnrate by 25%
-                this.harpySpawnVariance = (int)(GameConstants.HARPY_SPAWN_VARIANCE * 0.8 );//increase Spawnrate by 25%
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.8);
                 break;
 
             case 2:
                 System.out.println("Difficulty UP!");
-                this.harpySpawnInterval = (int)(GameConstants.HARPY_SPAWN_INTERVAL * 0.67 );//increase Spawnrate by 50%
-                this.harpySpawnVariance = (int)(GameConstants.HARPY_SPAWN_VARIANCE * 0.67 );//increase Spawnrate by 50%
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.8);
                 break;
 
             case 3:
                 showMessage("WARNING!\n\nBOSS DETECTED:\nAPOLLO\n\nPrepare for battle!");
                 isBossActive = true;
                 clearEverything();
-                spawnBoss();
+                spawnApollo();
                 healPlayer();
                 break;
             case 4:
-                showMessage("STAGE 1 CLEARED!\n\nEntering the Heavens.\n\nPress [1] to use\nABILITY 1:\nAPOLLO'S SUN");
+                showMessage("STAGE 1 CLEARED!\n\nEntering the Heavens...\n\nArrow Damage doubled!\n\n Press [1] to use\nABILITY 1:\nAPOLLO'S SUN");
                 if (background != null) {
                     clearEverything();
+                    healPlayer();
                     background.setImage(ResourceManager.stage2Img);
                     background.setSpeed(GameConstants.SCREEN_SPEED);
                     ability1Timer = 0;
                     this.currentStage = 2;
+
+                    // DOUBLE ARROW DAMAGE
+                    arrowDamage*=2;
+
+                    // Clear old spawners (remove Stage 1 config)
+                    activeSpawners.clear();
+                    // Harpy Spawner
+                    activeSpawners.add(new EnemySpawner(Harpy.class, 100, 50));
+                    // Cyclops Spawner
+                    activeSpawners.add(new EnemySpawner(Cyclops.class,
+                             GameConstants.CYCLOPS_SPAWN_INTERVAL,
+                             GameConstants.CYCLOPS_SPAWN_VARIANCE));
+
                 }
                 break;
             case 5:
                 System.out.println("Difficulty UP!");
-                this.harpySpawnInterval = (int)(GameConstants.HARPY_SPAWN_INTERVAL * 0.67 );//increase Spawnrate by 50%
-                this.harpySpawnVariance = (int)(GameConstants.HARPY_SPAWN_VARIANCE * 0.67 );//increase Spawnrate by 50%
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
                 break;
             case 6:
+                System.out.println("Difficulty UP!");
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
+                break;
+            case 7:
                 showMessage("WARNING!\n\nBOSS DETECTED:\nZEUS\n\nPrepare for battle!");
                 isBossActive = true;
                 clearEverything();
                 spawnZeus();
                 healPlayer();
                 break;
-            case 7:
-                showMessage("STAGE 2 CLEARED!\n\nEntering the next stage.\n\nPress [2] to use\nABILITY 2:\nZEUS'S LIGHTING");
+            case 8:
+                showMessage("STAGE 2 CLEARED!\n\nEntering the INFERNO...\n\nShooting speed increased!\n\nPress [2] to use\nABILITY 2:\nZEUS'S LIGHTING");
                 if (background != null) {
                     clearEverything();
-                    background.setImage(ResourceManager.stage2Img);
-                    background.setSpeed(GameConstants.SCREEN_SPEED);
-                    ability1Timer = 0;
-                    this.currentStage = 2;
+                    background.setImage(ResourceManager.stage1Img);
+                    background.setSpeed(0);
+                    ability2Timer = 0;
+                    arrowInterval = GameConstants.ARROW_INTERVAL2;
+                    this.currentStage = 3;
+                    activeSpawners.clear();
+                    activeSpawners.add(new EnemySpawner(Harpy.class, 100, 50));
+                    // Cyclops Spawner
+                    activeSpawners.add(new EnemySpawner(Cyclops.class,
+                            GameConstants.CYCLOPS_SPAWN_INTERVAL,
+                            GameConstants.CYCLOPS_SPAWN_VARIANCE));
                 }
                 break;
+            case 9:
+
         }
     }
 
@@ -278,13 +324,14 @@ public class GameModel {
     private void clearEverything() {
         // "敵または羽の場合、消す"
         objects.removeIf(obj -> obj instanceof HostileEntity || obj instanceof Projectile);
+        newObjectsBuffer.removeIf(obj -> obj instanceof HostileEntity || obj instanceof Projectile);
     }
 
     // プレイヤーが撃つ（Controllerから呼ばれる）
     public void playerShoot() {
         if (!isGameOver) {
             // プレイヤーの中央上から発射
-            Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH-GameConstants.ARROW_WIDTH)/2, player.getY() - GameConstants.ARROW_HEIGHT);
+            Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH-GameConstants.ARROW_WIDTH)/2, player.getY() - GameConstants.ARROW_HEIGHT, arrowDamage);
             newObjectsBuffer.add(a);
         }
     }
@@ -292,53 +339,35 @@ public class GameModel {
     public void ability1(){
         if (ability1Timer > 0) return;
         ability1Timer = GameConstants.ABILITY1TIMER;
-        Sun sun = new Sun(player.getX(), player.getY(), 0, false, true);
-        newObjectsBuffer.add(sun);
+        Sun sun = new Sun(
+                player.getX() + GameConstants.PLAYER_WIDTH / 2,
+                player.getY(),
+                0, false, true
+        );        newObjectsBuffer.add(sun);
         System.out.println("Player shoots sun");
     }
 
-    // 敵を出現させる
-    public void spawnEnemy() {
-        //ボスのフェーズの時に、何もしない
-        if(isBossActive) return;
-
-        if(harpySpawnTimer > 0){
-            harpySpawnTimer--;
-        } else {
-            int randomX = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.HARPY_WIDTH + 1);
-            Harpy e = new Harpy(randomX, GameConstants.HUD_HEIGHT - GameConstants.HARPY_HEIGHT);
-            newObjectsBuffer.add(e);
-
-            int variance = harpySpawnVariance;
-            int randomVar = rand.nextInt(variance * 2) - variance; // range: -15 a +15
-
-            this.harpySpawnTimer = harpySpawnInterval + randomVar;
-
-
-        }
+    public void ability2(){
+        if (ability2Timer > 0) return;
+        ability2Timer = GameConstants.ABILITY2TIMER;
+        Lighting l = new Lighting(
+                player.getX() + GameConstants.PLAYER_WIDTH / 2,
+                player.getY(),
+                0, false, true, false
+        );        newObjectsBuffer.add(l);
+        System.out.println("Player shoots Lighting");
     }
 
-
-    private void spawnBoss() {
+    private void spawnApollo() {
         Apollo apollo = new Apollo(this);
         objects.add(apollo);
         System.out.println("APOLLO HAS DESCENDED!");
-    }
-
-    public void shootSun(int ApolloX, int ApolloY, int ApolloSpeedX, boolean isSecondPhase){
-        Sun sun = new Sun(ApolloX, ApolloY, ApolloSpeedX, isSecondPhase, false);
-        newObjectsBuffer.add(sun);
     }
 
     public void spawnZeus() {
         Zeus zeus = new Zeus(this);
         objects.add(zeus);
         System.out.println("ZEUS HAS DESCENDED!");
-    }
-
-    public void shootLighting(int ZuesX, int ZeusY, int ZeusSpeedX) {
-        Lighting lighting = new Lighting(ZuesX, ZeusY, ZeusSpeedX, false);
-        newObjectsBuffer.add(lighting);
     }
 
     // ダメージ処理メソッド
@@ -380,85 +409,127 @@ public class GameModel {
         return !area1.isEmpty();
     }
 
-    // 当たり判定ロジック
+    /**
+     * Centralized Collision Logic.
+     * Iterates through all objects to check for intersections.
+     */
     private void checkCollisions() {
+        for (int i = 0; i < objects.size(); i++) {
+            GameObject objA = objects.get(i);
+            if (objA.isDead()) continue;
 
-        // 1. Player vs ANYTHING HOSTILE (Enemy, Boss, Sun)
-        for (GameObject obj : objects) {
-            // Check if object is a living hostile entity
-            if (obj instanceof HostileEntity) {
-                if (obj instanceof Sun){
-                    Sun sun = (Sun) obj;
-                    if (sun.getIsFriendly()){
-                        continue;
-                    }
-                }
-                if (checkIntersection(player, obj)) {
-                    playerTakesDamage(); // Player loses 1 life (Fixed)
-                }
-            }
-            // 2. Player vs ENEMY PROJECTILES (Feather)
-            // Logic: Is it a Projectile? YES. Is it NOT my own Arrow? YES.
-            else if (obj instanceof Projectile && !(obj instanceof Arrow)) {
-                if (checkIntersection(player, obj)) {
-                    playerTakesDamage();      // Player loses 1 life (Fixed)
-                    obj.setDead(true); // Destroy the feather
+            for (int j = i + 1; j < objects.size(); j++) {
+                GameObject objB = objects.get(j);
+                if (objB.isDead()) continue;
+
+                if (checkIntersection(objA, objB)) {
+                    handleCollision(objA, objB);
                 }
             }
         }
-
-        // 3. Arrow vs HOSTILE ENTITIES (Enemy, Boss, Sun)
-        for (GameObject objA : objects) {
-            if (objA instanceof Arrow) {
-                Arrow arrow = (Arrow) objA;
-
-                for (GameObject objB : objects) {
-                    // Unified check for all enemies
-                    if (objB instanceof HostileEntity) {
-                        HostileEntity hostile = (HostileEntity) objB;
-                        if (objB instanceof Sun) {
-                            Sun sun = (Sun) objB;
-                            if (sun.getIsFriendly()) {
-                                continue;
-                            }
-                        }
-                        if (!arrow.isDead() && !hostile.isDead() && checkIntersection(arrow, hostile)) {
-                            arrow.setDead(true); // Arrow breaks
-                            hostile.takeDamage(arrow.getDamage());
-                        }
-                    }
-                }
-            }
-            // 4. Friendly Sun vs HOSTILE ENTITIES and PROJECTILES
-            if (objA instanceof Sun) {
-                Sun sun = (Sun) objA;
-                if (sun.getIsFriendly()) {
-                    for (GameObject objB : objects) {
-                        // Unified check for all enemies
-                        if (objB instanceof HostileEntity) {
-                            HostileEntity hostile = (HostileEntity) objB;
-                            if (!sun.isDead() && !hostile.isDead() && checkIntersection(sun, hostile)) {
-                                hostile.takeDamage(sun.getDamage());
-                            }
-                        }
-                        if (objB instanceof Projectile && !(objB instanceof Arrow)){
-                            if (checkIntersection(sun, objB)) {
-                                objB.setDead(true); // Destroy the feather
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
     }
+
+    /**
+     * Handles the specific logic when two objects collide.
+     * Uses Projectile Power Levels and Alignment to determine the outcome.
+     */
+    private void handleCollision(GameObject a, GameObject b) {
+
+        // --- CASE 1: PROJECTILE vs PROJECTILE ---
+        if (a instanceof Projectile && b instanceof Projectile) {
+            Projectile p1 = (Projectile) a;
+            Projectile p2 = (Projectile) b;
+
+            // Same team projectiles do not destroy each other
+            if (p1.getAlignment() == p2.getAlignment()) return;
+
+            // Compare Power Levels to see who survives
+            if (p1.getPowerLevel() > p2.getPowerLevel()) {
+                p2.setDead(); // p1 dominates
+
+                // SUN CASE: p1 is a Sun, it takes damage equal to p2's damage
+                if (p1 instanceof BossProjectile) {
+                    ((BossProjectile) p1).reduceHealth(p2.getDamage());
+                }
+
+            } else if (p2.getPowerLevel() > p1.getPowerLevel()) {
+                p1.setDead(); // p2 dominates
+
+                // SUN CASE: If p2 is a Sun, it takes damage equal to p1's damage
+                if (p2 instanceof BossProjectile) {
+                    ((BossProjectile) p2).reduceHealth(p1.getDamage());
+                }
+
+            } else {
+                // Equal power (e.g., Arrow vs Feather) -> Both destroyed
+                p1.setDead();
+                p2.setDead();
+            }
+            return;
+        }
+
+        // --- CASE 2: PROJECTILE vs LIVING ENTITY (Player or Enemy) ---
+        Projectile proj = null;
+        GameObject entity = null;
+
+        // Identify which is which
+        if (a instanceof Projectile) { proj = (Projectile) a; entity = b; }
+        else if (b instanceof Projectile) { proj = (Projectile) b; entity = a; }
+
+        if (proj != null) {
+            // Sub-case A: Projectile hits Player
+            if (entity instanceof Player) {
+                if (proj.getAlignment() == Alignment.ENEMY) {
+                    playerTakesDamage();
+                    if (!proj.isPenetrating()) proj.setDead();
+                }
+            }
+            // Sub-case B: Projectile hits Enemy (Harpy, Apollo, Golem, etc.)
+            else if (entity instanceof HostileEntity) {
+                HostileEntity enemy = (HostileEntity) entity;
+
+                // Only damage if the projectile belongs to the Player
+                if (proj.getAlignment() == Alignment.PLAYER) {
+                    enemy.takeDamage(proj.getDamage());
+
+                    // SUN CASE: If the projectile is a Sun, it also loses HP upon contact
+                    if (proj instanceof BossProjectile) {
+                        ((BossProjectile) proj).reduceHealth(1);
+                    }
+
+                    else if (!proj.isPenetrating()) {
+                        proj.setDead();
+                    }
+                }
+            }
+            return;
+        }
+
+        // --- CASE 3: PHYSICAL COLLISION (Player vs Enemy Body) ---
+        if ((a instanceof Player && b instanceof HostileEntity) ||
+                (b instanceof Player && a instanceof HostileEntity)) {
+            playerTakesDamage();
+        }
+    }
+
 
     // 無敵時間中かどうか
     public boolean isInvincible() {
         return damageTimer > 0;
     }
 
-    public int getAbility1Timer() {
+    public int getAbilityNthTimer(int n) {
+        switch (n){
+            case 1 -> {
+                return ability1Timer;
+            }
+            case 2 -> {
+                return ability2Timer;
+            }
+            case 3 -> {
+                return ability3Timer;
+            }
+        }
         return ability1Timer;
     }
 
@@ -466,9 +537,16 @@ public class GameModel {
         // Logic for Ability 1 (Sun)
         if (abilityIndex == 1) {
             // Unlocks after defeating the first boss (Apollo)
-            // Apollo is Level Index 3. So > 3 means Stage 2 started.
+            // Apollo is Level Index 4. So > 4 means Stage 2 started.
             return this.currentLevelIndex > 4;
         }
+        // Logic for Ability 2 (Lighting)
+        if (abilityIndex == 2) {
+            // Unlocks after defeating the second boss (Zeus)
+            // Zeus is Level Index 8. So > 8 means Stage 3 started.
+            return this.currentLevelIndex > 8;
+        }
+
         // Future logic for Ability 2 and 3
         return false;
     }

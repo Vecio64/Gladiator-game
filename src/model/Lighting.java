@@ -3,52 +3,54 @@ package model;
 import view.ResourceManager;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
 
-public class Lighting extends HostileEntity{
+public class Lighting extends BossProjectile {
 
-    private BufferedImage image;
-    private double preciseX, preciseY;
-    private double velX, velY;
-    private boolean isfriendly;
-    private int damage = GameConstants.SUN_DAMAGE;
+    private int velY;
 
-    public Lighting(int x, int y, int ZeusSpeedX, boolean friendly) {
-        super(0, 0, GameConstants.LIGHTING_WIDTH, GameConstants.LIGHTING_HEIGHT, 1, 0);
+    public Lighting(int x, int y, int ZeusSpeedX, boolean isSecondPhase, boolean friendly, boolean ability2Started) {
+        super(0,
+                0,
+                GameConstants.LIGHTING_WIDTH,
+                GameConstants.LIGHTING_HEIGHT,
+                isSecondPhase ? ResourceManager.lightingImg2 : ResourceManager.lightingImg,
+                friendly ? Alignment.PLAYER : Alignment.ENEMY,
+                3,
+                GameConstants.LIGHTING_DAMAGE);
 
-        isInvincible = true;
-        this.isfriendly = friendly;
+        this.isPlayerProjectile = friendly;
+        this.isPenetrating = true;
 
-        this.velX = 0;
-        this.velY = 20;
-
-        this.image = ResourceManager.lightingImg;
-
-
-        if (!friendly) {
-            // zeusが打つとき
-            this.x = x;
-            this.y = y;
-            this.preciseX = x;
-            this.preciseY = y;
+        if (isSecondPhase) {
+            velY = GameConstants.LIGHTING_SPEED2;
         } else {
-            // playerが打つとき
-            this.x = x;
-            this.y = y;
-            this.preciseX = x;
-            this.preciseY = y;
+            velY = GameConstants.LIGHTING_SPEED1;
+        }
+
+        if(isPlayerProjectile){
+            velY = -velY;
+            maxHP = GameConstants.LIGHTING_HP;
+            currentHP = maxHP;
+            // set position for player
+            this.x = x + (GameConstants.PLAYER_WIDTH - width) / 2;
+            this.y = y - GameConstants.PLAYER_HEIGHT;
+        } else {
+            if (!ability2Started){
+
+            // set position for Zeus
+            this.x = (ZeusSpeedX > 0) ? x + GameConstants.ZEUS_WIDTH - width : x + width;
+            } else {
+                this.x = (ZeusSpeedX > 0) ? x : x + GameConstants.ZEUS_WIDTH - width;
+            }
+            this.y = y + height;
         }
     }
 
     @Override
     public void move() {
-        preciseX += velX;
-        preciseY += velY;
+        y += velY;
 
-        x = (int) preciseX;
-        y = (int) preciseY;
-
-        if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT || y < GameConstants.HUD_HEIGHT - height) {
+        if (y > GameConstants.HUD_HEIGHT + GameConstants.FIELD_HEIGHT || y < GameConstants.HUD_HEIGHT - height) {
             isDead = true;
         }
 
@@ -67,13 +69,5 @@ public class Lighting extends HostileEntity{
     @Override
     public Shape getShape() {
         return new Ellipse2D.Float(x, y, width, height);
-    }
-
-    public boolean getIsFriendly() {
-        return this.isfriendly;
-    }
-
-    public int getDamage() {
-        return damage;
     }
 }

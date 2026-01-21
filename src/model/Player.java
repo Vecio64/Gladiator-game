@@ -12,11 +12,8 @@ public class Player extends GameObject {
     private int speed = GameConstants.PLAYER_SPEED;
     private int level = 1;
 
-    private BufferedImage image;
-
     public Player(int x, int y) {
-        super(x, y, GameConstants.PLAYER_WIDTH, GameConstants.PLAYER_HEIGHT); // 40x40の四角
-        this.image = ResourceManager.playerImg;
+        super(x, y, GameConstants.PLAYER_WIDTH, GameConstants.PLAYER_HEIGHT, ResourceManager.playerImg); // 40x40の四角
     }
 
     @Override

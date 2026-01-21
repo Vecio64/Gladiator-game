@@ -1,31 +1,42 @@
 package model;
 
-import java.awt.Graphics;
+import view.ResourceManager;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Projectile Class
- * Abstract class for all flying objects that deal damage (Arrows, Feathers).
- * It handles the damage value and checks if the object is out of the screen bounds.
+ * Abstract base class for all flying objects (Arrows, Feathers, Suns, Boulders).
+ * It introduces the concept of "Power Level" to handle projectile-vs-projectile collisions.
  */
 public abstract class Projectile extends GameObject {
 
-    protected int damage; // Amount of damage this projectile deals
+    protected Alignment alignment;
 
-    public Projectile(int x, int y, int w, int h, int damage) {
-        super(x, y, w, h);
+    // Power Level determines priority when two projectiles collide:
+    // 0 = Ephemeral (Destroyed by anything)
+    // 1 = Light (Arrow, Feather)
+    // 2 = Heavy (Boulder - Destroys Light)
+    // 3 = Ultimate (Sun - Destroys Heavy and Light)
+    protected int powerLevel;
+
+    protected int damage;
+
+    // If true, the projectile does not vanish after hitting a target (e.g., The Sun)
+    protected boolean isPenetrating;
+
+    public Projectile(int x, int y, int w, int h, BufferedImage image, Alignment alignment, int powerLevel, int damage) {
+        super(x, y, w, h, image);
+        this.alignment = alignment;
+        this.powerLevel = powerLevel;
         this.damage = damage;
+        this.isPenetrating = false; // Default: destroys itself on impact
     }
 
-    /**
-     * Helper method to check if the projectile is outside the screen.
-     * Checks both TOP (for Arrows) and BOTTOM (for Feathers).
-     * @return true if out of bounds
-     */
-    protected boolean isOutOfBounds() {
-        return (y < GameConstants.HUD_HEIGHT - this.height || y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT);
-    }
-
-    public int getDamage() {
-        return damage;
-    }
+    // Getters
+    public Alignment getAlignment() { return alignment; }
+    public int getPowerLevel() { return powerLevel; }
+    public int getDamage() { return damage; }
+    public boolean isPenetrating() { return isPenetrating; }
 }

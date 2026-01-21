@@ -2,35 +2,32 @@ package model;
 
 import view.ResourceManager;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-// --- Feather Class (Enemy Projectile) ---
 public class Feather extends Projectile {
 
-    private BufferedImage image;
-
     public Feather(int x, int y) {
-        // We pass the FIXED damage (1)
-        super(x, y, GameConstants.FEATHER_WIDTH, GameConstants.FEATHER_HEIGHT, GameConstants.FEATHER_DAMAGE);
-        this.image = ResourceManager.featherImg;
+        // Alignment: ENEMY
+        // Power Level: 1 (Light) -> Clashes equally with Arrows
+        // Damage: Standard Feather Damage
+        super(x, y, GameConstants.FEATHER_WIDTH, GameConstants.FEATHER_HEIGHT, ResourceManager.featherImg,
+                Alignment.ENEMY, 1, GameConstants.FEATHER_DAMAGE);
     }
 
     @Override
     public void move() {
-        y += GameConstants.FEATHER_SPEED;;
-
-        // Use the common check from Projectile class
-        if(isOutOfBounds()){
+        y += GameConstants.FEATHER_SPEED;
+        // Despawn logic
+        if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT) {
             isDead = true;
         }
     }
 
     @Override
     public void draw(Graphics g) {
-        if (image != null) {
+        if (ResourceManager.featherImg != null) {
             g.drawImage(image, x, y, width, height, null);
         } else {
-            g.setColor(Color.GRAY);
+            g.setColor(Color.MAGENTA);
             g.fillRect(x, y, width, height);
         }
     }

@@ -12,7 +12,6 @@ import java.awt.image.BufferedImage;
  */
 public class Apollo extends Boss {
 
-    private BufferedImage image;
     private int speedX = GameConstants.APOLLO_SPEED1;
     private boolean secondPhase = false; // Flag to track if the boss is in "Rage Mode"
 
@@ -24,6 +23,7 @@ public class Apollo extends Boss {
                 GameConstants.HUD_HEIGHT, // Start below HUD
                 GameConstants.APOLLO_WIDTH,
                 GameConstants.APOLLO_HEIGHT,
+                ResourceManager.apolloImg,
                 GameConstants.APOLLO_HP,
                 GameConstants.APOLLO_SCORE_POINTS, // Score awarded when defeated
                 model
@@ -33,6 +33,7 @@ public class Apollo extends Boss {
 
     @Override
     public void move() {
+         super.move();
         // Update horizontal position
         x += speedX;
 
@@ -42,11 +43,13 @@ public class Apollo extends Boss {
 
             // Trigger shooting mechanism via GameModel
             // We pass the current phase status to decide if the Sun should be Red/Fast
-            model.shootSun(x, y, speedX, secondPhase);
+            shootSun();
         }
+    }
 
-        // Decrease the flash timer (inherited from HostileEntity) for the hit effect
-        if (flashTimer > 0) flashTimer--;
+    private void shootSun(){
+        Sun s = new Sun(x, y, speedX, secondPhase, false);
+        model.spawnEnemyProjectile(s);
     }
 
     @Override
@@ -57,14 +60,10 @@ public class Apollo extends Boss {
         // 2. Specific Logic for Apollo: Check for Second Phase (Rage Mode)
         // If HP drops below 50% and we are not yet in the second phase...
         if (hp <= maxHp / 2 && !secondPhase) {
-            this.image = ResourceManager.apolloImg2; // Change sprite to Red Apollo
-            this.speedX = GameConstants.APOLLO_SPEED2; // Double the movement speed
+            image = ResourceManager.apolloImg2; // Change sprite to Red Apollo
+            speedX = (speedX > 0) ? GameConstants.APOLLO_SPEED2 : -GameConstants.APOLLO_SPEED2; // Double the movement speed
             secondPhase = true; // Activate the flag
             System.out.println("Apollo entering Phase 2!");
-        }
-
-        if(isDead){
-
         }
     }
 

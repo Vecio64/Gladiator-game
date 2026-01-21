@@ -189,7 +189,7 @@ public class GamePanel extends JPanel implements KeyListener {
                 }
 
                 // 2. Draw Cooldown Overlay (The fading effect)
-                int timer = model.getAbility1Timer();
+                int timer = model.getAbilityNthTimer(1);
                 int maxTime = GameConstants.ABILITY1TIMER; // Make sure this is set correctly in Constants!
 
                 if (timer > 0) {
@@ -210,6 +210,42 @@ public class GamePanel extends JPanel implements KeyListener {
 
                     // Optional: Draw the text timer on top if you want
                      g.setColor(Color.WHITE);
+                    String keyNum = String.valueOf(timer/60 + 1);
+                    int numWidth = g.getFontMetrics().stringWidth(keyNum);
+                    g.drawString(keyNum, x + (slotSize - numWidth) / 2, slotY + 37);
+                }
+            }
+
+            // Check if this is the first slot (Index 0) AND if Ability 1 is unlocked
+            if (i == 1 && model.isAbilityUnclocked(2)) {
+
+                // 1. Draw the Icon (The Sun)
+                if (ResourceManager.lightingImg != null) {
+                    g.drawImage(ResourceManager.lightingImg, x, slotY, slotSize, slotSize, null);
+                }
+
+                // 2. Draw Cooldown Overlay (The fading effect)
+                int timer = model.getAbilityNthTimer(2);
+                int maxTime = GameConstants.ABILITY2TIMER; // Make sure this is set correctly in Constants!
+
+                if (timer > 0) {
+                    // Calculate percentage of time remaining (0.0 to 1.0)
+                    float ratio = (float) timer / maxTime;
+
+                    // Calculate height of the dark overlay based on the ratio
+                    // If ratio is 1.0 (just used), height is full (60).
+                    // If ratio is 0.5, height is half (30), covering the top half.
+                    // This creates the effect of the color "filling up from bottom".
+                    int overlayHeight = (int) (slotSize * ratio);
+
+                    // Set color to semi-transparent black
+                    g.setColor(new Color(0, 0, 0, 180)); // 180 is the alpha (transparency)
+
+                    // Draw the overlay from the top of the slot downwards
+                    g.fillRect(x, slotY, slotSize, overlayHeight);
+
+                    // Optional: Draw the text timer on top if you want
+                    g.setColor(Color.WHITE);
                     String keyNum = String.valueOf(timer/60 + 1);
                     int numWidth = g.getFontMetrics().stringWidth(keyNum);
                     g.drawString(keyNum, x + (slotSize - numWidth) / 2, slotY + 37);
@@ -414,7 +450,9 @@ public class GamePanel extends JPanel implements KeyListener {
             }
 
             // ABILITY 2
-            if (key == KeyEvent.VK_2) System.out.println("Ability 2 pressed");
+            if (model.getCurrentLevelIndex() > 7 && key == KeyEvent.VK_2){
+                model.ability2();
+            }
 
             // ABILITY 3
             if (key == KeyEvent.VK_3) System.out.println("Ability 3 pressed");
