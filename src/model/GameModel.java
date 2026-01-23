@@ -290,7 +290,7 @@ public class GameModel {
                 showMessage("STAGE 2 CLEARED!\n\nEntering the INFERNO...\n\nShooting speed increased!\n\nPress [2] to use\nABILITY 2:\nZEUS'S LIGHTING");
                 if (background != null) {
                     clearEverything();
-                    background.setImage(ResourceManager.stage1Img);
+                    background.setImage(ResourceManager.stage3Img);
                     background.setSpeed(0);
                     ability2Timer = 0;
                     arrowInterval = GameConstants.ARROW_INTERVAL2;
@@ -520,15 +520,14 @@ public class GameModel {
 
     public int getAbilityNthTimer(int n) {
         switch (n){
-            case 1 -> {
+            case 1:
                 return ability1Timer;
-            }
-            case 2 -> {
+            case 2:
                 return ability2Timer;
-            }
-            case 3 -> {
+            case 3:
                 return ability3Timer;
-            }
+            default:
+                System.out.println("getability ERROR");
         }
         return ability1Timer;
     }

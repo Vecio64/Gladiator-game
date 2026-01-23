@@ -31,8 +31,8 @@ public final class GameConstants {
     public static final int ABILITY3TIMER = FPS * 10; // 10 seconds
 
     // ARROWの設定
-    public static final int ARROW_WIDTH = 8;
-    public static final int ARROW_HEIGHT = ARROW_WIDTH * 367/41; // set to the image height width ration
+    public static final int ARROW_WIDTH = 10;
+    public static final int ARROW_HEIGHT = 70; // set to the image height width ration
     public static final int ARROW_SPEED = 30;
     public static final int ARROW_INTERVAL = 20;
     public static final int ARROW_INTERVAL2 = 15;
@@ -90,7 +90,7 @@ public final class GameConstants {
     public static final int APOLLO_HEIGHT = APOLLO_WIDTH * 1556 / 2463;
     public static final int APOLLO_SPEED1 = 4;
     public static final int APOLLO_SPEED2 = APOLLO_SPEED1 * 3 / 2;
-    public static final int APOLLO_HP = 50; //50
+    public static final int APOLLO_HP = 2; //50
     public static final int APOLLO_SCORE_POINTS = 1000;
 
     // SUNの設定
@@ -106,7 +106,7 @@ public final class GameConstants {
     public static final int ZEUS_SPEED2 = 8;
     public static final int ZEUS_WIDTH = 150;
     public static final int ZUES_HEIGHT = 150;
-    public static final int ZEUS_HP = 200; // 100
+    public static final int ZEUS_HP = 10; // 100
     public static final int ZEUS_SCORE_POINTS = 1500;
     public static final int ZEUS_SHOOT_TIMER = 60;
     public static final int ZEUS_SHOOT_TIMER2 = 40;
@@ -129,14 +129,14 @@ public final class GameConstants {
     //SCOREの設定
     // STAGE 1
     public static final int SCORE_STAGE1_PHASE1 = 0;
-    public static final int SCORE_STAGE1_PHASE2 = HARPY_SCORE_POINTS * 10; // 100
-    public static final int SCORE_STAGE1_PHASE3 = HARPY_SCORE_POINTS * 30; // 300
-    public static final int SCORE_FOR_BOSS_1 = HARPY_SCORE_POINTS * 50; // 500
+    public static final int SCORE_STAGE1_PHASE2 = HARPY_SCORE_POINTS * 1; // 100
+    public static final int SCORE_STAGE1_PHASE3 = HARPY_SCORE_POINTS * 3; // 300
+    public static final int SCORE_FOR_BOSS_1 = HARPY_SCORE_POINTS * 5; // 500
     // STAGE 2
     public static final int SCORE_STAGE2_PHASE1 = SCORE_FOR_BOSS_1 + APOLLO_SCORE_POINTS; //1500
-    public static final int SCORE_STAGE2_PHASE2 = SCORE_STAGE2_PHASE1 + 500; // 2000
-    public static final int SCORE_STAGE2_PHASE3 = SCORE_STAGE2_PHASE2 + 750; // 2750
-    public static final int SCORE_FOR_BOSS_2 = SCORE_STAGE2_PHASE3 + 750; // 3500
+    public static final int SCORE_STAGE2_PHASE2 = SCORE_STAGE2_PHASE1 + 5; // 2000
+    public static final int SCORE_STAGE2_PHASE3 = SCORE_STAGE2_PHASE2 + 7; // 2750
+    public static final int SCORE_FOR_BOSS_2 = SCORE_STAGE2_PHASE3 + 7; // 3500
     // STAGE 3
     public static final int SCORE_STAGE3_PHASE1 = SCORE_FOR_BOSS_2 + ZEUS_SCORE_POINTS; // 5000
     public static final int SCORE_STAGE3_PHASE2 = 100000; // 6000

@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class Zeus extends Boss {
 
+
     private int speedX = GameConstants.ZEUS_SPEED;
     private boolean secondPhase = false; // Flag to track if the boss is in "Rage Mode"
     private int shootTimer;
@@ -21,7 +22,7 @@ public class Zeus extends Boss {
     boolean ability1Phase;
     boolean ability2Started;
     private int ability2Repetitions;
-    
+
     public Zeus (GameModel model) {
         super ( (GameConstants.WINDOW_HEIGHT - GameConstants.ZEUS_WIDTH) / 2,
                 GameConstants.HUD_HEIGHT,
@@ -33,7 +34,7 @@ public class Zeus extends Boss {
                 model
         );
         maxShootTimer = GameConstants.ZEUS_SHOOT_TIMER;
-        shootTimer = maxShootTimer;
+        resetShootTimer();
         maxAbility1Pause = GameConstants.ZEUS_ABILITY1_PAUSE;
         setAbility1Timer();
         ability1Position = 1;
@@ -62,7 +63,7 @@ public class Zeus extends Boss {
                 }
                 if(shootTimer <= 0){
                     shootLighting();
-                    shootTimer = maxShootTimer;
+                    resetShootTimer();
                 }
                 shootTimer--;
             } else if (ability1Pause <= 0){
@@ -102,6 +103,7 @@ public class Zeus extends Boss {
             if (ability2Repetitions == 0){
                 ability2Timer = GameConstants.ZEUS_ABILITY2_TIMER;
                 ability2Started = false;
+                resetShootTimer();
             }
 
         }
@@ -120,6 +122,7 @@ public class Zeus extends Boss {
         if (ability1Position == 5) {
             setAbility1Timer();
             ability1Position = 1;
+            resetShootTimer();
             return;
         }
 
@@ -165,6 +168,10 @@ public class Zeus extends Boss {
         Random random = new Random();
         ability1Timer = random.nextInt(4) + 1;;
         ability1Phase = false;
+    }
+
+    private void resetShootTimer(){
+        shootTimer = maxShootTimer;
     }
 
     @Override

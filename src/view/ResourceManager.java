@@ -63,6 +63,7 @@ public class ResourceManager {
     // STAGES
     public static BufferedImage stage1Img;
     public static BufferedImage stage2Img;
+    public static BufferedImage stage3Img;
     // HEART
     public static BufferedImage heartFullImg;
     public static BufferedImage heartEmptyImg;
@@ -125,6 +126,7 @@ public class ResourceManager {
             // STAGES
             stage1Img = loadTexture("res/stage1.png");
             stage2Img = loadTexture("res/stage2.png");
+            stage3Img = loadTexture("res/stage3.png");
             // HEART
             heartFullImg = loadTexture("res/heart.png");
             heartEmptyImg = createBlackSilhouette(heartFullImg);
