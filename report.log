@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  6 FEB 2026 18:14
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  6 FEB 2026 18:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -391,25 +391,32 @@ LaTeX Font Info:    Trying to load font information for T1+lmss on input line 23
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
+LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
+(Font)              scaled to size 11.53198pt on input line 41.
+LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
+(Font)              scaled to size 11.53198pt on input line 41.
+
 
 [2]
 
-[3] (./report.aux)
+[3]
+
+[4] (./report.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-05-26>
  ***********
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 0A7386D8CD2CCE4FBBB99E236A6BD844;671.
+(rerunfilecheck)             Checksum: 7FF820551AFE065B3E4C3119943E68A8;951.
  ) 
 Here is how much of TeX's memory you used:
- 9941 strings out of 468530
- 149747 string characters out of 5449390
- 554860 words of memory out of 5000000
- 38375 multiletter control sequences out of 15000+600000
- 660583 words of font info for 93 fonts, out of 8000000 for 9000
+ 9945 strings out of 468530
+ 149809 string characters out of 5449390
+ 556206 words of memory out of 5000000
+ 38379 multiletter control sequences out of 15000+600000
+ 663648 words of font info for 96 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 72i,6n,79p,380b,455s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,6n,79p,376b,455s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (3 pages, 11844 bytes).
+Output written on report.dvi (4 pages, 12768 bytes).
