@@ -9,6 +9,7 @@
 \usepackage{caption}
 \usepackage{float}
 \usepackage{here}
+\usepackage{array}
 
 \title{情報理工学域 メディア情報学プログラム\\
     プログラミング演習 最終レポート}
@@ -78,15 +79,30 @@
 \end{figure}
 
 次に、プレイ中のキー操作について説明します。
-\begin{itemize}
-    \item 移動：カーソルキー
-    \item 攻撃：Spaceキー
-    \item 一時停止、再開：P
-    \item 特殊スキル：1、2、3
-\end{itemize}
-カーソルキーで画面全体を縦横無尽に移動し、Spaceキーを押すことで矢を放って攻撃します。Spaceキーを長押しすることで連射が可能です。
+\begin{table}[H]
+    \centering
+    \caption{プレイ中のキー操作}
+    \begin{tabular}{|c|c|m{20em}|}
+        \hline
+        移動 & カーソルキー & 画面全体を縦横無尽に移動。 \\
+        \hline
+        攻撃 & Spaceキー & 長押しで連射が可能。 \\
+        \hline
+        一時停止、再開 & P & プレイ中に押すことでゲームを一時停止、再度押すことでゲームを再開。 \\
+        \hline
+        特殊スキル & 1,2,3 & 各ステージのボスを倒すことで手に入る特殊スキルは、それぞれ1,2,3を押すことで発動。 \\
+        \hline
+    \end{tabular}
+\end{table}
 
-(文責：佐々木)
+ゲームオーバー時には、Cを押すとゲームをもう一度プレイ(Continue)でき、Qを押すとゲームをやめる(Quit)ことができます。
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.25]{gameover.eps}
+    \caption{ゲームオーバー画面}
+\end{figure}
+
+{\raggedleft (文責：佐々木)\par}
 
 \section{付録２：プログラムリスト}
 % プログラムリストは本文中には説明に必要な部分だけ抜粋して掲載して，プログラムリスト全体はレポートの最後に「付録」として付ける。プログラムコードには，主なメソッド，フィールドの説明など最低限のコメントは付ける。さらに，cat -n コマンドなどで行番号を付与してから載せること．
