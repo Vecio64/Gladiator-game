@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  6 FEB 2026 18:24
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  16 FEB 2026 15:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -397,11 +397,7 @@ LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 41.
 
 
-[2]
-
-[3]
-
-[4] (./report.aux)
+[2] (./report.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2025-06-01> patch level 1
@@ -413,10 +409,10 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 Here is how much of TeX's memory you used:
  9945 strings out of 468530
  149809 string characters out of 5449390
- 556206 words of memory out of 5000000
+ 553206 words of memory out of 5000000
  38379 multiletter control sequences out of 15000+600000
  663648 words of font info for 96 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 72i,6n,79p,376b,455s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,6n,79p,378b,453s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (4 pages, 12768 bytes).
+Output written on report.dvi (2 pages, 6412 bytes).
