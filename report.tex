@@ -61,10 +61,32 @@
 \section{付録1：操作法マニュアル}
 % そのプログラムを初めて使う人向けの説明書を書いてください．ドローエディタなら操作法の説明，ゲームならキー操作の 説明などを書いてください．スクリーンキャプチャした画像に 説明を書き込んだりしてもいいでしょう。2ページ程度の簡潔な説明書で構いません。
 
-\begin{figure*}[H]
+ゲームを起動すると、タイトル画面が出てきます。Spaceキーを押してスタート画面に移り、再度Spaceキーを押すことでゲームが始まります。
+\begin{figure}[H]
+  \centering
+  \begin{minipage}{0.4\columnwidth}
     \centering
-    \includegraphics[scale=0.5]{title.eps}
-\end{figure*}
+    \includegraphics[width=\textwidth]{title.eps}
+    \caption{タイトル画面}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.4\columnwidth}
+    \centering
+    \includegraphics[width=\textwidth]{start.eps}
+    \caption{スタート画面}
+  \end{minipage}
+\end{figure}
+
+次に、プレイ中のキー操作について説明します。
+\begin{itemize}
+    \item 移動：カーソルキー
+    \item 攻撃：Spaceキー
+    \item 一時停止、再開：P
+    \item 特殊スキル：1、2、3
+\end{itemize}
+カーソルキーで画面全体を縦横無尽に移動し、Spaceキーを押すことで矢を放って攻撃します。Spaceキーを長押しすることで連射が可能です。
+
+(文責：佐々木)
 
 \section{付録２：プログラムリスト}
 % プログラムリストは本文中には説明に必要な部分だけ抜粋して掲載して，プログラムリスト全体はレポートの最後に「付録」として付ける。プログラムコードには，主なメソッド，フィールドの説明など最低限のコメントは付ける。さらに，cat -n コマンドなどで行番号を付与してから載せること．
