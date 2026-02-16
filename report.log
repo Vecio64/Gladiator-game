@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  16 FEB 2026 15:31
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  16 FEB 2026 15:37
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -422,8 +422,8 @@ LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 43.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 43.
-File: title.png Graphic file (type bmp)
-<title.png>
+File: title.eps Graphic file (type eps)
+<title.eps>
 
 
 [2] (./report.aux)
@@ -436,8 +436,8 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 7FF820551AFE065B3E4C3119943E68A8;951.
  ) 
 Here is how much of TeX's memory you used:
- 11279 strings out of 468530
- 175847 string characters out of 5449390
+ 11277 strings out of 468530
+ 175811 string characters out of 5449390
  576329 words of memory out of 5000000
  39700 multiletter control sequences out of 15000+600000
  663648 words of font info for 96 fonts, out of 8000000 for 9000
