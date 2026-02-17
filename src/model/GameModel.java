@@ -82,7 +82,6 @@ public class GameModel {
         activeSpawners.add(new EnemySpawner(Harpy.class, GameConstants.HARPY_SPAWN_INTERVAL, GameConstants.HARPY_SPAWN_VARIANCE));
         this.currentStage = 1;
 
-
         String tutorial = "WELCOME GLADIATOR!\n\n" +
                 "Controls:\n" +
                 "[KEY-ARROWS] Move\n" +
@@ -92,11 +91,9 @@ public class GameModel {
                 "and survive.\n" +
                 "Good Luck!";
         showMessage(tutorial);
-
-
     }
 
-    public static void addScore(int points){
+    public static void addScore(int points) {
         score += points;
     }
 
@@ -119,10 +116,7 @@ public class GameModel {
         if(background!= null) {
             background.update();
         }
-
         checkLevelProgression();
-
-
 
         // --- 連射ロジック ---
         if (isFiring) {
@@ -208,14 +202,13 @@ public class GameModel {
         }
     }
 
-
     private void checkLevelProgression() {
         // ボスがいたら、何もしない
         if (isBossActive) return;
         //次のフェーズがなかったらreturn
         if (currentLevelIndex >= GameConstants.LEVEL_MILESTONES.length) return;
 
-        if (score >= nextTargetScore){
+        if (score >= nextTargetScore) {
             //apply the effect we decided in the applyLevelEffects function
             applyLevelEffects(currentLevelIndex);
             currentLevelIndex++;
@@ -304,7 +297,6 @@ public class GameModel {
                 }
                 break;
             case 9:
-
         }
     }
 
@@ -314,7 +306,7 @@ public class GameModel {
         this.state = GameState.MESSAGE;
     }
 
-    public void bossDefeated(){
+    public void bossDefeated() {
         System.out.println("BOSS DEFEATED! Stage clear.");
         this.isBossActive = false;
         healPlayer();
@@ -336,7 +328,7 @@ public class GameModel {
         }
     }
 
-    public void ability1(){
+    public void ability1() {
         if (ability1Timer > 0) return;
         ability1Timer = GameConstants.ABILITY1TIMER;
         Sun sun = new Sun(
@@ -347,7 +339,7 @@ public class GameModel {
         System.out.println("Player shoots sun");
     }
 
-    public void ability2(){
+    public void ability2() {
         if (ability2Timer > 0) return;
         ability2Timer = GameConstants.ABILITY2TIMER;
         Lighting l = new Lighting(
@@ -384,7 +376,7 @@ public class GameModel {
         }
     }
 
-    private void healPlayer(){
+    private void healPlayer() {
         lives = GameConstants.PLAYER_MAX_LIVES;
     }
 
@@ -512,7 +504,6 @@ public class GameModel {
         }
     }
 
-
     // 無敵時間中かどうか
     public boolean isInvincible() {
         return damageTimer > 0;
@@ -545,7 +536,6 @@ public class GameModel {
             // Zeus is Level Index 8. So > 8 means Stage 3 started.
             return this.currentLevelIndex > 8;
         }
-
         // Future logic for Ability 2 and 3
         return false;
     }
@@ -593,5 +583,4 @@ public class GameModel {
     public String[] getCurrentMessageLines() {
         return currentMessageLines;
     }
-
 }

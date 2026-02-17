@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  18 FEB 2026 02:13
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  18 FEB 2026 02:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -512,26 +512,26 @@ LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
 [4]
 
 [5]
+
+[6]
 File: title.eps Graphic file (type eps)
  <title.eps>
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 180.
+(Font)              <10> on input line 218.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 180.
+(Font)              <7> on input line 218.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 180.
+(Font)              <5> on input line 218.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 6.72699pt on input line 180.
+(Font)              scaled to size 6.72699pt on input line 218.
 File: start.eps Graphic file (type eps)
  <start.eps>
 
-[6]
+[7]
 File: gameover.eps Graphic file (type eps)
  <gameover.eps> (./src/main/Main.java
 
-[7]) (./src/model/GameModel.java
-
-[8]
+[8]) (./src/model/GameModel.java
 
 [9]
 
@@ -561,49 +561,49 @@ File: gameover.eps Graphic file (type eps)
 
 [22]
 
-[23]) (./src/model/GameConstants.java
+[23])
 
-[24]
+[24] (./src/model/GameConstants.java
 
 [25]
 
 [26]
 
-[27]) (./src/model/GameObject.java
+[27]
 
-[28]) (./src/model/GameState.java)
+[28]) (./src/model/GameObject.java
 
-[29] (./src/model/Alignment.java) (./src/model/Background.java
+[29]) (./src/model/GameState.java) (./src/model/Alignment.java
 
-[30]
+[30]) (./src/model/Background.java
 
 [31]
 
 [32]) (./src/model/Projectile.java
 
-[33]) (./src/model/Player.java
+[33])
 
-[34]
+[34] (./src/model/Player.java
 
 [35]) (./src/model/Arrow.java
 
-[36]) (./src/model/BossProjectile.java) (./src/model/Boss.java
+[36]) (./src/model/BossProjectile.java
 
-[37]) (./src/model/Apollo.java
+[37]) (./src/model/Boss.java
 
-[38]
+[38]) (./src/model/Apollo.java
 
-[39]) (./src/model/Sun.java
+[39]
 
-[40]
+[40]) (./src/model/Sun.java
 
 [41]
 
 [42]
 
-[43]) (./src/model/Zeus.java
+[43]
 
-[44]
+[44]) (./src/model/Zeus.java
 
 [45]
 
@@ -611,37 +611,37 @@ File: gameover.eps Graphic file (type eps)
 
 [47]
 
-[48]) (./src/model/Lighting.java
+[48]
 
-[49]
+[49]) (./src/model/Lighting.java
 
-[50]) (./src/model/HostileEntity.java
+[50]
 
-[51]
+[51]) (./src/model/HostileEntity.java
 
 [52]) (./src/model/EnemySpawner.java
 
-[53]) (./src/model/Boulder.java
+[53]
 
-[54]
+[54]) (./src/model/Boulder.java
 
-[55]) (./src/model/Cyclops.java
+[55]
 
-[56]
+[56]) (./src/model/Cyclops.java
 
 [57]
 
-[58]) (./src/model/Feather.java
+[58]
 
-[59]) (./src/model/Harpy.java
+[59]) (./src/model/Feather.java)
 
-[60]
+[60] (./src/model/Harpy.java
 
-[61])
+[61]
 
-[62] (./src/model/Minion.java) (./src/view/GamePanel.java
+[62]) (./src/model/Minion.java
 
-[63]
+[63]) (./src/view/GamePanel.java
 
 [64]
 
@@ -677,9 +677,11 @@ File: gameover.eps Graphic file (type eps)
 
 [80]
 
-[81])
+[81]
 
-[82] (./report.aux)
+[82])
+
+[83] (./report.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2025-06-01> patch level 1
@@ -691,10 +693,10 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 Here is how much of TeX's memory you used:
  14369 strings out of 468530
  220352 string characters out of 5449390
- 1422363 words of memory out of 5000000
+ 1434363 words of memory out of 5000000
  42662 multiletter control sequences out of 15000+600000
  686506 words of font info for 125 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 72i,11n,79p,666b,2116s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,11n,79p,666b,2106s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (82 pages, 2075672 bytes).
+Output written on report.dvi (83 pages, 2092776 bytes).
