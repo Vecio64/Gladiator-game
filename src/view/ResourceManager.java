@@ -4,18 +4,14 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.File; // Fileクラスのインポートが必要になる場合があります
+import java.io.File;
 import java.io.InputStream;
 
 /**
  * ResourceManager
- * ゲームのリソース（画像など）を管理するクラスです。
- * 起動時に一度だけ画像を読み込み、メモリに保持することでパフォーマンスを向上させます。
- * （ディスクへのアクセス回数を減らすため）
+ * 起動時に一度だけ画像を読み込みメモリに保持する
  */
 public class ResourceManager {
-
-
     // PLAYER
     public static BufferedImage playerImg;
     public static BufferedImage arrowImg;
@@ -72,8 +68,7 @@ public class ResourceManager {
     public static Font pixelFont;
 
     /**
-     * "res"フォルダからすべてのリソースを読み込みます。
-     * このメソッドは、ゲーム開始前に「一度だけ」呼び出す必要があります。
+     * "res"フォルダからすべてのリソースを読み込む
      */
     public static void loadImages() {
         try {
@@ -154,12 +149,11 @@ public class ResourceManager {
             System.err.println("Error: Could not load images.");
             e.printStackTrace();
         }
-
     }
 
     // 画像を安全に読み込むためのヘルパーメソッド
     private static BufferedImage loadTexture(String path) throws IOException {
-        // クラスパス（srcフォルダ内など）からリソースを探す
+        // クラスパスからリソースを探す
         java.net.URL url = ResourceManager.class.getClassLoader().getResource(path);
 
         if (url == null) {

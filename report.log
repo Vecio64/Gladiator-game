@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  17 FEB 2026 22:52
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  17 FEB 2026 23:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -632,9 +632,47 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [59]) (./src/model/Minion.java
 
-[60])
+[60]) (./src/view/GamePanel.java
 
-[61] (./report.aux)
+[61]
+
+[62]
+
+[63]
+
+[64]
+
+[65]
+
+[66]
+
+[67]
+
+[68]
+
+[69]
+
+[70]
+
+[71]
+
+[72]
+
+[73]) (./src/view/ResourceManager.java
+
+[74]
+
+[75]
+
+[76]
+
+[77]
+
+[78]
+
+[79])
+
+[80] (./report.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2025-06-01> patch level 1
@@ -644,12 +682,12 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 7FF820551AFE065B3E4C3119943E68A8;951.
  ) 
 Here is how much of TeX's memory you used:
- 14197 strings out of 468530
- 217828 string characters out of 5449390
- 1376363 words of memory out of 5000000
- 42498 multiletter control sequences out of 15000+600000
+ 14358 strings out of 468530
+ 220176 string characters out of 5449390
+ 1434363 words of memory out of 5000000
+ 42652 multiletter control sequences out of 15000+600000
  683511 words of font info for 124 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  72i,11n,79p,485b,2137s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (61 pages, 1489820 bytes).
+Output written on report.dvi (80 pages, 2035444 bytes).

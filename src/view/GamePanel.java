@@ -71,8 +71,6 @@ public class GamePanel extends JPanel implements KeyListener {
         }
     }
 
-
-
     // Main Game Drawing Method
     private void drawGameScreen(Graphics g) {
 
@@ -445,12 +443,12 @@ public class GamePanel extends JPanel implements KeyListener {
 
             // Placeholder for Abilities
             // ABILITY 1
-            if(model.getCurrentLevelIndex() > 3 && key == KeyEvent.VK_1){
+            if(model.getCurrentLevelIndex() > 3 && key == KeyEvent.VK_1) {
                 model.ability1();
             }
 
             // ABILITY 2
-            if (model.getCurrentLevelIndex() > 7 && key == KeyEvent.VK_2){
+            if (model.getCurrentLevelIndex() > 7 && key == KeyEvent.VK_2) {
                 model.ability2();
             }
 
@@ -458,8 +456,8 @@ public class GamePanel extends JPanel implements KeyListener {
             if (key == KeyEvent.VK_3) System.out.println("Ability 3 pressed");
         }
 
-        else if (state == GameState.PAUSED){
-            if (key == KeyEvent.VK_P){
+        else if (state == GameState.PAUSED) {
+            if (key == KeyEvent.VK_P) {
                 model.setState(GameState.PLAYING);
                 resetKeyState();
                 System.out.println("Game Resumed");
@@ -497,10 +495,9 @@ public class GamePanel extends JPanel implements KeyListener {
         if (key == KeyEvent.VK_SPACE) {
             model.setFiring(false);
         }
-        if (model.getState() == GameState.PLAYING){
+        if (model.getState() == GameState.PLAYING) {
             updatePlayerVelocity();
         }
-
     }
 
     @Override
