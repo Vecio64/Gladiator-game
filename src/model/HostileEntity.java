@@ -47,11 +47,9 @@ public abstract class HostileEntity extends GameObject {
         if (flashTimer > 0) {
             flashTimer--;
         }
-
     }
 
     public int getFlashTimer() {
         return flashTimer;
     }
-
 }

@@ -16,12 +16,12 @@ public class Cyclops extends Minion{
 
     public Cyclops (int x, int y, GameModel model){
         super(x, y,
-                GameConstants.CYCLOPS_WIDTH,
-                GameConstants.CYCLOPS_HEIGHT,
-                ResourceManager.cyclopsImg,
-                GameConstants.CYCLOPS_HP,
-                GameConstants.CYCLOPS_SCORE_POINTS,
-                model);
+            GameConstants.CYCLOPS_WIDTH,
+            GameConstants.CYCLOPS_HEIGHT,
+            ResourceManager.cyclopsImg,
+            GameConstants.CYCLOPS_HP,
+            GameConstants.CYCLOPS_SCORE_POINTS,
+            model);
         this.preciseY = y;
         this.velY = GameConstants.CYCLOPS_YSPEED;
         this.movementTimer = GameConstants.CYCLOPS_MOVEMENT_TIMER;
@@ -71,7 +71,6 @@ public class Cyclops extends Minion{
                 throwBoulder();
                 attackTimer = GameConstants.CYCLOPS_ATTACK_TIMER;
             }
-
         }
         movementTimer--;
     }
@@ -99,5 +98,4 @@ public class Cyclops extends Minion{
         this.myBoulder = b;
         model.spawnEnemyProjectile(b);
     }
-
 }

@@ -30,7 +30,6 @@ public class Harpy extends Minion {
         if (Math.random() < 0.5) {
             this.velX = -this.velX;
         }
-
         resetFireTimer();
     }
 
@@ -53,7 +52,7 @@ public class Harpy extends Minion {
             y = GameConstants.HUD_HEIGHT;
             velY = -velY;
         }
-        if (y > GameConstants.HUD_HEIGHT){
+        if (y > GameConstants.HUD_HEIGHT) {
             isInScreen = true;
         }
         if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - height) {
@@ -64,13 +63,13 @@ public class Harpy extends Minion {
         if(fireTimer > 0) {
             fireTimer--;
         }
-        if (fireTimer <= 0){
+        if (fireTimer <= 0) {
             throwFeather();
             resetFireTimer();
         }
     }
 
-    private void throwFeather(){
+    private void throwFeather() {
         Feather f = new Feather (x + (width - GameConstants.FEATHER_WIDTH)/2, y + height);
         model.spawnEnemyProjectile(f);
     }
@@ -83,9 +82,6 @@ public class Harpy extends Minion {
 
         this.fireTimer = base + randomVariation;
     }
-
-
-
 
     @Override
     public void draw(Graphics g) {
