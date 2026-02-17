@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  17 FEB 2026 23:06
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  17 FEB 2026 23:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -480,49 +480,50 @@ LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 89.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 89.
+
+
+[3]
 File: title.eps Graphic file (type eps)
  <title.eps>
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 117.
+(Font)              <10> on input line 128.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 117.
+(Font)              <7> on input line 128.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 117.
+(Font)              <5> on input line 128.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 6.72699pt on input line 117.
+(Font)              scaled to size 6.72699pt on input line 128.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 4.805pt on input line 117.
+(Font)              scaled to size 4.805pt on input line 128.
 File: start.eps Graphic file (type eps)
  <start.eps>
 
-[3]
+[4]
 File: gameover.eps Graphic file (type eps)
  <gameover.eps>
-
-[4]
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 155.
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 166.
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 155.
+(Font)              scaled to size 9.60999pt on input line 166.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 155.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 155.
+(Font)              scaled to size 9.60999pt on input line 166.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 166.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 155.
+(Font)              scaled to size 8.64899pt on input line 166.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 155.
+(Font)              scaled to size 8.64899pt on input line 166.
  (./src/main/Main.java
+
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 (Font)              scaled to size 8.64899pt on input line 1.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
 (Font)              scaled to size 8.64899pt on input line 1.
+[5]
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 (Font)              scaled to size 4.805pt on input line 1.
-
-
-[5]) (./src/model/GameModel.java
+) (./src/model/GameModel.java
 
 [6]
 
@@ -552,9 +553,9 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [19]
 
-[20]) (./src/model/GameConstants.java
+[20]
 
-[21]
+[21]) (./src/model/GameConstants.java
 
 [22]
 
@@ -564,23 +565,23 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [25]) (./src/model/GameObject.java
 
-[26]) (./src/model/GameState.java) (./src/model/Alignment.java)
+[26]) (./src/model/GameState.java)
 
-[27] (./src/model/Background.java
+[27] (./src/model/Alignment.java) (./src/model/Background.java
 
 [28]
 
-[29]) (./src/model/Projectile.java
+[29]
 
-[30]) (./src/model/Player.java
+[30]) (./src/model/Projectile.java
 
-[31]
+[31]) (./src/model/Player.java
 
-[32]) (./src/model/Arrow.java
+[32]
 
-[33]) (./src/model/BossProjectile.java
+[33]) (./src/model/Arrow.java
 
-[34]) (./src/model/Boss.java
+[34]) (./src/model/BossProjectile.java) (./src/model/Boss.java
 
 [35]) (./src/model/Apollo.java
 
@@ -610,9 +611,9 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [48]) (./src/model/HostileEntity.java
 
-[49]) (./src/model/EnemySpawner.java
+[49]
 
-[50]
+[50]) (./src/model/EnemySpawner.java
 
 [51]) (./src/model/Boulder.java
 
@@ -622,17 +623,17 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [54]
 
-[55])
+[55]
 
-[56] (./src/model/Feather.java)
+[56]) (./src/model/Feather.java
 
-[57] (./src/model/Harpy.java
+[57]) (./src/model/Harpy.java
 
 [58]
 
-[59]) (./src/model/Minion.java
+[59])
 
-[60]) (./src/view/GamePanel.java
+[60] (./src/model/Minion.java) (./src/view/GamePanel.java
 
 [61]
 
@@ -658,9 +659,9 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [72]
 
-[73]) (./src/view/ResourceManager.java
+[73]
 
-[74]
+[74]) (./src/view/ResourceManager.java
 
 [75]
 
@@ -679,15 +680,15 @@ LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-05-26>
  ***********
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 7FF820551AFE065B3E4C3119943E68A8;951.
+(rerunfilecheck)             Checksum: 588C1957C5EF07FA3AE086EEA46DAD99;1190.
  ) 
 Here is how much of TeX's memory you used:
- 14358 strings out of 468530
- 220176 string characters out of 5449390
- 1434363 words of memory out of 5000000
- 42652 multiletter control sequences out of 15000+600000
+ 14361 strings out of 468530
+ 220224 string characters out of 5449390
+ 1422363 words of memory out of 5000000
+ 42655 multiletter control sequences out of 15000+600000
  683511 words of font info for 124 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 72i,11n,79p,485b,2137s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,11n,79p,485b,2121s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (80 pages, 2035444 bytes).
+Output written on report.dvi (80 pages, 2037576 bytes).
