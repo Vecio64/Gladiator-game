@@ -91,10 +91,56 @@ MVCモデルを採用し、主にPullerがM、佐々木がV、斎藤がCを担�
 \subsection{佐々木担当}
 私は主にView層におけるUIの実装と、Model層におけるプレイヤーのライフ・ダメージ処理を担当しました。\\
 \textbf{1、ゲーム画面およびHUDの実装}\\
-\indent ユーザーが直感的に状況を把握できるよう、ゲームの状態に応じた画面遷移を実装しました。具体的には、ゲーム起動時の「タイトル画面」、操作説明を含む「スタート画面」、そして「ゲームオーバー画面」を作成しました。ゲームオーバー時には最終スコアを表示し、キー入力（Cで継続、Qで終了）によって次のアクションを選択できる機能を設けています。また、プレイ画面上部のHUDでは、現在のスコア、進行中のステージ数、およびプレイヤーの残りライフをリアルタイムで表示するようにしました。ライフは数字ではなくハートのアイコンを用いることで、視認性を高めています。\\
+\indent ユーザーが直感的に状況を把握できるよう、ゲームの状態に応じた画面遷移を実装しました。具体的には、ゲーム起動時の「タイトル画面」、操作説明を含む「スタート画面」、そして「ゲームオーバー画面」を作成しました。ゲームオーバー時には最終スコアを表示し、キー入力（Cで継続、Qで終了）によって次のアクションを選択できる機能を設けています。また、プレイ画面上部のHUDでは、現在のスコア、進行中のステージ数、およびプレイヤーの残りライフをリアルタイムで表示するようにしました。ライフは数字ではなくハートのアイコンを用いることで、視認性を高めています。
+\begin{lstlisting}[caption = HUDの描画(GamePanel.java)]
+    public class GamePanel extends JPanel implements KeyListener {
+        private void drawTopHUD(Graphics g) {
+            // Draw dark background bar
+            g.setColor(new Color(50, 50, 80));
+            g.fillRect(0, 0, GameConstants.WINDOW_WIDTH, GameConstants.HUD_HEIGHT);
+
+            // Draw white separator line
+            g.setColor(Color.WHITE);
+            g.drawLine(0, GameConstants.HUD_HEIGHT, GameConstants.WINDOW_WIDTH, GameConstants.HUD_HEIGHT);
+
+            // Font settings
+            setPixelFont(g, 18f);
+            int textY = 35;
+
+            // A. Score
+            g.drawString("SCORE:" + model.getScore(), 10, textY);
+
+            // B. Stage (Centered)
+            String stageText = model.getStageText();
+            int stageX = (GameConstants.WINDOW_WIDTH - g.getFontMetrics().stringWidth(stageText)) / 2;
+            g.drawString(stageText, stageX, textY);
+
+            // C. Hearts / Lives (Right aligned)
+            int maxLives = GameConstants.PLAYER_MAX_LIVES;
+            int currentLives = model.getLives();
+            int heartSize = 32;
+            int spacing = 8;
+            int startX = GameConstants.WINDOW_WIDTH - 20 - (maxLives * (heartSize + spacing));
+            int heartY = (GameConstants.HUD_HEIGHT - heartSize) / 2;
+
+            for (int i = 0; i < maxLives; i++) {
+                // Determine which icon to draw (Full or Empty)
+                BufferedImage icon = (i < currentLives) ? ResourceManager.heartFullImg : ResourceManager.heartEmptyImg;
+
+                if (icon != null) {
+                    g.drawImage(icon, startX + (i * (heartSize + spacing)), heartY, heartSize, heartSize, null);
+                } else {
+                    // Fallback drawing if images are missing
+                    g.setColor(i < currentLives ? Color.RED : Color.GRAY);
+                    g.fillOval(startX + (i * (heartSize + spacing)), heartY, heartSize, heartSize);
+                }
+            }
+        }
+    }
+\end{lstlisting}
 
 \noindent \textbf{2、ライフ制度と無敵時間の導入}\\
-\indent ゲームの難易度調整とプレイ体験の向上のため、プレイヤーに3つのライフを付与するシステムを構築しました。初期の実装では、敵や弾に接触した際、当たり判定が連続して発生しライフが一瞬で0になってしまう「多段ヒット」の問題が発生していました。これを解消するために、ダメージを受けた直後に一定時間の「無敵時間(クールタイム)」を導入しました。ダメージ発生時に damageTimer をセットし、このタイマーが作動している間は新たなダメージを受け付けないように処理を分岐させています。さらに、無敵時間中はプレイヤーキャラクターを点滅させることで、視覚的にもダメージを受けたことと無敵状態であることをユーザーにフィードバックする仕組みを整えました。
+\indent ゲームの難易度調整とプレイ体験の向上のため、プレイヤーに3つのライフを付与するシステムを構築しました。初期の実装では、敵や弾に接触した際、当たり判定が連続して発生しライフが一瞬で0になってしまう「多段ヒット」の問題が発生していました。これを解消するために、ダメージを受けた直後に一定時間の「無敵時間(クールタイム)」を導入しました。ダメージ発生時に damageTimer をセットし、このタイマーが作動している間は新たなダメージを受け付けないように処理を分岐させています。さらに、無敵時間中はプレイヤーキャラクターを点滅させることで、視覚的にもダメージを受けたことと無敵状態であることをユーザーが理解しやすいようにしました。
 
 \subsection{Puller担当}
 
