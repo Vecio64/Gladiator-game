@@ -1,9 +1,6 @@
 package model;
 
 public final class GameConstants {
-
-    // こらはゲームの定数を含めるクラスです
-
     // 画面のサイズ
     public static final int WINDOW_WIDTH = 600;
 
@@ -71,15 +68,12 @@ public final class GameConstants {
     public static final int CYCLOPS_MOVEMENT_TIMER = 20;
     public static final int CYCLOPS_ATTACK_TIMER = 60;
 
-
-
     // BOULDERの設定
     public static final int BOULDER_WIDTH = 100;
     public static final int BOULDER_HEIGHT = BOULDER_WIDTH;
     public static final double BOULDER_INITIAL_SPEED = 0;
     public static final double BOULDER_GRAVITY = 0.3;
     public static final int BOULDER_DAMAGE = 5;
-
 
     // ************************************
     // BOSSの設定
@@ -114,8 +108,6 @@ public final class GameConstants {
     public static final int ZEUS_ABILITY1_PAUSE2 = 25;
     public static final int ZEUS_ABILITY2_TIMER = FPS * 6; // 10 seconds
 
-
-
     //LIGHTINGの設定
     public static final int LIGHTING_WIDTH = 25;
     public static final int LIGHTING_HEIGHT = 150;
@@ -123,8 +115,6 @@ public final class GameConstants {
     public static final int LIGHTING_SPEED2 = 15;
     public static final int LIGHTING_DAMAGE = 1;
     public static final int LIGHTING_HP = 10;
-
-
 
     //SCOREの設定
     // STAGE 1
@@ -155,8 +145,5 @@ public final class GameConstants {
 
     //他の設定
     public static final int FLASH_TIMER = 5;
-
-
-
     private GameConstants(){} //オブジェクトを作らないようにprivateにする
 }
