@@ -9,7 +9,6 @@ public abstract class Boss extends HostileEntity {
         super(x, y, w, h, image, hp, scorePoints, model);
     }
 
-
     @Override
     public void takeDamage(int dmg) {
         super.takeDamage(dmg);
@@ -17,6 +16,5 @@ public abstract class Boss extends HostileEntity {
         if (this.isDead){
             model.bossDefeated();
         }
-
     }
 }

@@ -5,10 +5,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-
 public class Zeus extends Boss {
-
-
     private int speedX = GameConstants.ZEUS_SPEED;
     private boolean secondPhase = false; // Flag to track if the boss is in "Rage Mode"
     private int shootTimer;
@@ -111,7 +108,6 @@ public class Zeus extends Boss {
         if (secondPhase && ability2Timer > 0){
             ability2Timer--;
         }
-
     }
 
     private void ability1() {
@@ -125,7 +121,6 @@ public class Zeus extends Boss {
             resetShootTimer();
             return;
         }
-
 
         if(speedX > 0) {
             x = ability1Position * (GameConstants.WINDOW_WIDTH-width)/4;
@@ -160,8 +155,6 @@ public class Zeus extends Boss {
             maxShootTimer = GameConstants.ZEUS_SHOOT_TIMER2;
             maxAbility1Pause = GameConstants.ZEUS_ABILITY1_PAUSE2;
         }
-
-
     }
 
     private void setAbility1Timer(){
@@ -179,20 +172,14 @@ public class Zeus extends Boss {
         BufferedImage imgToDraw = (flashTimer > 0) ? hitImg : image;
 
         if (image != null) {
-
             if (speedX > 0) {
-
                 g.drawImage(imgToDraw, x, y, width, height, null);
             } else {
                 g.drawImage(imgToDraw, x + width, y, -width, height, null);
             }
         } else {
-
             g.setColor(Color.ORANGE);
             g.fillRect(x, y, width, height);
-
         }
     }
-
-
 }

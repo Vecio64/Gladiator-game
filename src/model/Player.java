@@ -38,7 +38,6 @@ public class Player extends GameObject {
             g.setColor(Color.BLUE);
             g.fillRect(x, y, width, height);
         }
-
     }
 
     @Override
@@ -68,5 +67,4 @@ public class Player extends GameObject {
     public int getLevel(){
         return level;
     }
-
 }

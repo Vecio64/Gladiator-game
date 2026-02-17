@@ -7,7 +7,6 @@ import java.awt.geom.Ellipse2D;
 public class Lighting extends BossProjectile {
 
     private int velY;
-
     public Lighting(int x, int y, int ZeusSpeedX, boolean isSecondPhase, boolean friendly, boolean ability2Started) {
         super(0,
                 0,
@@ -53,7 +52,6 @@ public class Lighting extends BossProjectile {
         if (y > GameConstants.HUD_HEIGHT + GameConstants.FIELD_HEIGHT || y < GameConstants.HUD_HEIGHT - height) {
             isDead = true;
         }
-
     }
 
     @Override
