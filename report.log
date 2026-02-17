@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  18 FEB 2026 01:17
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  18 FEB 2026 01:42
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -480,52 +480,56 @@ LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 89.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 89.
+LaTeX Font Info:    Font shape `JT1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JT1/gt/m/n' tried instead on input line 93.
+LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 93.
+LaTeX Font Info:    Font shape `JY1/mc/bx/n' in size <10> not available
+(Font)              Font shape `JY1/gt/m/n' tried instead on input line 93.
+LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
+(Font)              scaled to size 9.60999pt on input line 93.
 
 
 [3]
 File: title.eps Graphic file (type eps)
  <title.eps>
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 128.
+(Font)              <10> on input line 134.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 128.
+(Font)              <7> on input line 134.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 128.
+(Font)              <5> on input line 134.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 6.72699pt on input line 128.
+(Font)              scaled to size 6.72699pt on input line 134.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
-(Font)              scaled to size 4.805pt on input line 128.
+(Font)              scaled to size 4.805pt on input line 134.
 File: start.eps Graphic file (type eps)
  <start.eps>
 
 [4]
 File: gameover.eps Graphic file (type eps)
  <gameover.eps>
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 166.
-LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 166.
-LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 9.60999pt on input line 166.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 166.
+
+[5]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on input line 172.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 172.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `JT1/gt/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 166.
+(Font)              scaled to size 8.64899pt on input line 172.
 LaTeX Font Info:    Font shape `JY1/gt/m/n' will be
-(Font)              scaled to size 8.64899pt on input line 166.
+(Font)              scaled to size 8.64899pt on input line 172.
  (./src/main/Main.java
-
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 (Font)              scaled to size 8.64899pt on input line 1.
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
 (Font)              scaled to size 8.64899pt on input line 1.
-[5]
 LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 (Font)              scaled to size 4.805pt on input line 1.
-) (./src/model/GameModel.java
 
-[6]
+
+[6]) (./src/model/GameModel.java
 
 [7]
 
@@ -555,49 +559,49 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [20]
 
-[21]) (./src/model/GameConstants.java
+[21])
 
-[22]
+[22] (./src/model/GameConstants.java
 
 [23]
 
 [24]
 
-[25]) (./src/model/GameObject.java
+[25]
 
-[26]) (./src/model/GameState.java)
+[26]) (./src/model/GameObject.java
 
-[27] (./src/model/Alignment.java) (./src/model/Background.java
+[27]) (./src/model/GameState.java) (./src/model/Alignment.java
 
-[28]
+[28]) (./src/model/Background.java
 
 [29]
 
 [30]) (./src/model/Projectile.java
 
-[31]) (./src/model/Player.java
+[31])
 
-[32]
+[32] (./src/model/Player.java
 
 [33]) (./src/model/Arrow.java
 
-[34]) (./src/model/BossProjectile.java) (./src/model/Boss.java
+[34]) (./src/model/BossProjectile.java
 
-[35]) (./src/model/Apollo.java
+[35]) (./src/model/Boss.java
 
-[36]
+[36]) (./src/model/Apollo.java
 
-[37]) (./src/model/Sun.java
+[37]
 
-[38]
+[38]) (./src/model/Sun.java
 
 [39]
 
 [40]
 
-[41]) (./src/model/Zeus.java
+[41]
 
-[42]
+[42]) (./src/model/Zeus.java
 
 [43]
 
@@ -605,37 +609,37 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [45]
 
-[46]) (./src/model/Lighting.java
+[46]
 
-[47]
+[47]) (./src/model/Lighting.java
 
-[48]) (./src/model/HostileEntity.java
+[48]
 
-[49]
+[49]) (./src/model/HostileEntity.java
 
 [50]) (./src/model/EnemySpawner.java
 
-[51]) (./src/model/Boulder.java
+[51]
 
-[52]
+[52]) (./src/model/Boulder.java
 
-[53]) (./src/model/Cyclops.java
+[53]
 
-[54]
+[54]) (./src/model/Cyclops.java
 
 [55]
 
-[56]) (./src/model/Feather.java
+[56]
 
-[57]) (./src/model/Harpy.java
+[57]) (./src/model/Feather.java)
 
-[58]
+[58] (./src/model/Harpy.java
 
-[59])
+[59]
 
-[60] (./src/model/Minion.java) (./src/view/GamePanel.java
+[60]) (./src/model/Minion.java
 
-[61]
+[61]) (./src/view/GamePanel.java
 
 [62]
 
@@ -671,9 +675,11 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 
 [78]
 
-[79])
+[79]
 
-[80] (./report.aux)
+[80])
+
+[81] (./report.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2025-06-01> patch level 1
@@ -683,12 +689,12 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: 588C1957C5EF07FA3AE086EEA46DAD99;1190.
  ) 
 Here is how much of TeX's memory you used:
- 14361 strings out of 468530
- 220224 string characters out of 5449390
- 1422363 words of memory out of 5000000
- 42655 multiletter control sequences out of 15000+600000
- 683511 words of font info for 124 fonts, out of 8000000 for 9000
+ 14365 strings out of 468530
+ 220275 string characters out of 5449390
+ 1434363 words of memory out of 5000000
+ 42658 multiletter control sequences out of 15000+600000
+ 686506 words of font info for 125 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
- 72i,11n,79p,485b,2121s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,11n,79p,676b,2137s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (80 pages, 2037576 bytes).
+Output written on report.dvi (81 pages, 2040952 bytes).
