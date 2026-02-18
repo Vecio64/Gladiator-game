@@ -343,7 +343,7 @@ public class GameModel {
         if (ability2Timer > 0) return;
         ability2Timer = GameConstants.ABILITY2TIMER;
         Lighting l = new Lighting(
-                player.getX() + GameConstants.PLAYER_WIDTH / 2,
+                player.getX(),
                 player.getY(),
                 0, false, true, false
         );        newObjectsBuffer.add(l);
