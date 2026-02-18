@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025/Homebrew) (preloaded format=platex 2025.3.15)  18 FEB 2026 14:43
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025/Homebrew) (preloaded format=platex 2025.3.15)  18 FEB 2026 15:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -560,32 +560,38 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 [14]
 
 [15]
+
+[16]
+
+[17]
+
+[18]
 File: title.eps Graphic file (type eps)
  <title.eps>
 File: screenshot/aml1h-qx0nm.eps Graphic file (type eps)
  <screenshot/aml1h-qx0nm.eps>
-
-[16]
 File: screenshot/screen_2026_02_1853358.eps Graphic file (type eps)
  <screenshot/screen_2026_02_1853358.eps>
 File: screenshot/screen_2026_02_1853419.eps Graphic file (type eps)
  <screenshot/screen_2026_02_1853419.eps>
+
+[19]
 File: screenshot/screen_2026_02_1853424.eps Graphic file (type eps)
  <screenshot/screen_2026_02_1853424.eps>
 File: screenshot/screen_2026_02_1853622.eps Graphic file (type eps)
  <screenshot/screen_2026_02_1853622.eps>
-
-[17]
 File: screenshot/screen_2026_02_1853430.eps Graphic file (type eps)
  <screenshot/screen_2026_02_1853430.eps>
 File: screenshot/screen_2026_02_1853441.eps Graphic file (type eps)
  <screenshot/screen_2026_02_1853441.eps>
+
+[20]
 File: screenshot/aanjk-xj71v.eps Graphic file (type eps)
  <screenshot/aanjk-xj71v.eps>
 File: screenshot/a8sri-5dqx7.eps Graphic file (type eps)
  <screenshot/a8sri-5dqx7.eps>
 
-[18]
+[21]
 File: screenshot/screen_2026_02_1853451.eps Graphic file (type eps)
  <screenshot/screen_2026_02_1853451.eps>
 File: screenshot/screen_2026_02_1853552.eps Graphic file (type eps)
@@ -595,17 +601,17 @@ File: screenshot/a4417-wlsd5.eps Graphic file (type eps)
 File: screenshot/aer32-13xux.eps Graphic file (type eps)
  <screenshot/aer32-13xux.eps>
 
-[19]
+[22]
 File: screenshot/aki7j-iqzs4.eps Graphic file (type eps)
  <screenshot/aki7j-iqzs4.eps>
 File: screenshot/ad1up-zu78p.eps Graphic file (type eps)
  <screenshot/ad1up-zu78p.eps>
 
-[20]
+[23]
 
-[21]
+[24]
 
-[22]
+[25]
 File: title.eps Graphic file (type eps)
  <title.eps>
 File: start.eps Graphic file (type eps)
@@ -613,15 +619,9 @@ File: start.eps Graphic file (type eps)
 File: gameover.eps Graphic file (type eps)
  <gameover.eps>
 
-[23]
-
-[24] (./src/main/Main.java) (./src/model/GameModel.java
-
-[25]
-
 [26]
 
-[27]
+[27] (./src/main/Main.java) (./src/model/GameModel.java
 
 [28]
 
@@ -647,91 +647,91 @@ File: gameover.eps Graphic file (type eps)
 
 [39]
 
-[40]) (./src/model/GameConstants.java
+[40]
 
 [41]
 
 [42]
 
-[43]
+[43]) (./src/model/GameConstants.java
 
-[44]) (./src/model/GameObject.java
+[44]
 
-[45]) (./src/model/GameState.java) (./src/model/Alignment.java
+[45]
 
-[46]) (./src/model/Background.java
+[46]
 
-[47]
+[47]) (./src/model/GameObject.java
 
-[48]) (./src/model/Projectile.java
+[48]) (./src/model/GameState.java) (./src/model/Alignment.java
 
-[49]
+[49]) (./src/model/Background.java
 
-[50]) (./src/model/Player.java
+[50]
 
-[51])
+[51]) (./src/model/Projectile.java
 
-[52] (./src/model/Arrow.java)
+[52]
 
-[53] (./src/model/BossProjectile.java) (./src/model/Boss.java
+[53]) (./src/model/Player.java
 
-[54]) (./src/model/Apollo.java
+[54])
 
-[55]
+[55] (./src/model/Arrow.java)
 
-[56]) (./src/model/Sun.java
+[56] (./src/model/BossProjectile.java) (./src/model/Boss.java
 
-[57]
+[57]) (./src/model/Apollo.java
 
 [58]
 
-[59]
+[59]) (./src/model/Sun.java
 
-[60]) (./src/model/Zeus.java
+[60]
 
 [61]
 
 [62]
 
-[63]
+[63]) (./src/model/Zeus.java
 
 [64]
 
-[65]) (./src/model/Lighting.java
+[65]
 
 [66]
 
-[67]) (./src/model/HostileEntity.java
+[67]
 
-[68])
+[68]) (./src/model/Lighting.java
 
-[69] (./src/model/EnemySpawner.java
+[69]
 
-[70]) (./src/model/Boulder.java
+[70]) (./src/model/HostileEntity.java
 
-[71]
+[71])
 
-[72]) (./src/model/Cyclops.java
+[72] (./src/model/EnemySpawner.java
 
-[73]
+[73]) (./src/model/Boulder.java
 
 [74]
 
-[75]) (./src/model/Feather.java
+[75]) (./src/model/Cyclops.java
 
-[76]) (./src/model/Harpy.java
+[76]
 
 [77]
 
-[78]) (./src/model/Minion.java
+[78]) (./src/model/Feather.java
 
-[79]) (./src/view/GamePanel.java
+[79]) (./src/model/Harpy.java
 
 [80]
 
-[81]
+[81]) (./src/model/Minion.java
 
-[82]
+[82]) (./src/view/GamePanel.java
 
 [83]
 
@@ -751,21 +751,27 @@ File: gameover.eps Graphic file (type eps)
 
 [91]
 
-[92]) (./src/view/ResourceManager.java
+[92]
 
 [93]
 
 [94]
 
-[95]
+[95]) (./src/view/ResourceManager.java
 
 [96]
 
 [97]
 
-[98])
+[98]
 
-[99] (./report.aux)
+[99]
+
+[100]
+
+[101])
+
+[102] (./report.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2024-11-01> patch level 2
@@ -783,4 +789,4 @@ Here is how much of TeX's memory you used:
  934 hyphenation exceptions out of 8191
  72i,11n,79p,696b,2116s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (99 pages, 2278728 bytes).
+Output written on report.dvi (102 pages, 2314576 bytes).

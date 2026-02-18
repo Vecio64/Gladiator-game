@@ -286,6 +286,79 @@ Playerの攻撃として用いたり、Bossの攻撃としても用いること�
 {\raggedleft (文責：佐々木)\par}
 
 \subsection{Puller担当}
+私は、MVCモデルの中核となるModel層の設計と実装を主導しました。ゲームの根幹となるメインループ、オブジェクト指向設計に基づくクラス階層の構築、物理演算（当たり判定）、および敵AIのロジックを担当しました。
+
+\subsubsection{堅牢なオブジェクト管理システム}
+ゲーム内に登場するプレイヤー、敵、弾丸などの全オブジェクトを効率的に処理するため、基底クラス`GameObject`を作成し、`ArrayList`で一元管理する構造を採用しました。
+特筆すべき点として、メインループ(`update`)内でオブジェクトリストを走査中に新たなオブジェクト（発射された弾丸など）を追加すると`ConcurrentModificationException`が発生する問題を防ぐため、一時的なバッファリスト`newObjectsBuffer`を導入しました。これにより、ループ終了後に安全にリストを統合する堅牢な設計を実現しました。
+
+\begin{lstlisting}[caption={安全なオブジェクト更新ロジック (GameModel.java)}]
+// ループ中のエラー回避用のバッファ
+private ArrayList<GameObject> newObjectsBuffer;
+
+public void update() {
+    // ... (省略) ...
+    
+    // スポナーや入力処理によって生成されたオブジェクトをバッファに追加
+    
+    // 安全なタイミングでメインリストに統合
+    objects.addAll(newObjectsBuffer);
+    newObjectsBuffer.clear();
+
+    // 全オブジェクトの移動と描画を一括処理（ポリモーフィズム）
+    for (GameObject obj : objects) {
+        obj.move();
+    }
+    // ... (省略) ...
+}
+\end{lstlisting}
+
+\subsubsection{精密な当たり判定と領域計算}
+シューティングゲームにおいて最も重要な当たり判定には、単純な矩形交差判定（`intersects`）だけでなく、`java.awt.geom.Area`クラスを用いた領域計算アルゴリズムを採用しました。
+単純な四角形同士の判定では、画像が透明な部分でも「当たった」と判定されてしまう問題があります。そこで、`Area`クラスの`intersect`メソッドを使用することで、オブジェクトの形状に基づいた論理積を計算し、ピクセル単位に近い精密な衝突判定を実現しました。
+
+\begin{lstlisting}[caption={Areaクラスを用いた精密判定 (GameModel.java)}]
+private boolean checkIntersection(GameObject obj1, GameObject obj2) {
+    // 1. 形状（Shape）を取得
+    Shape s1 = obj1.getShape();
+    Shape s2 = obj2.getShape();
+
+    // 2. 高速化のため、まずは境界矩形で簡易判定
+    if (!s1.getBounds2D().intersects(s2.getBounds2D())) {
+        return false;
+    }
+
+    // 3. Areaクラスによる精密判定（形状の重なりを計算）
+    Area area1 = new Area(s1);
+    Area area2 = new Area(s2);
+    area1.intersect(area2);
+
+    return !area1.isEmpty(); // 重なり部分が存在すれば衝突
+}
+\end{lstlisting}
+
+\subsubsection{弾丸の優先度システム (Power Level)}
+単なる「当たったら消える」だけでなく、弾丸に「強度（Power Level）」の概念を導入しました。
+`Projectile`クラスに`powerLevel`フィールドを持たせ、弾丸同士が衝突した際、強度の高い方が生き残るロジックを実装しました（例：岩(Lv2)は矢(Lv1)を破壊して貫通するが、太陽(Lv3)には破壊される）。これにより、戦略的な攻撃の選択が可能になりました。
+
+\begin{lstlisting}[caption={弾丸同士の相殺ロジック (GameModel.java)}]
+if (p1.getPowerLevel() > p2.getPowerLevel()) {
+    p2.setDead(); // p1が強く、p2が破壊される
+} else if (p2.getPowerLevel() > p1.getPowerLevel()) {
+    p1.setDead(); // p2が強く、p1が破壊される
+} else {
+    p1.setDead(); // 同等の場合は相殺
+    p2.setDead();
+}
+\end{lstlisting}
+
+\subsubsection{ジェネリクスを用いた敵生成}
+敵の出現管理を行う`EnemySpawner`クラスでは、Javaのジェネリクス（`Class<? extends Minion>`）を活用しました。これにより、スパナーのインスタンス生成時に「ハーピー」や「サイクロプス」といったクラスタイプを動的に指定するだけで、異なる種類の敵を生成可能にしました。また、出現間隔に乱数による「ゆらぎ」を持たせることで、単調なゲームプレイを防いでいます。
+
+\subsubsection{第一ボス (Apollo) のAI実装}
+ステージ1のボスである`Apollo`クラスを実装しました。継承元の`Boss`クラスの機能を活用しつつ、画面端での反射移動や、HP半減時に画像と移動速度が変化する「発狂モード（第二形態）」への状態遷移ロジックを組み込みました。
+
+{\raggedleft (文責：Puller)\par}
 
 \section{実行例}
 % 実行例をスクリーンショットを使って，分かりやすく説明してください．特に，作成したプログラムの特徴となるような機能については，実際の使用例を分かりやすく説明するようにしてください．
