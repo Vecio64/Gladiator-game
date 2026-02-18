@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025/Homebrew) (preloaded format=platex 2025.3.15)  18 FEB 2026 15:19
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025/Homebrew) (preloaded format=platex 2025.3.15)  18 FEB 2026 15:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -612,6 +612,10 @@ File: screenshot/ad1up-zu78p.eps Graphic file (type eps)
 [24]
 
 [25]
+
+[26]
+
+[27]
 File: title.eps Graphic file (type eps)
  <title.eps>
 File: start.eps Graphic file (type eps)
@@ -619,13 +623,9 @@ File: start.eps Graphic file (type eps)
 File: gameover.eps Graphic file (type eps)
  <gameover.eps>
 
-[26]
-
-[27] (./src/main/Main.java) (./src/model/GameModel.java
-
 [28]
 
-[29]
+[29] (./src/main/Main.java) (./src/model/GameModel.java
 
 [30]
 
@@ -653,89 +653,89 @@ File: gameover.eps Graphic file (type eps)
 
 [42]
 
-[43]) (./src/model/GameConstants.java
+[43]
 
 [44]
 
-[45]
+[45]) (./src/model/GameConstants.java
 
 [46]
 
-[47]) (./src/model/GameObject.java
+[47]
 
-[48]) (./src/model/GameState.java) (./src/model/Alignment.java
+[48]
 
-[49]) (./src/model/Background.java
+[49]) (./src/model/GameObject.java
 
-[50]
+[50]) (./src/model/GameState.java) (./src/model/Alignment.java
 
-[51]) (./src/model/Projectile.java
+[51]) (./src/model/Background.java
 
 [52]
 
-[53]) (./src/model/Player.java
+[53]) (./src/model/Projectile.java
 
-[54])
+[54]
 
-[55] (./src/model/Arrow.java)
+[55]) (./src/model/Player.java
 
-[56] (./src/model/BossProjectile.java) (./src/model/Boss.java
+[56])
 
-[57]) (./src/model/Apollo.java
+[57] (./src/model/Arrow.java)
 
-[58]
+[58] (./src/model/BossProjectile.java) (./src/model/Boss.java
 
-[59]) (./src/model/Sun.java
+[59]) (./src/model/Apollo.java
 
 [60]
 
-[61]
+[61]) (./src/model/Sun.java
 
 [62]
 
-[63]) (./src/model/Zeus.java
+[63]
 
 [64]
 
-[65]
+[65]) (./src/model/Zeus.java
 
 [66]
 
 [67]
 
-[68]) (./src/model/Lighting.java
+[68]
 
 [69]
 
-[70]) (./src/model/HostileEntity.java
+[70]) (./src/model/Lighting.java
 
-[71])
+[71]
 
-[72] (./src/model/EnemySpawner.java
+[72]) (./src/model/HostileEntity.java
 
-[73]) (./src/model/Boulder.java
+[73])
 
-[74]
+[74] (./src/model/EnemySpawner.java
 
-[75]) (./src/model/Cyclops.java
+[75]) (./src/model/Boulder.java
 
 [76]
 
-[77]
+[77]) (./src/model/Cyclops.java
 
-[78]) (./src/model/Feather.java
+[78]
 
-[79]) (./src/model/Harpy.java
+[79]
 
-[80]
+[80]) (./src/model/Feather.java
 
-[81]) (./src/model/Minion.java
+[81]) (./src/model/Harpy.java
 
-[82]) (./src/view/GamePanel.java
+[82]
 
-[83]
+[83]) (./src/model/Minion.java
 
-[84]
+[84]) (./src/view/GamePanel.java
 
 [85]
 
@@ -757,11 +757,11 @@ File: gameover.eps Graphic file (type eps)
 
 [94]
 
-[95]) (./src/view/ResourceManager.java
+[95]
 
 [96]
 
-[97]
+[97]) (./src/view/ResourceManager.java
 
 [98]
 
@@ -769,24 +769,28 @@ File: gameover.eps Graphic file (type eps)
 
 [100]
 
-[101])
+[101]
 
-[102] (./report.aux)
+[102]
+
+[103])
+
+[104] (./report.aux)
  ***********
 pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 1C1E57987A221840BD356EA7C5459078;1574.
+(rerunfilecheck)             Checksum: 42910A75AEF944E9278B8A7310DB18BF;1986.
  ) 
 Here is how much of TeX's memory you used:
- 14568 strings out of 473836
- 230431 string characters out of 5722037
+ 14573 strings out of 473836
+ 230541 string characters out of 5722037
  1433468 words of memory out of 5000000
- 37516 multiletter control sequences out of 15000+600000
+ 37521 multiletter control sequences out of 15000+600000
  621653 words of font info for 123 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  72i,11n,79p,696b,2116s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (102 pages, 2316840 bytes).
+Output written on report.dvi (104 pages, 2323552 bytes).
