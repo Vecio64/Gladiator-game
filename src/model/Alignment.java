@@ -2,10 +2,12 @@ package model;
 
 /**
  * Alignment Enum
- * Defines which "team" a game object belongs to.
- * Used to prevent friendly fire and determine collision logic.
+ *
+ * Defines the "team" allegiance of a game object.
+ * This is crucial for collision detection to prevent friendly fire
+ * (e.g., Player projectiles should not hurt the Player, but should hurt Enemies).
  */
 public enum Alignment {
     PLAYER, // Belongs to the Player (Targets Enemies)
-    ENEMY  // Belongs to Enemies (Targets Player)
+    ENEMY   // Belongs to Enemies (Targets Player)
 }

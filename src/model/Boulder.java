@@ -3,18 +3,30 @@ package model;
 import view.ResourceManager;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
 
 /**
  * Boulder Class
- * A heavy projectile dropped by the StoneGolem.
- * It has Power Level 2, meaning it destroys Arrows/Feathers but is destroyed by the Sun.
+ *
+ * A heavy projectile dropped by the Cyclops enemy.
+ * It simulates gravity by accelerating downwards.
+ *
+ * Combat Logic:
+ * - Power Level: 2 (Heavy).
+ * - It will destroy Level 1 projectiles (Arrows) on impact.
+ * - It can be destroyed by Level 3 projectiles (Sun/Lighting).
  */
 public class Boulder extends Projectile {
 
-    private double preciseY;
-    private double velY;
-    private double gravity = GameConstants.BOULDER_GRAVITY; // Accelerates downwards
+    private double preciseY; // Double for smooth gravity calculation
+    private double velY;     // Vertical velocity
+    private double gravity = GameConstants.BOULDER_GRAVITY; // Acceleration per frame
+
+    /**
+     * Constructor for the Boulder.
+     *
+     * @param x The starting X coordinate (aligned with the horizontal center of the Cyclops).
+     * @param y The starting Y coordinate (positioned just below the Cyclops).
+     */
 
     public Boulder(int x, int y) {
         super(x, y,
@@ -27,17 +39,20 @@ public class Boulder extends Projectile {
         );
 
         this.preciseY = y;
-        this.velY = GameConstants.BOULDER_INITIAL_SPEED; // Initial throw speed
+        this.velY = GameConstants.BOULDER_INITIAL_SPEED;
     }
 
+    /**
+     * Updates the boulder's position applying gravity logic.
+     */
     @Override
     public void move() {
-        // Apply Gravity
+        // Apply Gravity: Increase velocity, then update position
         velY += gravity;
         preciseY += velY;
         y = (int) preciseY;
 
-        // Despawn if off-screen
+        // Despawn if it falls off the bottom of the screen
         if (y > GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT) {
             isDead = true;
         }
@@ -48,15 +63,18 @@ public class Boulder extends Projectile {
         if (image != null) {
             g.drawImage(image, x, y, width, height, null);
         } else {
-            // Placeholder: Gray Rock
+            // Fallback: Gray Circle
             g.setColor(Color.GRAY);
             g.fillOval(x, y, width, height);
         }
     }
 
+    /**
+     * Override getShape to provide a Circular Hitbox.
+     * This makes collision detection more accurate for a round object.
+     */
     @Override
     public Shape getShape() {
-        // set hitbox to a circle
         return new Ellipse2D.Float(x, y, width, height);
     }
 }

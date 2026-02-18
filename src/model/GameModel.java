@@ -8,92 +8,307 @@ import java.util.List;
 import java.util.Random;
 import java.awt.geom.Area;
 
-// --- GameModel (M) ---
+/**
+ * GameModel Class
+ *
+ * Represents the "Brain" of the application (MVC Architecture).
+ * It manages the game state, all game entities, collision detection,
+ * level progression, and core mechanics.
+ */
 public class GameModel {
-    private ArrayList<GameObject> objects;
+
+    // --- GAME OBJECTS MANAGEMENT ---
+    private ArrayList<GameObject> objects;        // List of all active game entities
+    private ArrayList<GameObject> newObjectsBuffer; // Buffer to add objects safely during iteration
     private Player player;
     private boolean isGameOver = false;
     private Random rand = new Random();
-    private ArrayList<GameObject> newObjectsBuffer; // 弾を追加するための予約リスト（ループ中のエラー回避用）
-    private GameState state; // 現在のゲーム状態
-    private boolean isFiring; // スペースキーが押されているか
-    private int shotTimer; // 連射間隔を制御するタイマー
-    private int arrowDamage;
-    private int arrowInterval;
 
-    // Score progression
-    private static int score = 0; //スコアの導入
-    private int nextTargetScore;
-    private int currentLevelIndex = 0;
-    private boolean isBossActive = false; //ボスのフェーズの確認
+    // --- GAME STATE & INPUT ---
+    private GameState state;       // Current state (TITLE, PLAYING, etc.)
+    private boolean isFiring;      // Tracks if the shoot key is held down
+    private int shotTimer;         // Controls the fire rate (cooldown)
+    private int arrowDamage;       // Current damage of player's arrows
+    private int arrowInterval;     // Current fire rate delay
 
-    // 追加:ライフ機能用変数
-    private int lives;// 初期ライフ
-    private int damageTimer; // ダメージを受けた後の無敵時間（フレーム数）
+    // --- PROGRESSION SYSTEM ---
+    private static int score = 0;
+    private int nextTargetScore;         // Score needed to reach the next event
+    private int currentLevelIndex = 0;   // Current step in the LEVEL_MILESTONES array
+    private int lastCheckpointIndex = 0; // Stores the index of the last major event (for Continue)
+    private boolean isBossActive = false; // Flag to pause progression during boss fights
 
+    // --- PLAYER STATS ---
+    private int lives;       // Current lives
+    private int damageTimer; // Invincibility frames after taking damage
+
+    // --- ABILITIES COOLDOWNS ---
     private int ability1Timer;
     private int ability2Timer;
     private int ability3Timer;
 
-    //background
+    // --- ENVIRONMENT ---
     private Background background;
+    private int currentStage; // Used for UI display (Stage 1, 2, 3)
 
-    // for writing the stage number in GamePanel
-    private int currentStage;
+    // --- UI MESSAGES ---
+    private String[] currentMessageLines; // Stores text for the Message Box
 
-    private String[] currentMessageLines;
-
-    private List<EnemySpawner> activeSpawners;
+    // --- ENEMY SPAWNING ---
+    private List<EnemySpawner> activeSpawners; // List of active enemy generators
 
     public GameModel() {
         objects = new ArrayList<>();
         newObjectsBuffer = new ArrayList<>();
         activeSpawners = new ArrayList<>();
-        state = GameState.TITLE; // 最初はタイトル画面から
+        state = GameState.TITLE;
     }
 
+    /**
+     * Initializes a fresh new game from the beginning.
+     */
     public void initGame() {
-        objects.clear();
-        newObjectsBuffer.clear();
-        activeSpawners.clear();
-        player = new Player((GameConstants.WINDOW_WIDTH -GameConstants.PLAYER_WIDTH)/2, GameConstants.FIELD_HEIGHT + GameConstants.HUD_HEIGHT - GameConstants.PLAYER_HEIGHT);
-        objects.add(player);
+        // Reset Checkpoint to 0 for a fresh start
+        lastCheckpointIndex = 0;
 
-        // Initialize Background
-        background = new Background();
+        // Call the logic to load the first level
+        resetToLevel(0);
 
-        isFiring = false;
-        shotTimer = 0;
         arrowDamage = GameConstants.ARROW_DAMAGE;
         arrowInterval = GameConstants.ARROW_INTERVAL;
-        state = GameState.PLAYING;
-        score = 0; //スコアをリセット
 
-        // 追加:ライフ初期化
-        lives = GameConstants.PLAYER_MAX_LIVES;
-        damageTimer = 0;
+        // Reset Abilities Cooldowns
+        ability1Timer = 0;
+        ability2Timer = 0;
+        ability3Timer = 0;
 
-        //Score progression resets
-        this.currentLevelIndex = 0;
-        this.nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
-        isBossActive = false;
+        // Initialize Background
+        if (background == null) background = new Background();
+        background.setImage(ResourceManager.stage1Img);
+        background.setSpeed(GameConstants.SCREEN_SPEED);
 
-        // STAGE 1 SETUP: Add Harpy Spawner
-        activeSpawners.add(new EnemySpawner(Harpy.class, GameConstants.HARPY_SPAWN_INTERVAL, GameConstants.HARPY_SPAWN_VARIANCE));
+        // Reset Stage Number Default
         this.currentStage = 1;
 
+        // Starting message
         String tutorial = "WELCOME GLADIATOR!\n\n" +
                 "Controls:\n" +
                 "[KEY-ARROWS] Move\n" +
                 "[SPACE] Shoot\n" +
                 "[P] Pause\n\n" +
                 "Defeat enemies\n" +
-                "and survive.\n" +
-                "Good Luck!";
+                "and survive!";
         showMessage(tutorial);
     }
 
-    public static void addScore(int points) {
+    /**
+     * Continues the game from the last saved checkpoint.
+     * Called when the player chooses "Continue" after Game Over.
+     */
+    public void continueGame() {
+        // Do NOT reset lastCheckpointIndex. Use it to restore state.
+        System.out.println("Continuing from Checkpoint Index: " + lastCheckpointIndex);
+
+        // Restore the game to the saved level index
+        resetToLevel(lastCheckpointIndex);
+
+        // Hide any lingering message boxes so the player can play immediately
+        if (this.state == GameState.MESSAGE) {
+            this.state = GameState.PLAYING;
+        }
+    }
+
+    /**
+     * Resets the game state to a specific level index.
+     * Used for both initialization and checkpoints.
+     * @param levelIndex The index in LEVEL_MILESTONES to load.
+     */
+    private void resetToLevel(int levelIndex) {
+        objects.clear();
+        newObjectsBuffer.clear();
+        activeSpawners.clear();
+
+        // --- RESET PLAYER ---
+        // Set the correct sprite (Normal vs Wings) based on progression
+        if (levelIndex > 3){
+            player = new Player(ResourceManager.playerImg2);
+        } else {
+            player = new Player(ResourceManager.playerImg);
+        }
+        objects.add(player);
+        lives = GameConstants.PLAYER_MAX_LIVES;
+        damageTimer = 0;
+
+        // Reset Timers / Mechanics
+        isFiring = false;
+        shotTimer = 0;
+
+        // Restore Level Index & Targets
+        this.currentLevelIndex = levelIndex;
+        // Safety check to avoid ArrayOutOfBounds
+        if (currentLevelIndex + 1 < GameConstants.LEVEL_MILESTONES.length) {
+            this.nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex + 1];
+        } else {
+            this.nextTargetScore = Integer.MAX_VALUE; // Max level reached
+        }
+
+        // Set default spawner for the start of the game
+        if (levelIndex == 0) {
+            activeSpawners.add(new EnemySpawner(Harpy.class, GameConstants.HARPY_SPAWN_INTERVAL, GameConstants.HARPY_SPAWN_VARIANCE));
+        }
+
+        // Restore Score (Set score to the previous milestone so we don't regress level)
+        if (levelIndex > 0) {
+            score = GameConstants.LEVEL_MILESTONES[levelIndex];
+        } else {
+            score = 0;
+        }
+
+        // Re-apply the specific effects (Bosses, Backgrounds) for this level
+        applyLevelEffects(levelIndex);
+
+        // Set State
+        isGameOver = false;
+        state = GameState.PLAYING;
+    }
+
+    /**
+     * Checks if the player has reached the score required for the next event.
+     */
+    private void checkLevelProgression() {
+        // If a Boss is active, pause progression
+        if (isBossActive) return;
+
+        // If max level reached, return
+        if (currentLevelIndex >= GameConstants.LEVEL_MILESTONES.length - 1) return;
+
+        if (score >= nextTargetScore){
+            // Advance level index
+            currentLevelIndex++;
+
+            // Apply new level logic
+            applyLevelEffects(currentLevelIndex);
+            System.out.println("Level Up! Current Index: " + currentLevelIndex);
+
+            // Set next target
+            if (currentLevelIndex + 1 < GameConstants.LEVEL_MILESTONES.length) {
+                nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex + 1];
+            }
+        }
+    }
+
+    /**
+     * Applies game changes based on the current level index.
+     * Handles difficulty spikes, boss spawns, and stage transitions.
+     */
+    private void applyLevelEffects(int levelIndex) {
+        switch (levelIndex) {
+            case 1: // Increase spawn rate
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.8);
+                break;
+
+            case 2: // Increase spawn rate
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.8);
+                break;
+
+            case 3: // BOSS 1: APOLLO
+                // Save checkpoint
+                lastCheckpointIndex = levelIndex;
+
+                showMessage("WARNING!\n\nBOSS DETECTED:\nAPOLLO\n\nPrepare for battle!");
+                isBossActive = true;
+                clearEverything(); // Remove standard enemies
+                spawnApollo();
+                healPlayer();
+                break;
+
+            case 4: // STAGE 2 START
+                // Save checkpoint
+                lastCheckpointIndex = levelIndex;
+
+                showMessage("STAGE 1 CLEARED!\n\nEntering the Heavens...\n\nNow you can fly!\n\nArrow Damage doubled!\n\n Press [1] to use\nABILITY 1:\nAPOLLO'S SUN");
+                if (background != null) {
+                    clearEverything();
+                    healPlayer();
+                    background.setImage(ResourceManager.stage2Img);
+                    background.setSpeed(GameConstants.SCREEN_SPEED);
+
+                    this.currentStage = 2;
+
+                    // Reset Ability 1 Cooldown
+                    ability1Timer = 0;
+
+                    // Upgrade Player: Change image to Wings
+                    player.setImage(ResourceManager.playerImg2);
+
+                    // Upgrade Player: Double Damage
+                    arrowDamage *= 2;
+
+                    // Update Spawners for Stage 2
+                    activeSpawners.clear();
+                    // Harpy Spawner
+                    activeSpawners.add(new EnemySpawner(Harpy.class, 100, 50));
+                    // Cyclops Spawner (New Enemy)
+                    activeSpawners.add(new EnemySpawner(Cyclops.class,
+                            GameConstants.CYCLOPS_SPAWN_INTERVAL,
+                            GameConstants.CYCLOPS_SPAWN_VARIANCE));
+                }
+                break;
+
+            case 5: // Increase spawn rate
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
+                break;
+            case 6: // Increase spawn rate
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
+                break;
+
+            case 7: // BOSS 2: ZEUS
+                // Save checkpoint
+                lastCheckpointIndex = levelIndex;
+
+                showMessage("WARNING!\n\nBOSS DETECTED:\nZEUS\n\nPrepare for battle!");
+                isBossActive = true;
+                clearEverything();
+                spawnZeus();
+                healPlayer();
+                break;
+
+            case 8: // STAGE 3 START
+                // Save checkpoint
+                lastCheckpointIndex = levelIndex;
+
+                showMessage("STAGE 2 CLEARED!\n\nEntering the INFERNO...\n\nNow you can\nshoot faster!\n\nPress [2] to use\nABILITY 2:\nZEUS'S LIGHTING");
+                if (background != null) {
+                    clearEverything();
+                    background.setImage(ResourceManager.stage3Img);
+                    background.setSpeed(0); // Static background for Inferno
+
+                    ability2Timer = 0;
+
+                    // Upgrade Player: Faster Fire Rate
+                    arrowInterval = GameConstants.ARROW_INTERVAL2;
+
+                    this.currentStage = 3;
+
+                    // Update Spawners
+                    activeSpawners.clear();
+                    activeSpawners.add(new EnemySpawner(Harpy.class, 80, 40));
+                    activeSpawners.add(new EnemySpawner(Cyclops.class, 240, 120));
+                }
+                break;
+            case 9:
+                // Future content
+                break;
+        }
+    }
+
+    public void showMessage(String text) {
+        // Split text to handle multiple lines in the UI
+        this.currentMessageLines = text.split("\n");
+        this.state = GameState.MESSAGE;
+    }
+
+    public static void addScore(int points){
         score += points;
     }
 
@@ -109,67 +324,64 @@ public class GameModel {
         this.state = s;
     }
 
+    /**
+     * Main Game Loop Update.
+     * Called every frame by the GamePanel timer.
+     */
     public void update() {
         if (state != GameState.PLAYING) return;
 
-        // Update background scrolling
+        // 1. Update Background
         if(background!= null) {
             background.update();
         }
+
+        // 2. Check Progression
         checkLevelProgression();
 
-        // --- 連射ロジック ---
+        // 3. Handle Shooting
         if (isFiring) {
             if (shotTimer == 0) {
                 playerShoot();
-                shotTimer = GameConstants.ARROW_INTERVAL;
+                shotTimer = arrowInterval;
             }
         }
         if (shotTimer > 0) {
             shotTimer--;
         }
 
-        // 無敵時間の更新
+        // 4. Update Invincibility Timer
         if (damageTimer > 0) {
             damageTimer--;
         }
 
-        if (ability1Timer > 0) {
-            ability1Timer--;
-        }
+        // 5. Update Ability Cooldowns
+        if (ability1Timer > 0) ability1Timer--;
+        if (ability2Timer > 0) ability2Timer--;
+        if (ability3Timer > 0) ability3Timer--;
 
-        if (ability2Timer > 0) {
-            ability2Timer--;
-        }
-
-        if (ability3Timer > 0) {
-            ability3Timer--;
-        }
-
-        // --- NEW SPAWN LOGIC ---
-        // Iterate through all active spawners
+        // 6. Spawn Enemies
         if (!isBossActive) {
             for (EnemySpawner spawner : activeSpawners) {
-                // If spawner says "True", create that enemy
                 if (spawner.update()) {
                     spawnMinion(spawner.getEnemyType());
                 }
             }
         }
 
-        // オブジェクト追加
+        // 7. Add new objects from buffer
         objects.addAll(newObjectsBuffer);
         newObjectsBuffer.clear();
 
-        // 移動
+        // 8. Move all objects
         for (GameObject obj : objects) {
             obj.move();
         }
 
-        // 当たり判定
+        // 9. Check Collisions
         checkCollisions();
 
-        // 削除
+        // 10. Remove dead objects
         objects.removeIf(obj -> obj.isDead());
     }
 
@@ -179,22 +391,21 @@ public class GameModel {
     private void spawnMinion(Class<? extends Minion> type) {
         int x,y;
         if (type == Harpy.class) {
-            x = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.HARPY_WIDTH); // Simple random X
+            x = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.HARPY_WIDTH); // Random X
             y = GameConstants.HUD_HEIGHT - GameConstants.HARPY_HEIGHT; // Start at top
             Harpy h = new Harpy(x, y, this);
             newObjectsBuffer.add(h);
         }
         else if (type == Cyclops.class) {
-            x = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.CYCLOPS_WIDTH); // Simple random X
-            y = GameConstants.HUD_HEIGHT - GameConstants.CYCLOPS_HEIGHT;
-            Cyclops g = new Cyclops(x, y, this); // Pass 'this' (GameModel)
-            newObjectsBuffer.add(g);
+            x = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.CYCLOPS_WIDTH); // Random X
+            y = GameConstants.HUD_HEIGHT - GameConstants.CYCLOPS_HEIGHT; // Start at top
+            Cyclops c = new Cyclops(x, y, this);
+            newObjectsBuffer.add(c);
         }
     }
 
     /**
      * Allows enemies (Minions/Bosses) to add projectiles to the game.
-     * Using a specific method is safer than exposing the whole list.
      */
     public void spawnEnemyProjectile(Projectile p) {
         if (p != null) {
@@ -202,202 +413,106 @@ public class GameModel {
         }
     }
 
-    private void checkLevelProgression() {
-        // ボスがいたら、何もしない
-        if (isBossActive) return;
-        //次のフェーズがなかったらreturn
-        if (currentLevelIndex >= GameConstants.LEVEL_MILESTONES.length) return;
-
-        if (score >= nextTargetScore) {
-            //apply the effect we decided in the applyLevelEffects function
-            applyLevelEffects(currentLevelIndex);
-            currentLevelIndex++;
-            System.out.println("The current level index is: " + currentLevelIndex);
-            nextTargetScore = GameConstants.LEVEL_MILESTONES[currentLevelIndex];
-        }
-    }
-
-    private void applyLevelEffects(int levelIndex) {
-        switch (levelIndex) {
-            case 0: //START OF THE GAME
-                System.out.println("Start of the Game");
-                break;
-
-            case 1:
-                System.out.println("Difficulty UP!");
-                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.8);
-                break;
-
-            case 2:
-                System.out.println("Difficulty UP!");
-                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.8);
-                break;
-
-            case 3:
-                showMessage("WARNING!\n\nBOSS DETECTED:\nAPOLLO\n\nPrepare for battle!");
-                isBossActive = true;
-                clearEverything();
-                spawnApollo();
-                healPlayer();
-                break;
-            case 4:
-                showMessage("STAGE 1 CLEARED!\n\nEntering the Heavens...\n\nArrow Damage doubled!\n\n Press [1] to use\nABILITY 1:\nAPOLLO'S SUN");
-                if (background != null) {
-                    clearEverything();
-                    healPlayer();
-                    background.setImage(ResourceManager.stage2Img);
-                    background.setSpeed(GameConstants.SCREEN_SPEED);
-                    ability1Timer = 0;
-                    this.currentStage = 2;
-
-                    // DOUBLE ARROW DAMAGE
-                    arrowDamage*=2;
-
-                    // Clear old spawners (remove Stage 1 config)
-                    activeSpawners.clear();
-                    // Harpy Spawner
-                    activeSpawners.add(new EnemySpawner(Harpy.class, 100, 50));
-                    // Cyclops Spawner
-                    activeSpawners.add(new EnemySpawner(Cyclops.class,
-                             GameConstants.CYCLOPS_SPAWN_INTERVAL,
-                             GameConstants.CYCLOPS_SPAWN_VARIANCE));
-
-                }
-                break;
-            case 5:
-                System.out.println("Difficulty UP!");
-                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
-                break;
-            case 6:
-                System.out.println("Difficulty UP!");
-                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
-                break;
-            case 7:
-                showMessage("WARNING!\n\nBOSS DETECTED:\nZEUS\n\nPrepare for battle!");
-                isBossActive = true;
-                clearEverything();
-                spawnZeus();
-                healPlayer();
-                break;
-            case 8:
-                showMessage("STAGE 2 CLEARED!\n\nEntering the INFERNO...\n\nShooting speed increased!\n\nPress [2] to use\nABILITY 2:\nZEUS'S LIGHTING");
-                if (background != null) {
-                    clearEverything();
-                    background.setImage(ResourceManager.stage3Img);
-                    background.setSpeed(0);
-                    ability2Timer = 0;
-                    arrowInterval = GameConstants.ARROW_INTERVAL2;
-                    this.currentStage = 3;
-                    activeSpawners.clear();
-                    activeSpawners.add(new EnemySpawner(Harpy.class, 100, 50));
-                    // Cyclops Spawner
-                    activeSpawners.add(new EnemySpawner(Cyclops.class,
-                            GameConstants.CYCLOPS_SPAWN_INTERVAL,
-                            GameConstants.CYCLOPS_SPAWN_VARIANCE));
-                }
-                break;
-            case 9:
-        }
-    }
-
-    public void showMessage(String text) {
-        // Split the text by newline character to handle multiple lines
-        this.currentMessageLines = text.split("\n");
-        this.state = GameState.MESSAGE;
-    }
-
-    public void bossDefeated() {
-        System.out.println("BOSS DEFEATED! Stage clear.");
+    public void bossDefeated(){
         this.isBossActive = false;
         healPlayer();
     }
 
-    // 全ての敵を消すメソッド
+    /**
+     * Removes all enemies and projectiles from the screen.
+     * Used when starting a boss fight or changing stages.
+     */
     private void clearEverything() {
-        // "敵または羽の場合、消す"
         objects.removeIf(obj -> obj instanceof HostileEntity || obj instanceof Projectile);
         newObjectsBuffer.removeIf(obj -> obj instanceof HostileEntity || obj instanceof Projectile);
     }
 
-    // プレイヤーが撃つ（Controllerから呼ばれる）
+    /**
+     * Spawns a player's arrow. Called by the Controller (Input).
+     */
     public void playerShoot() {
         if (!isGameOver) {
-            // プレイヤーの中央上から発射
-            Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH-GameConstants.ARROW_WIDTH)/2, player.getY() - GameConstants.ARROW_HEIGHT, arrowDamage);
+            // Spawn arrow centered above the player
+            Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH - GameConstants.ARROW_WIDTH)/2,
+                    player.getY() - GameConstants.ARROW_HEIGHT,
+                    arrowDamage);
             newObjectsBuffer.add(a);
         }
     }
 
-    public void ability1() {
+    // --- ABILITIES LOGIC ---
+
+    public void ability1(){
         if (ability1Timer > 0) return;
         ability1Timer = GameConstants.ABILITY1TIMER;
         Sun sun = new Sun(
                 player.getX() + GameConstants.PLAYER_WIDTH / 2,
                 player.getY(),
                 0, false, true
-        );        newObjectsBuffer.add(sun);
-        System.out.println("Player shoots sun");
+        );
+        newObjectsBuffer.add(sun);
     }
 
-    public void ability2() {
+    public void ability2(){
         if (ability2Timer > 0) return;
         ability2Timer = GameConstants.ABILITY2TIMER;
         Lighting l = new Lighting(
-                player.getX() + GameConstants.PLAYER_WIDTH / 2,
+                player.getX(),
                 player.getY(),
                 0, false, true, false
-        );        newObjectsBuffer.add(l);
-        System.out.println("Player shoots Lighting");
+        );
+        newObjectsBuffer.add(l);
     }
 
     private void spawnApollo() {
         Apollo apollo = new Apollo(this);
         objects.add(apollo);
-        System.out.println("APOLLO HAS DESCENDED!");
     }
 
     public void spawnZeus() {
         Zeus zeus = new Zeus(this);
         objects.add(zeus);
-        System.out.println("ZEUS HAS DESCENDED!");
     }
 
-    // ダメージ処理メソッド
+    /**
+     * Handles player taking damage.
+     */
     private void playerTakesDamage() {
-        if (damageTimer == 0) { // 無敵時間中でなければダメージ
+        if (damageTimer == 0) { // Only damage if not invincible
             lives--;
-            damageTimer = 120; // 180フレーム（約3秒）無敵にする
-            System.out.println("Damage taken! Lives remaining: " + lives);
-
+            damageTimer = GameConstants.PLAYER_INVINCIBLE_AFTER_DAMAGE; // 2 seconds invincibility (at 60 FPS)
+            // death check
             if (lives <= 0) {
                 state = GameState.GAMEOVER;
-                System.out.println("GAME OVER");
             }
         }
     }
 
-    private void healPlayer() {
+    private void healPlayer(){
         lives = GameConstants.PLAYER_MAX_LIVES;
     }
 
-
+    /**
+     * Detailed Intersection Check.
+     * Uses Java AWT Area class for precise pixel-perfect collision detection.
+     */
     private boolean checkIntersection(GameObject obj1, GameObject obj2) {
-        // 1. take the precise shapes
+        // 1. Get Shapes
         Shape s1 = obj1.getShape();
         Shape s2 = obj2.getShape();
 
-        // 2. Quick check: if the outer rectangles don't touch we skip the complicated calculations
+        // 2. Quick Check: If bounds don't overlap, skip complex calculation
         if (!s1.getBounds2D().intersects(s2.getBounds2D())) {
             return false;
         }
 
-        // 3. Precise Calculation
+        // 3. Precise Calculation (Area Intersection)
         Area area1 = new Area(s1);
         Area area2 = new Area(s2);
 
         area1.intersect(area2);
 
-        // if the area is not empty it means they are touching
+        // If the resulting area is not empty, they are touching
         return !area1.isEmpty();
     }
 
@@ -439,15 +554,15 @@ public class GameModel {
             if (p1.getPowerLevel() > p2.getPowerLevel()) {
                 p2.setDead(); // p1 dominates
 
-                // SUN CASE: p1 is a Sun, it takes damage equal to p2's damage
+                //  BOSS PROJECTILE CASE: takes damage equal to p2's damage
                 if (p1 instanceof BossProjectile) {
                     ((BossProjectile) p1).reduceHealth(p2.getDamage());
                 }
 
             } else if (p2.getPowerLevel() > p1.getPowerLevel()) {
-                p1.setDead(); // p2 dominates
+                p1.setDead();
 
-                // SUN CASE: If p2 is a Sun, it takes damage equal to p1's damage
+                // BOSS PROJECTILE CASE: takes damage equal to p1's damage
                 if (p2 instanceof BossProjectile) {
                     ((BossProjectile) p2).reduceHealth(p1.getDamage());
                 }
@@ -484,7 +599,7 @@ public class GameModel {
                 if (proj.getAlignment() == Alignment.PLAYER) {
                     enemy.takeDamage(proj.getDamage());
 
-                    // SUN CASE: If the projectile is a Sun, it also loses HP upon contact
+                    // BOSS PROJECTILE CASE: loses HP upon contact
                     if (proj instanceof BossProjectile) {
                         ((BossProjectile) proj).reduceHealth(1);
                     }
@@ -504,11 +619,11 @@ public class GameModel {
         }
     }
 
-    // 無敵時間中かどうか
+    // used in the GamePanel for making the player flashing after taking damage
     public boolean isInvincible() {
         return damageTimer > 0;
     }
-
+    // used in the GamePanel for the graphics of the abilities slots
     public int getAbilityNthTimer(int n) {
         switch (n){
             case 1:
@@ -518,25 +633,28 @@ public class GameModel {
             case 3:
                 return ability3Timer;
             default:
-                System.out.println("getability ERROR");
+                System.out.println("Error: Unknown Ability Index");
         }
         return ability1Timer;
     }
 
+    /**
+     * Checks if an ability is unlocked based on current level progression.
+     */
     public boolean isAbilityUnclocked(int abilityIndex) {
         // Logic for Ability 1 (Sun)
         if (abilityIndex == 1) {
             // Unlocks after defeating the first boss (Apollo)
-            // Apollo is Level Index 4. So > 4 means Stage 2 started.
-            return this.currentLevelIndex > 4;
+            // Apollo is Level Index 3. So > 3 means Stage 2 started.
+            return this.currentLevelIndex > 3;
         }
         // Logic for Ability 2 (Lighting)
         if (abilityIndex == 2) {
             // Unlocks after defeating the second boss (Zeus)
-            // Zeus is Level Index 8. So > 8 means Stage 3 started.
-            return this.currentLevelIndex > 8;
+            // Zeus is Level Index 7. So > 7 means Stage 3 started.
+            return this.currentLevelIndex > 7;
         }
-        // Future logic for Ability 2 and 3
+
         return false;
     }
 
@@ -544,7 +662,7 @@ public class GameModel {
         this.state = GameState.PLAYING;
     }
 
-    //SETTERS & GETTERS
+    // --- SETTERS & GETTERS ---
     public ArrayList<GameObject> getObjects() {
         return objects;
     }
@@ -583,4 +701,5 @@ public class GameModel {
     public String[] getCurrentMessageLines() {
         return currentMessageLines;
     }
+
 }

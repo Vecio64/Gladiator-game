@@ -6,22 +6,24 @@ import java.awt.image.BufferedImage;
 
 /**
  * Background Class
- * Handles the infinite scrolling background using a "Mirroring" technique.
- * It draws the original image and a vertically flipped copy above it
- * to create a seamless loop without needing a specific seamless texture.
+ *
+ * Handles the infinite scrolling background effect.
+ * Instead of requiring a seamless texture, this class uses a "Mirroring" technique:
+ * it draws the image normally, then draws a vertically flipped copy above/below it.
+ * This ensures the edges always match perfectly, creating a smooth loop.
  */
 public class Background {
-    private double y; // Vertical position (double for smooth movement)
-    private double speed; // Scrolling speed
+    private double y;      // Current vertical position (double for precise scrolling)
+    private double speed;  // Pixels per frame to scroll
     private BufferedImage image;
 
-    // Screen dimensions
+    // Dimensions derived from GameConstants
     private final int WIDTH = GameConstants.WINDOW_WIDTH;
-    private final int HEIGHT = GameConstants.FIELD_HEIGHT / 2;
+    private final int HEIGHT = GameConstants.FIELD_HEIGHT / 2; // Height of one "tile"
 
     public Background() {
-        this.image = ResourceManager.stage1Img;
-        this.speed = 0;
+        this.image = ResourceManager.stage1Img; // Default to Stage 1
+        this.speed = 0; // Starts stationary until game begins
         this.y = GameConstants.HUD_HEIGHT;
     }
 
@@ -33,68 +35,70 @@ public class Background {
         this.speed = newSpeed;
     }
 
+    /**
+     * Updates the background position.
+     * Resets 'y' when a full cycle is completed to prevent coordinate overflow.
+     */
     public void update() {
-        // Move the background downwards
         y += speed;
 
-        // Reset position when a full cycle is completed to prevent overflow
+        // Reset position after scrolling past two full tiles (Normal + Flipped)
         if (y >= HEIGHT * 2 + GameConstants.HUD_HEIGHT) {
             y = GameConstants.HUD_HEIGHT;
         }
     }
 
+    /**
+     * Draws the background tiles.
+     * Checks if we are in "Stage 2" mode to apply specific tiling logic if needed.
+     */
     public void draw(Graphics g) {
         if (image == null) return;
 
         int currentY = (int) y;
 
-        if (isStage2Img()){
+        // Stage 2 logic (assumed to use the mirroring technique)
+        if (this.image == ResourceManager.stage2Img){
             // DRAWING STRATEGY:
-            // The screen is 800px tall. Our "Tile" is 400px.
-            // We need to cover the screen from Y=0 to Y=800.
-            // Since 'currentY' moves down, we need to draw tiles above and below it.
-
-            // We assume the pattern is: [Normal] [Flipped] [Normal] [Flipped] ...
+            // We need to cover the entire screen height.
+            // Since our tile is smaller, and the background moves,
+            // we draw a chain of tiles: Normal -> Flipped -> Normal -> Flipped.
 
             // 1. Draw Normal Tile at current Y
-            // Covers: y to y+400  x
             drawForceSize(g, currentY, false);
 
-            // 2. Draw Flipped Tile BELOW
-            // Covers: y+400 to y+800
+            // 2. Draw Flipped Tile BELOW it (y + HEIGHT)
             drawForceSize(g, currentY + HEIGHT, true);
 
-            // 3. Draw Flipped Tile ABOVE
-            // Covers: y-400 to y. (Crucial for when y starts at 0 or is small)
+            // 3. Draw Flipped Tile ABOVE it (y - HEIGHT)
+            // Essential for when 'currentY' is near 0
             drawForceSize(g, currentY - HEIGHT, true);
 
-            // 4. Draw Normal Tile ABOVE that
-            // Covers: y-800 to y-400. (Crucial for the loop wrap-around)
+            // 4. Draw Normal Tile ABOVE that (y - 2*HEIGHT)
+            // Essential for the seamless loop wrap-around
             drawForceSize(g, currentY - (HEIGHT * 2), false);
         } else {
+            // Default drawing (static background )
             g.drawImage(image, 0, GameConstants.HUD_HEIGHT, WIDTH, HEIGHT * 2, null);
         }
     }
 
     /**
-     * Helper method to draw a tile either normally or vertically flipped.
+     * Helper to draw a tile either normally or vertically flipped.
+     *
      * @param g Graphics context
-     * @param yPos The Y position to draw at
-     * @param isFlipped If true, draws the image upside down (mirrored)
+     * @param yPos The Y coordinate to draw at
+     * @param isFlipped If true, mirrors the image vertically
      */
     private void drawForceSize(Graphics g, int yPos, boolean isFlipped) {
         if (!isFlipped) {
-            // NORMAL: Force width 600, height 400
+            // Normal Draw
             g.drawImage(image, 0, yPos, WIDTH, HEIGHT, null);
         } else {
-            // FLIPPED: Force width 600, height 400 (but drawn upwards)
-            // Destination Y starts at bottom (yPos + HEIGHT)
-            // Height is negative (-HEIGHT) to flip it
+            // Flipped Draw:
+            // - Destination Y starts at the bottom of the target area (yPos + HEIGHT)
+            // - Height is negative (-HEIGHT) to draw upwards, effectively flipping it
             g.drawImage(image, 0, yPos + HEIGHT, WIDTH, -HEIGHT, null);
         }
-    }
-
-    private boolean isStage2Img(){
-        return (this.image == ResourceManager.stage2Img);
     }
 }

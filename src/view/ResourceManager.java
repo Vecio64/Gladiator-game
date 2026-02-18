@@ -8,131 +8,120 @@ import java.io.File;
 import java.io.InputStream;
 
 /**
- * ResourceManager
- * 起動時に一度だけ画像を読み込みメモリに保持する
+ * ResourceManager Class
+ *
+ * Handles the loading and storage of all game assets (Images, Fonts).
+ *
+ * **Key Feature:**
+ * Implements the "Cache" pattern.
+ * Instead of reloading the image from disk every time an enemy is created (which is slow),
+ * we load all images once at startup (`loadImages`) and store them in static variables.
+ * Game objects then simply reference these loaded images in memory.
  */
 public class ResourceManager {
-    // PLAYER
+
+    // --- PLAYER ASSETS ---
     public static BufferedImage playerImg;
+    public static BufferedImage playerImg2; // With Wings
     public static BufferedImage arrowImg;
 
-    //******************
-    // MINIONS
-    //******************
-    // HARPY
+    // --- MINION ASSETS ---
+    // Harpy
     public static BufferedImage harpyImg;
-    public static BufferedImage harpyHitImg;
-    // HARPY's FEATHER
+    public static BufferedImage harpyHitImg; // Pre-calculated white silhouette
     public static BufferedImage featherImg;
-    // CYCLOPS
+
+    // Cyclops
     public static BufferedImage cyclopsImg;
     public static BufferedImage cyclopsImg2;
-    public static BufferedImage cyclopsHitImg;
-    public static BufferedImage cyclopsHitImg2;
-    // CYCLOPS's BOULCER
+    public static BufferedImage cyclopsHitImg; // Pre-calculated white silhouette
+    public static BufferedImage cyclopsHitImg2; // Pre-calculated white silhouette
     public static BufferedImage boulderImg;
 
-    //******************
-    // BOSSES
-    //******************
-
-    // APOLLO
+    // --- BOSS ASSETS ---
+    // Apollo
     public static BufferedImage apolloImg;
-    public static BufferedImage apolloImg2;
-    public static BufferedImage apolloHitImg;
-    // APOLLO's SUN
+    public static BufferedImage apolloImg2; // Red/Angry
+    public static BufferedImage apolloHitImg; // Pre-calculated white silhouette
     public static BufferedImage sunImg;
     public static BufferedImage sunImg2;
-    // ZEUS
+
+    // Zeus
     public static BufferedImage zeusImg;
-    public static BufferedImage zeusImg2;
-    public static BufferedImage zeusHitImg;
-    public static BufferedImage zeusHitImg2;
-    // ZEUS's LIGHTNING
+    public static BufferedImage zeusImg2; // Angry
+    public static BufferedImage zeusHitImg; // Pre-calculated white silhouette
+    public static BufferedImage zeusHitImg2; // Pre-calculated white silhouette
     public static BufferedImage lightingImg;
     public static BufferedImage lightingImg2;
 
-    //******************
-    // HUD
-    //******************
-
-    // STAGES
+    // --- UI & BACKGROUND ASSETS ---
+    public static BufferedImage homeScreenImg;
     public static BufferedImage stage1Img;
     public static BufferedImage stage2Img;
     public static BufferedImage stage3Img;
-    // HEART
     public static BufferedImage heartFullImg;
     public static BufferedImage heartEmptyImg;
 
-    // PIXEL FONT
+    // --- FONTS ---
     public static Font pixelFont;
 
     /**
-     * "res"フォルダからすべてのリソースを読み込む
+     * Loads all resources from the "res" directory.
+     * Must be called exactly once during game initialization.
      */
     public static void loadImages() {
         try {
             System.out.println("Loading resources...");
 
-            // PLAYER
+            // 1. Load Player
             playerImg = loadTexture("res/player.png");
+            playerImg2 = loadTexture("res/playerWings.png");
             arrowImg   = loadTexture("res/arrow.png");
 
-            //******************
-            // MINIONS
-            //******************
-            // HARPY
+            // 2. Load Minions
+            // Harpy
             harpyImg = loadTexture("res/enemy.png");
-            harpyHitImg = createWhiteSilhouette(harpyImg);
-            // HARPY's FEATHER
+            harpyHitImg = createWhiteSilhouette(harpyImg); // Generate hit flash effect
             featherImg = loadTexture("res/feather.png");
-            // CYCLOPS
+
+            // Cyclops
             cyclopsImg = loadTexture("res/cyclops_openedwings.png");
             cyclopsImg2 = loadTexture("res/cyclops_closedwings.png");
-            cyclopsHitImg = createWhiteSilhouette(cyclopsImg);
-            cyclopsHitImg2 = createWhiteSilhouette(cyclopsImg2);
-            // CYCLOPS's BOULDER
+            cyclopsHitImg = createWhiteSilhouette(cyclopsImg); // Generate hit flash effect
+            cyclopsHitImg2 = createWhiteSilhouette(cyclopsImg2); // Generate hit flash effect
             boulderImg = loadTexture("res/boulder.png");
 
-            //******************
-            // BOSSES
-            //******************
-
-            // APOLLO
+            // 3. Load Bosses
+            // Apollo
             apolloImg = loadTexture("res/Apollo.png");
             apolloImg2 = loadTexture("res/ApolloRed.png");
-            apolloHitImg = createWhiteSilhouette(apolloImg);
-            // APOLLO's SUN
+            apolloHitImg = createWhiteSilhouette(apolloImg); // Generate hit flash effect
             sunImg = loadTexture("res/sun.png");
             sunImg2 = loadTexture("res/sunRed.png");
-            // ZEUS
+
+            // Zeus
             zeusImg = loadTexture("res/Zeus.png");
             zeusImg2 = loadTexture("res/ZeusAngry.png");
-            zeusHitImg = createWhiteSilhouette(zeusImg);
-            zeusHitImg2 = createWhiteSilhouette(zeusImg2);
-            // ZEUS's LIGHTNING
+            zeusHitImg = createWhiteSilhouette(zeusImg); // Generate hit flash effect
+            zeusHitImg2 = createWhiteSilhouette(zeusImg2); // Generate hit flash effect
             lightingImg = loadTexture("res/lighting.png");
             lightingImg2 = loadTexture("res/lightingAngry.png");
 
-            //******************
-            // HUD
-            //******************
-
-            // STAGES
+            // 4. Load UI & Backgrounds
+            homeScreenImg = loadTexture("res/gladiatorGameScreen.png");
             stage1Img = loadTexture("res/stage1.png");
             stage2Img = loadTexture("res/stage2.png");
             stage3Img = loadTexture("res/stage3.png");
-            // HEART
             heartFullImg = loadTexture("res/heart.png");
-            heartEmptyImg = createBlackSilhouette(heartFullImg);
+            heartEmptyImg = createBlackSilhouette(heartFullImg); // Generate empty heart dynamically
 
-            // --- LOAD CUSTOM FONT ---
+            // 5. Load Custom Font
             try {
-                // Load the font file from the res folder
+                // Access font file as an input stream
                 InputStream is = ResourceManager.class.getClassLoader().getResourceAsStream("res/PixelFont.ttf");
 
                 if (is != null) {
-                    // Create the font object (default size is 1pt)
+                    // Create TrueType font
                     pixelFont = Font.createFont(Font.TRUETYPE_FONT, is);
                     System.out.println("Pixel Font loaded successfully!");
                 } else {
@@ -145,20 +134,24 @@ public class ResourceManager {
             }
 
             System.out.println("All Resources loaded successfully!");
+
         } catch (IOException e) {
-            System.err.println("Error: Could not load images.");
+            System.err.println("Critical Error: Could not load images.");
             e.printStackTrace();
         }
     }
 
-    // 画像を安全に読み込むためのヘルパーメソッド
+    /**
+     * Helper method to safely load an image from the classpath.
+     * @param path Relative path to the resource (e.g., "res/image.png").
+     * @return The loaded BufferedImage.
+     * @throws IOException If the file is not found or cannot be read.
+     */
     private static BufferedImage loadTexture(String path) throws IOException {
-        // クラスパスからリソースを探す
         java.net.URL url = ResourceManager.class.getClassLoader().getResource(path);
 
         if (url == null) {
-            // もし getResource で見つからない場合（フォルダ構成の違いなど）、
-            // 通常のファイルパスとして読み込みを試みる（フォールバック処理）
+            // Fallback: Try reading as a standard file if getResource fails (e.g., in some IDE setups)
             try {
                 return ImageIO.read(new File(path));
             } catch (IOException ex) {
@@ -168,26 +161,30 @@ public class ResourceManager {
         return ImageIO.read(url);
     }
 
-    // ダメージ演出用に、透明度を維持したまま「真っ白なシルエット」を作成するメソッド
+    /**
+     * Generates a "Hit Flash" effect dynamically.
+     * Creates a copy of the original image where all non-transparent pixels are turned pure white.
+     * This saves us from having to manually create and load separate "white" versions of every sprite.
+     * @param original The source sprite.
+     * @return A pure white silhouette of the source sprite.
+     */
     private static BufferedImage createWhiteSilhouette(BufferedImage original) {
-        // 元の画像と同じサイズで、空の画像を作成
         BufferedImage whiteImg = new BufferedImage(
                 original.getWidth(),
                 original.getHeight(),
                 BufferedImage.TYPE_INT_ARGB
         );
 
-        // すべてのピクセルを走査する
         for (int x = 0; x < original.getWidth(); x++) {
             for (int y = 0; y < original.getHeight(); y++) {
                 int p = original.getRGB(x, y);
 
-                // アルファ値（透明度）を取得
+                // Extract Alpha channel
                 int a = (p >> 24) & 0xff;
 
-                // 透明ではない部分（キャラクター部分）だけを「真っ白」に塗りつぶす
+                // If pixel is not transparent, paint it White
                 if (a > 0) {
-                    // ARGB: アルファ値 + R(255) + G(255) + B(255)
+                    // ARGB: Alpha + R(255) + G(255) + B(255)
                     int whiteColor = (a << 24) | (255 << 16) | (255 << 8) | 255;
                     whiteImg.setRGB(x, y, whiteColor);
                 }
@@ -196,17 +193,20 @@ public class ResourceManager {
         return whiteImg;
     }
 
+    /**
+     * Generates a Black Silhouette (Used for empty hearts).
+     */
     private static BufferedImage createBlackSilhouette(BufferedImage original) {
         BufferedImage blackImg = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_INT_ARGB);
         for (int x = 0; x < original.getWidth(); x++) {
             for (int y = 0; y < original.getHeight(); y++) {
                 int p = original.getRGB(x, y);
-                int a = (p >> 24) & 0xff; // Get Alpha
+                int a = (p >> 24) & 0xff;
 
-                // If the pixel is not transparent, make it BLACK
+                // If pixel is not transparent, paint it Black
                 if (a > 0) {
                     // ARGB: Alpha + R(0) + G(0) + B(0)
-                    int blackColor = (a << 24) | (0 << 16) | (0 << 8) | 0;
+                    int blackColor = (a << 24) | (0) | (0);
                     blackImg.setRGB(x, y, blackColor);
                 }
             }

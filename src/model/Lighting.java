@@ -4,44 +4,64 @@ import view.ResourceManager;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
+/**
+ * Lighting Class
+ *
+ * A BossProjectile used by Zeus (Boss) or the Player (Ability 2).
+ * It travels vertically at high speed.
+ *
+ * Key Features:
+ * - Power Level 3 (Ultimate).
+ * - Penetrating: Hits multiple targets.
+ */
 public class Lighting extends BossProjectile {
 
-    private int velY;
-    public Lighting(int x, int y, int ZeusSpeedX, boolean isSecondPhase, boolean friendly, boolean ability2Started) {
-        super(0,
-                0,
+    private int velY; // Vertical velocity
+
+    /**
+     * Constructor for Lighting Bolt.
+     * @param summonerX X position of the entity creating the lighting.
+     * @param summonerY Y position of the entity creating the lighting.
+     * @param ZeusVelX Used to determine spawn offset relative to Zeus's movement. (only if Zeus is the summoner)
+     * @param isSecondPhase If true Lighting is faster and blue (only if Zeus is the summoner)
+     * @param friendly If true, belongs to Player; else belongs to Zeus.
+     * @param ability2Active Flag to check if this is part of Zeus's Ability2. (only if Zeus is the summoner)
+     */
+    public Lighting(int summonerX, int summonerY, int ZeusVelX, boolean isSecondPhase, boolean friendly, boolean ability2Active) {
+        super(0, 0,
                 GameConstants.LIGHTING_WIDTH,
                 GameConstants.LIGHTING_HEIGHT,
                 isSecondPhase ? ResourceManager.lightingImg2 : ResourceManager.lightingImg,
                 friendly ? Alignment.PLAYER : Alignment.ENEMY,
                 3,
-                GameConstants.LIGHTING_DAMAGE);
+                1);
 
         this.isPlayerProjectile = friendly;
         this.isPenetrating = true;
 
-        if (isSecondPhase) {
-            velY = GameConstants.LIGHTING_SPEED2;
-        } else {
-            velY = GameConstants.LIGHTING_SPEED1;
-        }
+        // Set Speed based on Phase
+        velY = (isSecondPhase) ? GameConstants.LIGHTING_SPEED2 : GameConstants.LIGHTING_SPEED1;
 
+        // --- Spawn & Direction Logic ---
         if(isPlayerProjectile){
+            // PLAYER: Move Up
             velY = -velY;
             maxHP = GameConstants.LIGHTING_HP;
             currentHP = maxHP;
-            // set position for player
-            this.x = x + (GameConstants.PLAYER_WIDTH - width) / 2;
-            this.y = y - GameConstants.PLAYER_HEIGHT;
-        } else {
-            if (!ability2Started){
 
-            // set position for Zeus
-            this.x = (ZeusSpeedX > 0) ? x + GameConstants.ZEUS_WIDTH - width : x + width;
+            // Center on Player
+            this.x = summonerX + (GameConstants.PLAYER_WIDTH - width) / 2;
+            this.y = summonerY - GameConstants.PLAYER_HEIGHT;
+        } else {
+            // ZEUS: Move Down
+            if (!ability2Active){
+                // Standard attack: Center on Zeus
+                this.x = summonerX + (GameConstants.ZEUS_WIDTH - width) / 2;
             } else {
-                this.x = (ZeusSpeedX > 0) ? x : x + GameConstants.ZEUS_WIDTH - width;
+                // Zeus's Ability2 : Offset spawn based on movement direction
+                this.x = (ZeusVelX > 0) ? summonerX : summonerX + GameConstants.ZEUS_WIDTH - width;
             }
-            this.y = y + height;
+            this.y = summonerY + height;
         }
     }
 
@@ -49,7 +69,9 @@ public class Lighting extends BossProjectile {
     public void move() {
         y += velY;
 
-        if (y > GameConstants.HUD_HEIGHT + GameConstants.FIELD_HEIGHT || y < GameConstants.HUD_HEIGHT - height) {
+        // Despawn if off-screen (Top or Bottom)
+        if (y > GameConstants.HUD_HEIGHT + GameConstants.FIELD_HEIGHT || // BOTTOM
+                y < GameConstants.HUD_HEIGHT - height) { // TOP
             isDead = true;
         }
     }
@@ -62,10 +84,5 @@ public class Lighting extends BossProjectile {
             g.setColor(Color.YELLOW);
             g.fillOval(x, y, width, height);
         }
-    }
-
-    @Override
-    public Shape getShape() {
-        return new Ellipse2D.Float(x, y, width, height);
     }
 }
