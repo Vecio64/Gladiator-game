@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  18 FEB 2026 13:54
+This is e-upTeX, Version 3.141592653-p4.1.2-u2.00-250202-2.6 (utf8.euc) (TeX Live 2025) (preloaded format=platex 2025.6.24)  18 FEB 2026 13:59
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -586,18 +586,18 @@ File: screenshot/ad1up-zu78p.eps Graphic file (type eps)
 [18]
 
 [19]
+
+[20]
 File: title.eps Graphic file (type eps)
  <title.eps>
 File: start.eps Graphic file (type eps)
  <start.eps>
-
-[20]
 File: gameover.eps Graphic file (type eps)
  <gameover.eps>
 
-[21] (./src/main/Main.java
+[21]
 
-[22]) (./src/model/GameModel.java
+[22] (./src/main/Main.java) (./src/model/GameModel.java
 
 [23]
 
@@ -627,37 +627,37 @@ File: gameover.eps Graphic file (type eps)
 
 [36]
 
-[37]) (./src/model/GameConstants.java
+[37]
 
-[38]
+[38]) (./src/model/GameConstants.java
 
 [39]
 
 [40]
 
-[41]) (./src/model/GameObject.java
+[41]
 
-[42]
+[42]) (./src/model/GameObject.java
 
-[43]) (./src/model/GameState.java) (./src/model/Alignment.java) (./src/model/Background.java
+[43]) (./src/model/GameState.java) (./src/model/Alignment.java
 
-[44]
+[44]) (./src/model/Background.java
 
 [45]
 
 [46]) (./src/model/Projectile.java
 
-[47]) (./src/model/Player.java
+[47]
 
-[48]
+[48]) (./src/model/Player.java
 
-[49]) (./src/model/Arrow.java
+[49])
 
-[50]) (./src/model/BossProjectile.java
+[50] (./src/model/Arrow.java)
 
-[51]) (./src/model/Boss.java) (./src/model/Apollo.java
+[51] (./src/model/BossProjectile.java) (./src/model/Boss.java
 
-[52]
+[52]) (./src/model/Apollo.java
 
 [53]
 
@@ -685,29 +685,29 @@ File: gameover.eps Graphic file (type eps)
 
 [65]) (./src/model/HostileEntity.java
 
-[66]) (./src/model/EnemySpawner.java
+[66])
 
-[67]
+[67] (./src/model/EnemySpawner.java
 
 [68]) (./src/model/Boulder.java
 
-[69])
+[69]
 
-[70] (./src/model/Cyclops.java
+[70]) (./src/model/Cyclops.java
 
 [71]
 
-[72]) (./src/model/Feather.java
+[72]
 
-[73]) (./src/model/Harpy.java
+[73]) (./src/model/Feather.java
 
-[74]
+[74]) (./src/model/Harpy.java
 
 [75]
 
-[76]) (./src/model/Minion.java) (./src/view/GamePanel.java
+[76]) (./src/model/Minion.java
 
-[77]
+[77]) (./src/view/GamePanel.java
 
 [78]
 
@@ -759,10 +759,10 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 Here is how much of TeX's memory you used:
  14472 strings out of 468530
  223905 string characters out of 5449390
- 1424291 words of memory out of 5000000
+ 1439291 words of memory out of 5000000
  42736 multiletter control sequences out of 15000+600000
  689276 words of font info for 126 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  72i,11n,79p,666b,2121s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (97 pages, 2272240 bytes).
+Output written on report.dvi (97 pages, 2271192 bytes).
