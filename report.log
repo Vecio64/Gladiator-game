@@ -1,4 +1,4 @@
-This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.5.12)  18 FEB 2026 11:30
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.euc) (TeX Live 2024) (preloaded format=platex 2024.5.12)  18 FEB 2026 11:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -390,8 +390,7 @@ File: l3backend-dvips.def 2024-02-20 L3 backend support: dvips
 \g__pdf_backend_annotation_int=\count299
 \g__pdf_backend_link_int=\count300
 \g__pdf_backend_link_sf_int=\count301
-)
-No file report.aux.
+) (./report.aux)
 \openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
@@ -417,11 +416,9 @@ LaTeX Font Info:    ... okay on input line 55.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 55.
 LaTeX Font Info:    ... okay on input line 55.
 Package hyperref Info: Link coloring OFF on input line 55.
+ (./report.out) (./report.out)
 \@outlinefile=\write3
 \openout3 = `report.out'.
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
@@ -437,7 +434,7 @@ LaTeX Font Info:    Font shape `JT1/mc/m/n' will be
 LaTeX Font Info:    Font shape `JY1/mc/m/n' will be
 (Font)              scaled to size 11.53198pt on input line 57.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 57.
-(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
+ (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 57.
@@ -571,23 +568,16 @@ pLaTeX2e <2023-02-14>+1, based on
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
-
-
-Package rerunfilecheck Warning: File `report.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `report.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  588C1957C5EF07FA3AE086EEA46DAD99;1190.
+Package rerunfilecheck Info: File `report.out' has not changed.
+(rerunfilecheck)             Checksum: 588C1957C5EF07FA3AE086EEA46DAD99;1190.
  ) 
 Here is how much of TeX's memory you used:
- 14372 strings out of 474774
- 223021 string characters out of 5758801
+ 14395 strings out of 474774
+ 223319 string characters out of 5758801
  2547032 words of memory out of 5000000
- 36439 multiletter control sequences out of 15000+600000
+ 36456 multiletter control sequences out of 15000+600000
  620520 words of font info for 122 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  72i,11n,79p,671b,2119s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on report.dvi (97 pages, 2270912 bytes).
+Output written on report.dvi (97 pages, 2272296 bytes).
