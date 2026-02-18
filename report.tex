@@ -90,7 +90,6 @@ MVCモデルを採用し、主にPullerがM、佐々木がV、斎藤がCを担�
 私が作成したのは、コントローラーと第二ボスZeusの実装です。
 
 \subsubsection{コントローラーの実装}
-
 \lstinputlisting[
   caption={GamePanel.java（一部抜粋）},
   firstline=382,
@@ -120,6 +119,7 @@ MVCモデルを採用し、主にPullerがM、佐々木がV、斎藤がCを担�
   lastline=501
 ]{src/view/GamePanel.java}
 このクラスは、keyPressedで行われた変更を元の状態に戻します。このようにすることで、毎フレーム押された状態だけを処理することができます。
+
 \subsubsection{第二ボスZeusの実装}
 第二ボスZeusの実装は、Zeus本体とZeusが攻撃する雷(Lighting)の二つのファイルを作成して実装しました。
 まず、本体についてです。
@@ -149,8 +149,8 @@ Playerの攻撃として用いたり、Bossの攻撃としても用いること�
 一つのファイルで完結させることができました。また、変数isSecondPhaseにより、第二段階に入ったことが判別できる。第二段階に入ったときに、画像を変えることでLightingでもより強く見せることができました。
 このような変化を加えることで、ゲーム性が増しました。
 
-
 {\raggedleft (文責：齋藤)\par}
+
 \subsection{佐々木担当}
 私は主にView層におけるUIの実装と、Model層におけるプレイヤーのライフ・ダメージ処理を担当しました。\\
 \textbf{1、ゲーム画面およびHUDの実装}\\
