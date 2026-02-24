@@ -22,9 +22,11 @@ public class ResourceManager {
 
     // --- PLAYER ASSETS ---
     public static BufferedImage playerImg;
-    public static BufferedImage playerImg2; // With Wings
+    public static BufferedImage playerImg2; // With wings and fire
+    public static BufferedImage playerImg3; // Electric
     public static BufferedImage arrowImg;
-    public static BufferedImage arrowImgFire;
+    public static BufferedImage arrowFireImg;
+    public static BufferedImage arrowLightingImg;
 
     // --- MINION ASSETS ---
     // Harpy
@@ -75,10 +77,12 @@ public class ResourceManager {
             System.out.println("Loading resources...");
 
             // 1. Load Player
-            playerImg = loadTexture("player.png");
-            playerImg2 = loadTexture("playerStage2.png");
+            playerImg = loadTexture("player_stage1.png");
+            playerImg2 = loadTexture("player_stage2.png");
+            playerImg3 = loadTexture("player_stage3.png");
             arrowImg   = loadTexture("arrow.png");
-            arrowImgFire   = loadTexture("arrow_fire.png");
+            arrowFireImg = loadTexture("arrow_fire.png");
+            arrowLightingImg = loadTexture("arrow_lighting.png");
 
             // 2. Load Minions
             // Harpy
@@ -87,8 +91,8 @@ public class ResourceManager {
             featherImg = loadTexture("feather.png");
 
             // Cyclops
-            cyclopsImg = loadTexture("cyclops_openedwings.png");
-            cyclopsImg2 = loadTexture("cyclops_closedwings.png");
+            cyclopsImg = loadTexture("cyclops_opened_wings.png");
+            cyclopsImg2 = loadTexture("cyclops_closed_wings.png");
             cyclopsHitImg = createWhiteSilhouette(cyclopsImg); // Generate hit flash effect
             cyclopsHitImg2 = createWhiteSilhouette(cyclopsImg2); // Generate hit flash effect
             boulderImg = loadTexture("boulder.png");
@@ -96,21 +100,21 @@ public class ResourceManager {
             // 3. Load Bosses
             // Apollo
             apolloImg = loadTexture("Apollo.png");
-            apolloImg2 = loadTexture("ApolloRed.png");
+            apolloImg2 = loadTexture("Apollo_phase2.png");
             apolloHitImg = createWhiteSilhouette(apolloImg); // Generate hit flash effect
             sunImg = loadTexture("sun.png");
-            sunImg2 = loadTexture("sunRed.png");
+            sunImg2 = loadTexture("sun_phase2.png");
 
             // Zeus
             zeusImg = loadTexture("Zeus.png");
-            zeusImg2 = loadTexture("ZeusAngry.png");
+            zeusImg2 = loadTexture("Zeus_phase2.png");
             zeusHitImg = createWhiteSilhouette(zeusImg); // Generate hit flash effect
             zeusHitImg2 = createWhiteSilhouette(zeusImg2); // Generate hit flash effect
             lightingImg = loadTexture("lighting.png");
-            lightingImg2 = loadTexture("lightingAngry.png");
+            lightingImg2 = loadTexture("lighting_phase2.png");
 
             // 4. Load UI & Backgrounds
-            homeScreenImg = loadTexture("gladiatorGameScreen.png");
+            homeScreenImg = loadTexture("gladiator_game_screen.png");
             stage1Img = loadTexture("stage1.png");
             stage2Img = loadTexture("stage2.png");
             stage3Img = loadTexture("stage3.png");

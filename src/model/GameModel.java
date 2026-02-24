@@ -132,11 +132,16 @@ public class GameModel {
         activeSpawners.clear();
 
         // --- RESET PLAYER ---
-        // Set the correct sprite (Normal vs Wings) based on progression
-        if (levelIndex > 3){
+        // Set the correct sprite (Stage 1, Stage 2, Stage 3) based on progression
+        if (levelIndex < 4){
+            // Stage 1
+            player = new Player(ResourceManager.playerImg);
+        } else if (levelIndex < 8) {
+            // Stage 2
             player = new Player(ResourceManager.playerImg2);
         } else {
-            player = new Player(ResourceManager.playerImg);
+            // Stage 3
+            player = new Player(ResourceManager.playerImg3);
         }
         objects.add(player);
         lives = GameConstants.PLAYER_MAX_LIVES;
@@ -236,18 +241,19 @@ public class GameModel {
                     background.setImage(ResourceManager.stage2Img);
                     background.setSpeed(GameConstants.SCREEN_SPEED);
 
+                    // update stage number
                     this.currentStage = 2;
 
-                    // Reset Ability 1 Cooldown
+                    // Unlock Ability 1
                     ability1Timer = 0;
 
-                    // Upgrade Player: Change image to Wings
+                    // Upgrade Player: Change image to Wings and Fire
                     player.setImage(ResourceManager.playerImg2);
 
                     // Upgrade Player: Double Damage
                     arrowDamage *= 2;
                     // Update arrow image
-                    arrowImg = ResourceManager.arrowImgFire;
+                    arrowImg = ResourceManager.arrowFireImg;
 
                     // Update Spawners for Stage 2
                     activeSpawners.clear();
@@ -288,12 +294,20 @@ public class GameModel {
                     background.setImage(ResourceManager.stage3Img);
                     background.setSpeed(0); // Static background for Inferno
 
+                    // update stage number
+                    this.currentStage = 3;
+
+                    // Unlock Ability 2
                     ability2Timer = 0;
+
+                    // Upgrade Player: Change image to Electric Bow
+                    player.setImage(ResourceManager.playerImg3);
 
                     // Upgrade Player: Faster Fire Rate
                     arrowInterval = GameConstants.ARROW_INTERVAL2;
 
-                    this.currentStage = 3;
+                    // Update arrow image
+                    arrowImg = ResourceManager.arrowLightingImg;
 
                     // Update Spawners
                     activeSpawners.clear();

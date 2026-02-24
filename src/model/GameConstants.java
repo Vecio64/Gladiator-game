@@ -41,8 +41,8 @@ public final class GameConstants {
     public static final int ARROW_WIDTH = 10; // 10
     public static final int ARROW_HEIGHT = 70; // 70
     public static final int ARROW_SPEED = 30; // 30
-    public static final int ARROW_INTERVAL = 20;  // 20; Standard fire rate
-    public static final int ARROW_INTERVAL2 = 15; // 15; Upgraded fire rate (Stage 3)
+    public static final int ARROW_INTERVAL = 20;  // 20;  Standard fire rate: 3 arrow per second
+    public static final int ARROW_INTERVAL2 = 15; // 15; Upgraded fire rate (Stage 3): 4 arrows per second
     public static final int ARROW_DAMAGE = 1; // 1
 
     // ************************************
