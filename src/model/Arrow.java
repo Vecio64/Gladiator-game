@@ -2,6 +2,7 @@ package model;
 
 import view.ResourceManager;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Arrow Class
@@ -18,12 +19,12 @@ public class Arrow extends Projectile {
      * @param y Starting Y coordinate (top of Player).
      * @param arrowDamage Damage this arrow inflicts on enemies.
      */
-    public Arrow(int x, int y, int arrowDamage) {
+    public Arrow(int x, int y, int arrowDamage, BufferedImage image) {
         // Initialize Projectile properties:
         // - Image: Standard Arrow Image
         // - Alignment: PLAYER (Harms Enemies)
         // - Power Level: 1 (Weakest projectile type, destroyed by heavier objects)
-        super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT, ResourceManager.arrowImg,
+        super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT, image,
                 Alignment.PLAYER, 1, arrowDamage);
     }
 

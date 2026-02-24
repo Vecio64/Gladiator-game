@@ -3,6 +3,7 @@ package model;
 import view.ResourceManager;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -41,6 +42,7 @@ public class GameModel {
     // --- PLAYER STATS ---
     private int lives;       // Current lives
     private int damageTimer; // Invincibility frames after taking damage
+    private BufferedImage arrowImg;
 
     // --- ABILITIES COOLDOWNS ---
     private int ability1Timer;
@@ -76,6 +78,7 @@ public class GameModel {
 
         arrowDamage = GameConstants.ARROW_DAMAGE;
         arrowInterval = GameConstants.ARROW_INTERVAL;
+        arrowImg = ResourceManager.arrowImg;
 
         // Reset Abilities Cooldowns
         ability1Timer = 0;
@@ -243,6 +246,8 @@ public class GameModel {
 
                     // Upgrade Player: Double Damage
                     arrowDamage *= 2;
+                    // Update arrow image
+                    arrowImg = ResourceManager.arrowImgFire;
 
                     // Update Spawners for Stage 2
                     activeSpawners.clear();
@@ -435,7 +440,8 @@ public class GameModel {
             // Spawn arrow centered above the player
             Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH - GameConstants.ARROW_WIDTH)/2,
                     player.getY() - GameConstants.ARROW_HEIGHT,
-                    arrowDamage);
+                    arrowDamage,
+                    arrowImg);
             newObjectsBuffer.add(a);
         }
     }

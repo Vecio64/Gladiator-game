@@ -22,7 +22,7 @@ public final class GameConstants {
     public static final int WINDOW_HEIGHT = HUD_HEIGHT + FIELD_HEIGHT + BOTTOM_HUD_HEIGHT;
 
     // --- SYSTEM SETTINGS ---
-    public static final int FPS = 60; // Target Frames Per Second
+    public static final int FPS = 60; // 60; Target Frames Per Second
     public static final double SCREEN_SPEED = 1.0; // Background scroll speed
 
     // --- PLAYER STATS ---

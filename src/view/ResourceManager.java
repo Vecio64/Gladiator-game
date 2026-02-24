@@ -12,7 +12,7 @@ import java.io.InputStream;
  *
  * Handles the loading and storage of all game assets (Images, Fonts).
  *
- * **Key Feature:**
+ * Key Feature:
  * Implements the "Cache" pattern.
  * Instead of reloading the image from disk every time an enemy is created (which is slow),
  * we load all images once at startup (`loadImages`) and store them in static variables.
@@ -24,6 +24,7 @@ public class ResourceManager {
     public static BufferedImage playerImg;
     public static BufferedImage playerImg2; // With Wings
     public static BufferedImage arrowImg;
+    public static BufferedImage arrowImgFire;
 
     // --- MINION ASSETS ---
     // Harpy
@@ -74,51 +75,52 @@ public class ResourceManager {
             System.out.println("Loading resources...");
 
             // 1. Load Player
-            playerImg = loadTexture("res/player.png");
-            playerImg2 = loadTexture("res/playerWings.png");
-            arrowImg   = loadTexture("res/arrow.png");
+            playerImg = loadTexture("player.png");
+            playerImg2 = loadTexture("playerStage2.png");
+            arrowImg   = loadTexture("arrow.png");
+            arrowImgFire   = loadTexture("arrow_fire.png");
 
             // 2. Load Minions
             // Harpy
-            harpyImg = loadTexture("res/enemy.png");
+            harpyImg = loadTexture("enemy.png");
             harpyHitImg = createWhiteSilhouette(harpyImg); // Generate hit flash effect
-            featherImg = loadTexture("res/feather.png");
+            featherImg = loadTexture("feather.png");
 
             // Cyclops
-            cyclopsImg = loadTexture("res/cyclops_openedwings.png");
-            cyclopsImg2 = loadTexture("res/cyclops_closedwings.png");
+            cyclopsImg = loadTexture("cyclops_openedwings.png");
+            cyclopsImg2 = loadTexture("cyclops_closedwings.png");
             cyclopsHitImg = createWhiteSilhouette(cyclopsImg); // Generate hit flash effect
             cyclopsHitImg2 = createWhiteSilhouette(cyclopsImg2); // Generate hit flash effect
-            boulderImg = loadTexture("res/boulder.png");
+            boulderImg = loadTexture("boulder.png");
 
             // 3. Load Bosses
             // Apollo
-            apolloImg = loadTexture("res/Apollo.png");
-            apolloImg2 = loadTexture("res/ApolloRed.png");
+            apolloImg = loadTexture("Apollo.png");
+            apolloImg2 = loadTexture("ApolloRed.png");
             apolloHitImg = createWhiteSilhouette(apolloImg); // Generate hit flash effect
-            sunImg = loadTexture("res/sun.png");
-            sunImg2 = loadTexture("res/sunRed.png");
+            sunImg = loadTexture("sun.png");
+            sunImg2 = loadTexture("sunRed.png");
 
             // Zeus
-            zeusImg = loadTexture("res/Zeus.png");
-            zeusImg2 = loadTexture("res/ZeusAngry.png");
+            zeusImg = loadTexture("Zeus.png");
+            zeusImg2 = loadTexture("ZeusAngry.png");
             zeusHitImg = createWhiteSilhouette(zeusImg); // Generate hit flash effect
             zeusHitImg2 = createWhiteSilhouette(zeusImg2); // Generate hit flash effect
-            lightingImg = loadTexture("res/lighting.png");
-            lightingImg2 = loadTexture("res/lightingAngry.png");
+            lightingImg = loadTexture("lighting.png");
+            lightingImg2 = loadTexture("lightingAngry.png");
 
             // 4. Load UI & Backgrounds
-            homeScreenImg = loadTexture("res/gladiatorGameScreen.png");
-            stage1Img = loadTexture("res/stage1.png");
-            stage2Img = loadTexture("res/stage2.png");
-            stage3Img = loadTexture("res/stage3.png");
-            heartFullImg = loadTexture("res/heart.png");
+            homeScreenImg = loadTexture("gladiatorGameScreen.png");
+            stage1Img = loadTexture("stage1.png");
+            stage2Img = loadTexture("stage2.png");
+            stage3Img = loadTexture("stage3.png");
+            heartFullImg = loadTexture("heart.png");
             heartEmptyImg = createBlackSilhouette(heartFullImg); // Generate empty heart dynamically
 
             // 5. Load Custom Font
             try {
                 // Access font file as an input stream
-                InputStream is = ResourceManager.class.getClassLoader().getResourceAsStream("res/PixelFont.ttf");
+                InputStream is = ResourceManager.class.getClassLoader().getResourceAsStream("PixelFont.ttf");
 
                 if (is != null) {
                     // Create TrueType font
