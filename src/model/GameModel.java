@@ -31,6 +31,7 @@ public class GameModel {
     private int shotTimer;         // Controls the fire rate (cooldown)
     private int arrowDamage;       // Current damage of player's arrows
     private int arrowInterval;     // Current fire rate delay
+    private int arrowSpeed;
 
     // --- PROGRESSION SYSTEM ---
     private static int score = 0;
@@ -78,6 +79,7 @@ public class GameModel {
 
         arrowDamage = GameConstants.ARROW_DAMAGE;
         arrowInterval = GameConstants.ARROW_INTERVAL;
+        arrowSpeed = GameConstants.ARROW_SPEED;
         arrowImg = ResourceManager.arrowImg;
 
         // Reset Abilities Cooldowns
@@ -130,6 +132,11 @@ public class GameModel {
         objects.clear();
         newObjectsBuffer.clear();
         activeSpawners.clear();
+
+        // Reset Abilities Cooldowns
+        ability1Timer = 0;
+        ability2Timer = 0;
+        ability3Timer = 0;
 
         // --- RESET PLAYER ---
         // Set the correct sprite (Stage 1, Stage 2, Stage 3) based on progression
@@ -258,8 +265,10 @@ public class GameModel {
                     // Update Spawners for Stage 2
                     activeSpawners.clear();
                     // Harpy Spawner
-                    activeSpawners.add(new EnemySpawner(Harpy.class, 100, 50));
-                    // Cyclops Spawner (New Enemy)
+                    activeSpawners.add(new EnemySpawner(Harpy.class,
+                            GameConstants.HARPY_SPAWN_INTERVAL,
+                            GameConstants.HARPY_SPAWN_VARIANCE));
+                    // Cyclops Spawner
                     activeSpawners.add(new EnemySpawner(Cyclops.class,
                             GameConstants.CYCLOPS_SPAWN_INTERVAL,
                             GameConstants.CYCLOPS_SPAWN_VARIANCE));
@@ -267,15 +276,18 @@ public class GameModel {
                 break;
 
             case 5: // Increase spawn rate
-                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.85);
                 break;
             case 6: // Increase spawn rate
-                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.9);
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.85);
                 break;
 
             case 7: // BOSS 2: ZEUS
                 // Save checkpoint
                 lastCheckpointIndex = levelIndex;
+
+                // Set score exactly to 3500
+                score = GameConstants.SCORE_FOR_BOSS_2;
 
                 showMessage("WARNING!\n\nBOSS DETECTED:\nZEUS\n\nPrepare for battle!");
                 isBossActive = true;
@@ -303,20 +315,44 @@ public class GameModel {
                     // Upgrade Player: Change image to Electric Bow
                     player.setImage(ResourceManager.playerImg3);
 
-                    // Upgrade Player: Faster Fire Rate
+                    // Upgrade Player: Faster Fire Rate and faster arrows
                     arrowInterval = GameConstants.ARROW_INTERVAL2;
+                    arrowSpeed = GameConstants.ARROW_SPEED2;
 
                     // Update arrow image
                     arrowImg = ResourceManager.arrowLightingImg;
 
                     // Update Spawners
                     activeSpawners.clear();
-                    activeSpawners.add(new EnemySpawner(Harpy.class, 80, 40));
-                    activeSpawners.add(new EnemySpawner(Cyclops.class, 240, 120));
+                    // Harpy Spawner
+                    activeSpawners.add(new EnemySpawner(Harpy.class,
+                            GameConstants.HARPY_SPAWN_INTERVAL,
+                            GameConstants.HARPY_SPAWN_VARIANCE));
+                    // Cyclops Spawner
+                    activeSpawners.add(new EnemySpawner(Cyclops.class,
+                            GameConstants.CYCLOPS_SPAWN_INTERVAL,
+                            GameConstants.CYCLOPS_SPAWN_VARIANCE));
+                    // Minotaur Spawner
+                    activeSpawners.add(new EnemySpawner(Minotaur.class,
+                            GameConstants.MINOTAUR_SPAWN_INTERVAL,
+                            GameConstants.MINOTAUR_SPAWN_VARIANCE));
                 }
                 break;
-            case 9:
-                // Future content
+            case 9: // Increase spawn rate
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.85);
+                break;
+            case 10: // Increase spawn rate
+                for (EnemySpawner s : activeSpawners) s.increaseDifficulty(0.85);
+                break;
+            case 11:
+                // Save checkpoint
+//                lastCheckpointIndex = levelIndex;
+
+                showMessage("WARNING!\n\nBOSS DETECTED:\nHADES\n\nPrepare for battle!");
+                isBossActive = true;
+                clearEverything();
+                spawnZeus();
+                healPlayer();
                 break;
         }
     }
@@ -421,6 +457,12 @@ public class GameModel {
             Cyclops c = new Cyclops(x, y, this);
             newObjectsBuffer.add(c);
         }
+        else if (type == Minotaur.class) {
+            x = rand.nextInt(GameConstants.WINDOW_WIDTH - GameConstants.MINOTAUR_WIDTH); // Random X
+            y = GameConstants.HUD_HEIGHT;
+            Minotaur m = new Minotaur(x, y, this);
+            newObjectsBuffer.add(m);
+        }
     }
 
     /**
@@ -455,6 +497,7 @@ public class GameModel {
             Arrow a = new Arrow(player.getX() + (GameConstants.PLAYER_WIDTH - GameConstants.ARROW_WIDTH)/2,
                     player.getY() - GameConstants.ARROW_HEIGHT,
                     arrowDamage,
+                    arrowSpeed,
                     arrowImg);
             newObjectsBuffer.add(a);
         }

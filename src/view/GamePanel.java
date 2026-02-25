@@ -544,12 +544,12 @@ public class GamePanel extends JPanel implements KeyListener {
 
             // Abilities
             // Ability 1 (Sun)
-            if(model.getCurrentLevelIndex() > 3 && key == KeyEvent.VK_1){
+            if(model.isAbilityUnclocked(1) && key == KeyEvent.VK_1){
                 model.ability1();
             }
 
             // Ability 2 (Lightning)
-            if (model.getCurrentLevelIndex() > 7 && key == KeyEvent.VK_2){
+            if (model.isAbilityUnclocked(2) && key == KeyEvent.VK_2){
                 model.ability2();
             }
         }

@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
  */
 public class Arrow extends Projectile {
 
+
+    private int speed;
     /**
      * Constructor.
      *
@@ -19,13 +21,14 @@ public class Arrow extends Projectile {
      * @param y Starting Y coordinate (top of Player).
      * @param arrowDamage Damage this arrow inflicts on enemies.
      */
-    public Arrow(int x, int y, int arrowDamage, BufferedImage image) {
+    public Arrow(int x, int y, int arrowDamage, int speed, BufferedImage image) {
         // Initialize Projectile properties:
         // - Image: Standard Arrow Image
         // - Alignment: PLAYER (Harms Enemies)
         // - Power Level: 1 (Weakest projectile type, destroyed by heavier objects)
         super(x, y, GameConstants.ARROW_WIDTH, GameConstants.ARROW_HEIGHT, image,
                 Alignment.PLAYER, 1, arrowDamage);
+        this.speed = speed;
     }
 
     /**
@@ -34,7 +37,7 @@ public class Arrow extends Projectile {
      */
     @Override
     public void move() {
-        y -= GameConstants.ARROW_SPEED;
+        y -= speed;
 
         // Remove if completely off-screen (top)
         if (y < -height) {

@@ -41,6 +41,11 @@ public class ResourceManager {
     public static BufferedImage cyclopsHitImg2; // Pre-calculated white silhouette
     public static BufferedImage boulderImg;
 
+    // Minotaur
+    public static BufferedImage minotaurImg;
+    public static BufferedImage minotaurImg2;
+    public static BufferedImage minotaurHitImg; // Pre-calculated white silhouette
+
     // --- BOSS ASSETS ---
     // Apollo
     public static BufferedImage apolloImg;
@@ -96,6 +101,11 @@ public class ResourceManager {
             cyclopsHitImg = createWhiteSilhouette(cyclopsImg); // Generate hit flash effect
             cyclopsHitImg2 = createWhiteSilhouette(cyclopsImg2); // Generate hit flash effect
             boulderImg = loadTexture("boulder.png");
+
+            // Minotaur
+            minotaurImg = loadTexture("minotaur.png");
+            minotaurImg2 = loadTexture("minotaur_angry.png");
+            minotaurHitImg = createWhiteSilhouette(minotaurImg);
 
             // 3. Load Bosses
             // Apollo

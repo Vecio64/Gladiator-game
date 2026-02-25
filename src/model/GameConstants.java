@@ -40,7 +40,8 @@ public final class GameConstants {
     // --- PROJECTILE: ARROW (Player) ---
     public static final int ARROW_WIDTH = 10; // 10
     public static final int ARROW_HEIGHT = 70; // 70
-    public static final int ARROW_SPEED = 30; // 30
+    public static final int ARROW_SPEED = 20; // 20
+    public static final int ARROW_SPEED2 = 40; // 40
     public static final int ARROW_INTERVAL = 20;  // 20;  Standard fire rate: 3 arrow per second
     public static final int ARROW_INTERVAL2 = 15; // 15; Upgraded fire rate (Stage 3): 4 arrows per second
     public static final int ARROW_DAMAGE = 1; // 1
@@ -85,6 +86,16 @@ public final class GameConstants {
     public static final double BOULDER_GRAVITY = 0.3;     // 0.3; Accelerates down
     public static final int BOULDER_DAMAGE = 5; // 5
 
+    // --- MINOTAUR ---
+    public static final int MINOTAUR_WIDTH = 150; // 150
+    public static final int MINOTAUR_HEIGHT = MINOTAUR_WIDTH;
+    public static final int MINOTAUR_VELX = 3; // 3
+    public static final int MINOTAUR_VELY = 12; // 12
+    public static final int MINOTAUR_HP = 20; // 20
+    public static final int MINOTAUR_SCORE_POINTS = 100; // 100
+    public static final int MINOTAUR_SPAWN_INTERVAL = FPS * 12; // 12 seconds
+    public static final int MINOTAUR_SPAWN_VARIANCE = MINOTAUR_SPAWN_INTERVAL / 2;
+
     // ************************************
     // BOSSES
     // ************************************
@@ -109,7 +120,7 @@ public final class GameConstants {
     public static final int ZUES_HEIGHT = ZEUS_WIDTH;
     public static final int ZEUS_SPEED1 = 6; // 6
     public static final int ZEUS_SPEED2 = 8; // 8
-    public static final int ZEUS_HP = 150; // 150
+    public static final int ZEUS_HP = 200; // 150
     public static final int ZEUS_SCORE_POINTS = 1500; // 1500
     public static final int ZEUS_SHOOT_TIMER = 45; // 45; 0.75 seconds
     public static final int ZEUS_SHOOT_TIMER2 = 30; // 30; 0.5 seconds (Enraged)
@@ -146,9 +157,9 @@ public final class GameConstants {
 
     // STAGE 3 PROGRESSION
     public static final int SCORE_STAGE3_PHASE1 = SCORE_FOR_BOSS_2 + ZEUS_SCORE_POINTS; // 5000
-    public static final int SCORE_STAGE3_PHASE2 = 100000; // 6000
-    public static final int SCORE_STAGE3_PHASE3 = 300000; // 7000
-    public static final int SCORE_FOR_BOSS_3 = 500000; // 8000
+    public static final int SCORE_STAGE3_PHASE2 = SCORE_STAGE3_PHASE1 + 1000; // 6000
+    public static final int SCORE_STAGE3_PHASE3 = SCORE_STAGE3_PHASE2 + 1000; // 7000
+    public static final int SCORE_FOR_BOSS_3 = SCORE_STAGE3_PHASE3 + 1000; // 8000
 
     // EXTRA STAGE
     public static final int SCORE_EXTRA_STAGE = 10000; // 10000
